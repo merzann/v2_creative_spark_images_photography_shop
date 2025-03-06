@@ -84,6 +84,9 @@ class OrderModel(models.Model):
     and :model:`PrintedProduct`.
     """
 
+    class Meta:
+        verbose_name_plural = "Order History"
+
     ORDER_STATUS_CHOICES = [
         ("pending", "Pending"),
         ("processing", "Processing"),
