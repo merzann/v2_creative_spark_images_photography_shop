@@ -1,0 +1,4 @@
+input[value="Delete"] {
+    width: auto !important;  /* Limits width */
+    max-width: 200px;
+}
