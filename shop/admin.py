@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import DigitalProduct, PrintedProduct, OrderModel
 
-# Register your models here.
+admin.site.register(DigitalProduct)
+admin.site.register(PrintedProduct)
+admin.site.register(OrderModel)
