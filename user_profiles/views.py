@@ -12,7 +12,8 @@ def profile(request):
     **Context:**
 
     `form`
-        An instance of :form:`user_profiles.UserProfileForm` for updating user information.
+        An instance of :form:`user_profiles.UserProfileForm` for updating
+        user information.
 
     **Template:**
 
@@ -21,7 +22,11 @@ def profile(request):
 
     user_profile = request.user.userprofile
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        form = UserProfileForm(
+            request.POST,
+            request.FILES,
+            instance=user_profile,
+        )
         if form.is_valid():
             form.save()
             return redirect("profile")  # Redirect to profile page

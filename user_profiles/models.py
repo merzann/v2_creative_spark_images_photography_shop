@@ -17,8 +17,17 @@ class UserProfile(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = CloudinaryField("profile_pictures", blank=True, null=True)
-    language_preference = models.CharField(max_length=10, choices=LANGUAGE_CHOICES, default="en")
+    profile_picture = CloudinaryField(
+        "profile_pictures",
+        blank=True,
+        null=True,
+    )
+
+    language_preference = models.CharField(
+        max_length=10,
+        choices=LANGUAGE_CHOICES,
+        default="en",
+    )
 
     def __str__(self):
         """Returns the username of the user profile."""
