@@ -21,4 +21,5 @@ from shop import views as index_views
 urlpatterns = [
     path('', index_views.index, name='index'),
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
 ]
