@@ -29,7 +29,7 @@ def profile(request):
         )
         if form.is_valid():
             form.save()
-            return redirect("profile")  # Redirect to profile page
+            return redirect("profile")
 
     else:
         form = UserProfileForm(instance=user_profile)
