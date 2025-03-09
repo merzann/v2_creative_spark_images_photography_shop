@@ -10,6 +10,9 @@ class UserProfile(models.Model):
     Related to :model:`auth.User`.
     """
 
+    class Meta:
+        verbose_name_plural = "User Profiles"
+
     LANGUAGE_CHOICES = [
         ("en", "English"),
         ("de", "German"),
