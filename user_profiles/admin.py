@@ -14,7 +14,6 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ("user", "language_preference", "email", "default_country")
     search_fields = ("user__username", "user__email", "country__name",)
     list_filter = ("language_preference", ("default_country", DropdownFilter),)
-    ordering = ("user__username",)
     actions = ['export_as_csv']
 
     def email(self, obj):
