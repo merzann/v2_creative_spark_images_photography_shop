@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_admin_listfilter_dropdown.filters import DropdownFilter
 from django.http import HttpResponse
 from .models import UserProfile
 import csv
@@ -11,8 +12,8 @@ class UserProfileAdmin(admin.ModelAdmin):
     """
 
     list_display = ("user", "language_preference", "email", "default_country")
-    search_fields = ("user__username", "user__email")
-    list_filter = ("default_country",)
+    search_fields = ("user__username", "user__email", "country__name",)
+    list_filter = ("language_preference", ("default_country", DropdownFilter),)
     ordering = ("user__username",)
     actions = ['export_as_csv']
 
