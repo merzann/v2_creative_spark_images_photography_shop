@@ -1,10 +1,10 @@
 {% load static %}
 
+{% url 'home' as home_url %}
+{% url 'user_profiles' as user_profiles_url %}
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +13,7 @@
     {% block meta %}
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% endblock %}
 
     {% block extra_meta %}
@@ -24,9 +24,6 @@
     <meta name="keywords" content="Anne's language retreat, ireland, Kerry, Waterville, b&b, bed and breakfast, language holidays, language courses
     hotel, tours, Skellig Michael, hiking, Gap of Dunloe, boat tours">
     {% endblock %}
-
-    <!-- Title -->
-    <title>Anne's Language Retreat</title>
 
     {% block corecss %}
     <!-- Google Fonts CSS -->
@@ -91,7 +88,7 @@
                             <a class="nav-link dropdown-toggle {% if request.path == recipes_url %}active{% endif %}"
                                 aria-current="page" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                Recipes
+                                Gallery
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 {% for category in categories %}
@@ -101,12 +98,12 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == about_page_url %}active{% endif %}"
-                                aria-current="page" href="">About</a>
+                            <a class="nav-link {% if request.path == user_profiles_url %}active{% endif %}"
+                                aria-current="page" href="{% url 'profile' %}">Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.path == weekly_tip_url %}active{% endif %}"
-                                aria-current="page" href="">Weekly Tip</a>
+                                aria-current="page" href="">Shoppiing cart</a>
                         </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item">

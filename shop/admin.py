@@ -11,7 +11,7 @@ class OrderModelAdmin(admin.ModelAdmin):
         css = {
             "all": ("css/admin_custom.css",)
         }
-        
+
     model = OrderModel
     verbose_name_plural = "Order History"
 
