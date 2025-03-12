@@ -146,18 +146,26 @@ a.dropdown-item {
 /* footer */
 footer {
     background-color: #333;
-    color: #fff;
+    color: #ddd;
     text-align: center;
     padding: 2rem;
     min-height: 100px; 
     box-sizing: border-box;
 }
 
-footer i {
+footer a {
+    color: #ddd;
     text-decoration: none;
-    font-size: 14px;
-    color: #fff;
-} 
+}
+
+footer a i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin:0 5px 30px;
+    font-size: 3rem;
+}
 
 /* Media Queries for screens from 576px */
 @media (min-width: 576px) {
