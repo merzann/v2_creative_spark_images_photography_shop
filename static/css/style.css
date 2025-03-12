@@ -30,19 +30,20 @@ header {
     display: none;
 }
 
+nav.navbar {
+    padding: 8px;
+}
+
 .navbar {
     background-color: #7c7575 !important;
     color: #ddd !important;
 }
 
 .navbar .nav-link {
-    padding: 5px 8px !important;
     display: flex;
     align-items: center;
-}
-
-.navbar .nav-link i {
-    margin-right: 4px !important;
+    padding: 5px 8px !important;
+    margin-left: 1rem;
 }
 
 .navbar-nav .nav-link, .dropdown-menu a {
@@ -57,11 +58,47 @@ header {
     color: rgb(85, 63, 70) !important;
 }
 
+.navbar-toggler {
+    position: relative;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+}
+
+.navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #7c7575 !important;
+    z-index: 1000;
+}
+
 /* Dropdown Menu Styles */
 .dropdown-menu {
-    background-color: #7c7575 !important;
+    display: flex;
+    background-color: #ddd!important;
+    border: none;
+    display: block;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.dropdown-menu.show {
     min-width: fit-content !important;
     width: auto !important;
+    font-size: 14px;
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+a.dropdown-item {
+    padding: 4px 12px;
 }
 
 /* Logo Mobile */
@@ -76,11 +113,6 @@ header {
 }
 
 /* Language selector */
-#languageDropdown {
-    padding: 5px !important;
-    margin: 0 6px !important;
-}
-
 .flag-icon {
     height: 1rem;
     object-fit: cover;
@@ -113,6 +145,7 @@ footer i {
         font-weight: 600;
     }
 
+
     #logo-mobile {
         height: 5rem;
     }
@@ -139,6 +172,10 @@ footer i {
         margin-right: 15px !important;
     }
 
+    nav.navbar {
+        padding: 8 16 8 16px;
+    }
+
     .navbar .nav-link {
         padding: 10px 15px !important;
     }
@@ -157,12 +194,5 @@ footer i {
 
     .flag-icon {
         height: 1.5rem;
-    }
-}
-
-/* Media Queries for screens from 1200px */
-@media (min-width: 1200px) {
-    #logo-desktop {
-        height: 7rem;
     }
 }
