@@ -59,7 +59,6 @@ nav.navbar {
 .navbar-nav .nav-item .nav-link.dropdown-toggle.active {
     background-color: #f8f9fa !important;
     color: #333 !important;
-    border-radius: 5px;
 }
 
 .navbar .dropdown-toggle {
@@ -82,14 +81,30 @@ nav.navbar {
     width: 100%;
     background-color: #7c7575 !important;
     z-index: 1000;
+    height: fit-content;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+.navbar-collapse.show {
+    overflow: visible;
 }
 
 /* Dropdown Menu Styles */
+.navbar-nav .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: 0;
+    margin-left: 5rem;
+    background-color: #ddd !important;
+    padding: 0.5rem;
+    text-align: left;
+}
+
 .dropdown-menu {
     display: flex;
     background-color: #ddd!important;
     border: none;
-    display: block;
     opacity: 0;
     transform: translateY(-10px);
     visibility: hidden;
