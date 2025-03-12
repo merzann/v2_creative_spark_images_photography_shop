@@ -55,6 +55,16 @@ header {
     height: 7rem;
 }
 
+/* Language selector flag icons */
+.flag-icon {
+    height: 1.5rem;
+    object-fit: cover;
+}
+
+.navbar .dropdown-menu {
+    min-width: 150px;
+}
+
 /* footer */
 footer {
     background-color: #333;
@@ -72,8 +82,8 @@ footer i {
 } 
 
 /* Media Queries */
-@media (max-width: 991px) {
-    #logo-desktop {
-        height: 7rem;
+@media (max-width: 576px) {
+    #logo-mobile {
+        height: 5rem;
     }
 }

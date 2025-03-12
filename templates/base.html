@@ -79,15 +79,15 @@
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <span class="d-lg-none ms-2">MENU</span> <!-- Visible only on mobile -->
+                    <span class="d-lg-none ms-2">MENU</span>
                 </div>
     
                 <!-- Center Section: Logo -->
-                <a class="navbar-brand mx-auto" href="#">
+                <a class="navbar-brand mx-auto" href="{% url 'home' %}">
                     <img id="logo-mobile" src="{% static 'images/creative_spark_photography_shop_no-bg.png' %}" class="d-block d-lg-none"
-                        alt="logo of website owner, an Art Deco Portrait of a female photographer">
+                        alt="logo with shop name creative sprak images and an Art Deco Portrait of a female photographer">
                     <img id="logo-desktop" src="{% static 'images/creative_spark_photography_logo_lg.png' %}" class="d-none d-lg-block"
-                        alt="logo of website owner, an Art Deco Portrait of a female photographer">
+                        alt="logo containing shop name creative spark images photography shop">
                 </a>
     
                 <!-- Right Section: My Account & Cart -->
@@ -95,7 +95,7 @@
                     <!-- My Account Dropdown -->
                     <div class="dropdown me-3">
                         <a class="nav-link dropdown-toggle" id="accountDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa-regular fa-user"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
@@ -104,7 +104,7 @@
                                 <li><a href="" class="dropdown-item">My Order History</a></li>
                                 <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
                             {% else %}
-                                <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
+                                <li><a href="{% url 'account_signup' %}" class="dropdown-item">Create an account</a></li>
                                 <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
                             {% endif %}
                         </ul>
@@ -114,29 +114,48 @@
                     <a class="nav-link" href="#">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </a>
-                </div>
-    
-            </div>
-    
-            <!-- Collapsible Navigation (Home & Gallery) -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item order-lg-1">
-                        <a class="nav-link {% if request.path == home_url %}active{% endif %}" href="">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Gallery
+
+                    <!-- Language Selector Dropdown -->
+                    <div class="dropdown me-3">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" id="languageDropdown" role="button"
+                            data-bs-toggle="dropdown"aria-haspopup="true" aria-expanded="false">
+                            <img src="{% static 'images/flags/uk-flag.png' %}" alt="English" class="flag-icon me-2"></a>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="galleryDropdown">
-                            {% for category in categories %}
-                            <li><a class="dropdown-item" href="">{{ category.name }}</a></li>
-                            {% endfor %}
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="">
+                                    <img src="{% static 'images/flags/de-flag.png' %}" alt="Deutsch" class="flag-icon me-2"></a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="">
+                                    <img src="{% static 'images/flags/fr-flag.png' %}" alt="Français" class="flag-icon me-2"></a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="">
+                                    <img src="{% static 'images/flags/es-flag.png' %}" alt="Español" class="flag-icon me-2"></a>
+                            </li>
                         </ul>
-                    </li>
-                </ul>
+                    </div>
+
+                    <!-- Collapsible Navigation (Gallery) -->
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Gallery
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="galleryDropdown">
+                                    {% for category in categories %}
+                                    <li><a class="dropdown-item" href="">{{ category.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+    
         </nav>
     </header>
     
