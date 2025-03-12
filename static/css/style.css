@@ -1,7 +1,7 @@
 /* General styles */
 html,
 body {
-    font-family: "Inter", sans-serif;
+    font-family: "Montserrat", sans-serif;
     height: 100vh;
     margin: 0;
     padding: 0;
@@ -9,7 +9,7 @@ body {
 
 h1,
 h2, h3 {
-    font-family: "Indie Flower", cursive;
+    font-family: "Poiret", cursive;
     margin-top: 5rem;
     margin-bottom: 3rem;
 }
@@ -18,52 +18,75 @@ h2, h3 {
     color:#333 !important;
 }
 
+/* Header Background */
 header {
     height: 10vh;
-    background-color: #333;
     color: #ddd;
     padding: 20px 10px;
 }
 
-/* Header Background */
+/* Navbar */
+.menu-text {
+    display: none;
+}
+
 .navbar {
-    background-color: #333 !important;
+    background-color: #7c7575 !important;
     color: #ddd !important;
 }
 
-/* Navbar Font Colors */
+.navbar .nav-link {
+    padding: 5px 8px !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar .nav-link i {
+    margin-right: 4px !important;
+}
+
 .navbar-nav .nav-link, .dropdown-menu a {
-    color: rgb(203, 177, 152) !important;
+    color: #333  !important;
+}
+
+.navbar .dropdown-toggle {
+    color: #ddd !important;
 }
 
 .navbar-nav .nav-link:hover, .dropdown-menu a:hover {
     color: rgb(85, 63, 70) !important;
 }
 
-/* Dropdown Menu Background */
+/* Dropdown Menu Styles */
 .dropdown-menu {
-    background-color: rgba(51, 51, 51, 0.9) !important;
-}
-
-/* Font Awesome icons */
-.fa-user, .fa-cart-shopping {
-    font-size: 1.2rem;
+    background-color: #7c7575 !important;
+    min-width: fit-content !important;
+    width: auto !important;
 }
 
 /* Logo Mobile */
 #logo-mobile {
-    height: 7rem;
+    height: 3rem;
 }
 
-/* Language selector flag icons */
+/* Font Awesome icons */
+.fa-user, .fa-cart-shopping {
+    color: #ddd !important;
+    font-size: 1rem;
+}
+
+/* Language selector */
+#languageDropdown {
+    padding: 5px !important;
+    margin: 0 6px !important;
+}
+
 .flag-icon {
-    height: 1.5rem;
+    height: 1rem;
     object-fit: cover;
+    margin-right: 4px !important;
 }
 
-.navbar .dropdown-menu {
-    min-width: 150px;
-}
 
 /* footer */
 footer {
@@ -81,9 +104,65 @@ footer i {
     color: #fff;
 } 
 
-/* Media Queries */
-@media (max-width: 576px) {
+/* Media Queries for screens from 576px */
+@media (min-width: 576px) {
+
+    .menu-text {
+        display: inline !important;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
     #logo-mobile {
         height: 5rem;
+    }
+
+    .fa-user, .fa-cart-shopping {
+        font-size: 1.5rem;
+    }
+
+    .flag-icon {
+        height: 1.5rem;
+        object-fit: cover;
+        margin-right: 4px !important;
+    }
+}
+
+/* Media Queries for screens from 992px */
+@media (min-width: 992px) {
+    #logo-desktop {
+        height: 5rem;
+    }
+
+    .fa-user, .fa-cart-shopping {
+        font-size: 1.5rem;
+        margin-right: 15px !important;
+    }
+
+    .navbar .nav-link {
+        padding: 10px 15px !important;
+    }
+
+    .navbar .nav-link i {
+        margin-right: 8px !important;
+    }
+
+    #languageDropdown {
+        padding: 10px !important;
+    }
+
+    .fa-user, .fa-cart-shopping {
+        font-size: 1.5rem;
+    }
+
+    .flag-icon {
+        height: 1.5rem;
+    }
+}
+
+/* Media Queries for screens from 1200px */
+@media (min-width: 1200px) {
+    #logo-desktop {
+        height: 7rem;
     }
 }
