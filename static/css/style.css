@@ -27,7 +27,9 @@ header {
 
 /* Navbar */
 .menu-text {
+    color: #ddd !important;
     display: none;
+    padding: 2px;
 }
 
 nav.navbar {
@@ -74,6 +76,9 @@ nav.navbar {
     border: none;
 }
 
+.navbar-toggler-icon {
+    color: #ddd;
+}
 .navbar-collapse {
     position: absolute;
     top: 100%;
@@ -167,7 +172,8 @@ footer a i {
     font-size: 3rem;
 }
 
-/* Login Page */
+
+/* Login Page styles */
 .login-card {
     width: 100%;
     max-width: 400px;
