@@ -30,3 +30,24 @@ class UserProfileForm(forms.ModelForm):
             "default_street_address2",
             "default_county",
         ]
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        # Set initial email value if available
+        if user:
+            self.fields["email"] = forms.EmailField(
+                initial=user.email, required=True
+            )
+
+        # Apply placeholders and styles to all fields dynamically
+        for field_name, field in self.fields.items():
+            if field_name:
+                placeholder_text = field.label
+                if field.required:
+                    placeholder_text += " *"
+                field.widget.attrs["placeholder"] = placeholder_text
+                field.widget.attrs["class"] = (
+                    "border-black rounded-0 profile-form-input"
+                )
