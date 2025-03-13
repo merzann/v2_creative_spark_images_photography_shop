@@ -6,7 +6,17 @@ from .models import UserProfile
 class UserProfileForm(forms.ModelForm):
     """
     Form to allow users to update their profile.
+
     Related to :model:`UserProfile`.
+
+    **Meta Class:**
+    - ``model``: Specifies that this form is associated with the `UserProfile`
+      model.
+    - ``fields``: Defines which fields from the `UserProfile` model should be
+      included in the form.
+
+    **Template:**
+    :template:`user_profile/profile.html`
     """
     email = forms.EmailField(
         max_length=254,
@@ -47,6 +57,13 @@ class UserProfileForm(forms.ModelForm):
         Ensure email is unique and not already used by another user.
         """
         email = self.cleaned_data.get("email")
-        if User.objects.exclude(pk=self.instance.user.pk).filter(email=email).exists():
-            raise forms.ValidationError("This email address is already in use.")
+        if (
+            User.objects.exclude(pk=self.instance.user.pk)
+            .filter(email=email)
+            .exists()
+        ):
+            raise forms.ValidationError(
+                "This email address is already in use."
+            )
+
         return email

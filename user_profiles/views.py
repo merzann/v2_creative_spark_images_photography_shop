@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserProfileForm
-from django.contrib.auth.models import User
 
 
 @login_required
@@ -25,13 +24,18 @@ def profile(request):
     user_profile = request.user.userprofile
 
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile, user=request.user)
+        form = UserProfileForm(
+            request.POST, request.FILES, instance=user_profile,
+            user=request.user
+        )
         if form.is_valid():
             user = request.user
             user.email = form.cleaned_data["email"]
             user.save()
             form.save()
-            messages.success(request, "Your profile has been updated successfully!")
+            messages.success(
+                request, "Your profile has been updated successfully!"
+            )
             return redirect("profile")
         else:
             messages.error(request, "Please correct the errors below.")
