@@ -73,7 +73,7 @@ ACCOUNT_SIGNUP_REDIRECT_URL = "/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_LOGOUT_ON_GET = True  # Logs out immediately on click
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/success"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 
