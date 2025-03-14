@@ -1,22 +1,31 @@
-{% extends "account/base.html" %}
+{% extends "allauth/account/base.html" %}
 
 {% load i18n %}
 
 {% block head_title %}{% trans "Confirm Access" %}{% endblock head_title %}
 
 {% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card allauth-card">
+        <div class="card-body">
+            <h2 class="text-center">{% trans "Confirm Access" %}</h2>
+            <p class="text-center">{% blocktranslate %}To safeguard the security of your account, please enter your password:{% endblocktranslate %}</p>
 
-<h1>{% trans "Confirm Access" %}</h1>
+            <form class="allauth-form" method="POST" action="{% url 'account_reauthenticate' %}">
+                {% csrf_token %}
 
-<p>{% blocktranslate %}To safeguard the security of your account, please enter your password:{% endblocktranslate %}</p>
+                <div class="form-group">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
 
-<form class="reauthenticate" method="POST" action="{% url 'account_reauthenticate' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans "Confirm" %}</button>
-</form>
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
 
+                <button type="submit" class="allauth-btn">{% trans "Confirm" %}</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}

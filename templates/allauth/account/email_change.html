@@ -1,33 +1,44 @@
-{% extends "account/base.html" %}
+{% extends "allauth/account/base.html" %}
 {% load i18n %}
-{% block head_title %}
-    {% trans "Email Address" %}
-{% endblock head_title %}
+
+{% block head_title %}{% trans "Email Address" %}{% endblock head_title %}
+
 {% block content %}
-    <h1>{% trans "Email Address" %}</h1>
-    {% if emailaddresses %}
-        {% if current_emailaddress %}
-            <p>
-                {% trans 'The following email address is associated with your account:' %} <a href="mailto:{{ current_emailaddress.email }}">{{ current_emailaddress.email }}</a>
-            </p>
-        {% endif %}
-        {% if new_emailaddress %}
-            <p>
-                {% trans 'Your email address is still pending verification:' %} <a href="mailto:{{ new_emailaddress.email }}">{{ new_emailaddress.email }}</a>
-            </p>
-            <form method="post" action="{% url 'account_email' %}">
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card allauth-card">
+        <div class="card-body">
+            <h2 class="text-center">{% trans "Email Address" %}</h2>
+
+            {% if emailaddresses %}
+                {% if current_emailaddress %}
+                    <p class="text-center">
+                        {% trans 'The following email address is associated with your account:' %}
+                        <a href="mailto:{{ current_emailaddress.email }}">{{ current_emailaddress.email }}</a>
+                    </p>
+                {% endif %}
+
+                {% if new_emailaddress %}
+                    <p class="text-center">
+                        {% trans 'Your email address is still pending verification:' %}
+                        <a href="mailto:{{ new_emailaddress.email }}">{{ new_emailaddress.email }}</a>
+                    </p>
+                    <form method="post" action="{% url 'account_email' %}" class="allauth-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="email" value="{{ new_emailaddress.email }}">
+                        <button type="submit" name="action_send" class="allauth-btn">{% trans 'Re-send Verification' %}</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                {% include "allauth/account/snippets/warn_no_email.html" %}
+            {% endif %}
+
+            <h2 class="text-center">{% trans "Change Email Address" %}</h2>
+            <form method="post" action="{% url 'account_email' %}" class="allauth-form">
                 {% csrf_token %}
-                <input type="hidden" name="email" value="{{ new_emailaddress.email }}">
-                <button type="submit" name="action_send">{% trans 'Re-send Verification' %}</button>
+                {{ form.as_p }}
+                <button name="action_add" type="submit" class="allauth-btn">{% trans "Change Email" %}</button>
             </form>
-        {% endif %}
-    {% else %}
-        {% include "account/snippets/warn_no_email.html" %}
-    {% endif %}
-    <h2>{% trans "Change Email Address" %}</h2>
-    <form method="post" action="{% url 'account_email' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button name="action_add" type="submit">{% trans "Change Email" %}</button>
-    </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}
