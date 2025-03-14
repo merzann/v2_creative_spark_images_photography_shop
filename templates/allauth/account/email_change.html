@@ -36,7 +36,7 @@
             <form method="post" action="{% url 'account_email' %}" class="allauth-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button name="action_add" type="submit" class="allauth-btn">{% trans "Change Email" %}</button>
+                <button name="action_add" type="submit" class="btn btn-primary allauth-btn">{% trans "Change Email" %}</button>
             </form>
         </div>
     </div>
