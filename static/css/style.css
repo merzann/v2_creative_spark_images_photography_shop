@@ -22,8 +22,20 @@ h2, h3 {
 header {
     height: 10vh;
     color: #ddd;
-    padding: 20px 10px;
 }
+
+/* Messages */
+#message-container {
+    position: relative;
+    font-size: 14px;
+    width: 100%;
+    z-index: 1050;
+}
+
+main {
+    transition: margin-top 0.3s ease-in-out;
+}
+
 
 /* Navbar */
 .menu-text {
@@ -355,6 +367,12 @@ footer a i {
 }
 
 @media (min-width: 1200px) {
+
+    /* Messages */
+    #message-container {
+        margin-top: 60px;
+    }
+
     .card {
         max-width: 600px;
     }
