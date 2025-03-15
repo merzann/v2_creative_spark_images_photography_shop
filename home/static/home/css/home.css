@@ -1,0 +1,107 @@
+/* First Section - Ocean Background */
+#intro {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+
+.background-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Logo & Catchphrase */
+.logo img {
+    z-index: 999;
+}
+
+.catch-phrase {
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+/* Product Range */
+.product-range {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+/* Lower Content Section */
+.lower-content {
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10%;
+}
+
+/* Special Offer */
+.special-offer {
+    background: rgba(255, 255, 255, 0.8);
+    color: black;
+    padding: 20px;
+    border-radius: 8px;
+    width: 30%;
+}
+
+/* Road Signs */
+.road-signs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.road-signs img {
+    width: 250px;
+    cursor: pointer;
+}
+
+/* Hidden Sections */
+.hidden {
+    display: none;
+}
+
+/* Cottage Animation */
+#cottage-animation {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../images/cottage-animation.jpg') center/cover no-repeat;
+}
+
+/* About Section */
+.about-content {
+    display: flex;
+    align-items: center;
+    padding: 50px;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.about-text {
+    font-size: 1.2rem;
+    max-width: 600px;
+}
