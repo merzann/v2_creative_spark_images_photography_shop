@@ -1,8 +1,46 @@
 {% extends "base.html" %}
-
-{% block title %}Home - Creative Spark Images{% endblock %}
+{% load static %}
 
 {% block content %}
-    <h2>Welcome to the Shop</h2>
-    <p>Click <a href="{% url 'profile' %}">here</a> to visit your profile.</p>
+    <div id="homepage">
+        <!-- First Section -->
+        <section id="intro" class="homepage-section">
+            <video autoplay loop muted class="background-video">
+                <source src="{% static 'videos/ocean.mp4' %}" type="video/mp4">
+            </video>
+            <div class="overlay">
+                <h1 class="logo">Your Store Logo</h1>
+                <p class="catch-phrase">"Your Catchphrase Here"</p>
+                <div class="product-range">
+                    <span>Digital Downloads</span> - 
+                    <span>Printed Wall Art</span> - 
+                    <span>Gifts</span>
+                </div>
+                <div class="lower-content">
+                    <div class="special-offer">
+                        <h2>Special Offer</h2>
+                        <p>Get 20% off all digital downloads this week!</p>
+                    </div>
+                    <div class="road-signs">
+                        <img id="gallery-sign" src="{% static 'images/gallery-sign.png' %}" alt="This way to the gallery">
+                        <img id="about-sign" src="{% static 'images/about-sign.png' %}" alt="About Us">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Second Section (Hidden Initially) -->
+        <section id="cottage-animation" class="homepage-section hidden">
+            <div class="animated-background"></div>
+            <audio id="walking-sound" src="{% static 'audio/walking-on-gravel.mp3' %}"></audio>
+        </section>
+
+        <!-- About Section (Initially Hidden) -->
+        <section id="about-section" class="homepage-section hidden">
+            <div class="about-content">
+                <img src="{% static 'images/profile-pic.jpg' %}" alt="Your Picture" class="profile-pic">
+                <p class="about-text">This is the about text. You can edit this from the admin panel.</p>
+            </div>
+        </section>
+    </div>
 {% endblock %}
