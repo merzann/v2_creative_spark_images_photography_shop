@@ -141,7 +141,7 @@ a.dropdown-item {
     padding: 4px 12px;
 }
 
-/* Logo Mobile */
+/* Logo Styles */
 #logo-mobile {
     height: 3rem;
 }
@@ -186,7 +186,6 @@ footer a i {
 
 
 /* AllAuth forms */
-/* ALLAUTH FORM CONTAINER */
 .container.d-flex {
     min-height: 80vh;
     padding-top: 5rem;
