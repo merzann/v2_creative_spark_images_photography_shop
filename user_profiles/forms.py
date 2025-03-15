@@ -43,7 +43,7 @@ class UserProfileForm(forms.ModelForm):
 
         # Apply placeholders and styles to all fields dynamically
         for field_name, field in self.fields.items():
-            if field_name:
+            if field_name != "default_country":
                 placeholder_text = field.label
                 if field.required:
                     placeholder_text += " *"
