@@ -26,6 +26,7 @@ class UserProfile(models.Model):
         blank=True,
         null=True,
     )
+
     language_preference = models.CharField(
         max_length=10,
         choices=LANGUAGE_CHOICES,

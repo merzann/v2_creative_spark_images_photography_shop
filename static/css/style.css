@@ -273,6 +273,13 @@ a.dropdown-item {
     font-size: 0.9rem;
 }
 
+/* footer */
+footer {
+    color: #ddd;
+    text-align: center;
+    padding: 2rem;
+}
+
 footer a {
     color: #ddd;
     text-decoration: none;
@@ -350,18 +357,5 @@ footer a i {
 
     .flag-icon {
         height: 1.5rem;
-    }
-}
-
-/* Media Queries for large screens */
-@media (min-width: 1024px) {
-    .card {
-        max-width: 550px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .card {
-        max-width: 600px;
     }
 }

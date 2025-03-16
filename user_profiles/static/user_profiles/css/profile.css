@@ -133,3 +133,16 @@
         font-size: 0.85rem;
     }
 }
+
+@media (min-width: 1024px) {
+    .card {
+        max-width: 550px;
+    }
+}
+
+@media (min-width: 1200px) {
+    div.profile-card {
+        max-width: 50%;
+        margin-top: 3.75rem;
+    }
+}

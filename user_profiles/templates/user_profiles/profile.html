@@ -8,7 +8,7 @@
 {% block head_title %}My Profile{% endblock head_title %}
 
 {% block content %}
-<section class="profile-container">
+<section class="profile-container" aria-label="Manage your profile data and order history here">
     <div class="profile-card">
         <h2 class="profile-title">Welcome, {{ user.username }}!</h2>
         <p class="profile-subtitle">Manage your personal details and preferences below.</p>
@@ -16,9 +16,9 @@
         <!-- Profile Picture Section -->
         <div class="profile-picture-container">
             {% if user.userprofile.profile_picture %}
-                <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                <img src="{{ user.userprofile.profile_picture.url }}" aria-label="Profile Picture" class="profile-picture">
             {% else %}
-                <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Picture" class="profile-picture">
+                <img src="{% static 'user_profiles/images/image_placeholder.jpg' %}" aria-label="no image selected" class="profile-picture">
             {% endif %}
             <label for="id_profile_picture" class="upload-btn">Upload New Picture</label>
         </div>
