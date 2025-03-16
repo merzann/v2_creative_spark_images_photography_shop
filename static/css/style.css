@@ -24,19 +24,6 @@ header {
     color: #ddd;
 }
 
-/* Messages */
-#message-container {
-    position: relative;
-    font-size: 14px;
-    width: 100%;
-    z-index: 1050;
-}
-
-main {
-    transition: margin-top 0.3s ease-in-out;
-}
-
-
 /* Navbar */
 .menu-text {
     color: #ddd !important;
@@ -159,31 +146,22 @@ a.dropdown-item {
     margin-right: 4px !important;
 }
 
-
-/* footer */
-footer {
-    background-color: #333;
-    color: #ddd;
-    text-align: center;
-    padding: 2rem;
-    min-height: 100px; 
-    box-sizing: border-box;
+/* Messages */
+#message-container {
+    position: relative;
+    font-size: 13px;
+    margin-top: 3.5rem;
+    width: 100%;
+    z-index: 1050;
 }
 
-footer a {
-    color: #ddd;
-    text-decoration: none;
+#message-container .alert {
+    padding: 10px;
 }
 
-footer a i {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    margin:0 5px 30px;
-    font-size: 3rem;
+#message-container button.btn-close {
+    padding: 14px 12px 12px;
 }
-
 
 /* AllAuth forms */
 .container.d-flex {
@@ -295,6 +273,19 @@ footer a i {
     font-size: 0.9rem;
 }
 
+footer a {
+    color: #ddd;
+    text-decoration: none;
+}
+
+footer a i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin:0 5px 30px;
+    font-size: 1.5rem;
+}
 
 /* Media Queries for screens from 576px */
 @media (min-width: 576px) {
@@ -304,7 +295,6 @@ footer a i {
         font-size: 1rem;
         font-weight: 600;
     }
-
 
     #logo-mobile {
         height: 5rem;
@@ -320,6 +310,12 @@ footer a i {
         margin-right: 4px !important;
     }
 }
+
+/* Media Queries for screens from 768px */
+#message-container {
+    margin-top: 6rem;
+}
+
 
 /* Media Queries for screens from 992px */
 @media (min-width: 992px) {
@@ -357,8 +353,7 @@ footer a i {
     }
 }
 
-
-/* media queries for large screens */
+/* Media Queries for large screens */
 @media (min-width: 1024px) {
     .card {
         max-width: 550px;
@@ -366,12 +361,6 @@ footer a i {
 }
 
 @media (min-width: 1200px) {
-
-    /* Messages */
-    #message-container {
-        margin-top: 60px;
-    }
-
     .card {
         max-width: 600px;
     }
