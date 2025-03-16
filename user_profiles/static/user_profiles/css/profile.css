@@ -3,31 +3,60 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
+    min-height: 100vh;
     padding: 4rem 2rem;
 }
 
+/* Carousel */
+#profileCarousel {
+    width: 100%;
+    max-width: 57rem;
+    margin: auto;
+}
+
+.carousel-inner {
+    padding: 20px 0;
+}
+
+/* Carousel Controls */
+.carousel-control-prev, .carousel-control-next {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #550f0f;
+    border-radius: 50%;
+    padding: 10px;
+}
+
+/* Profile Cards */
 .profile-card {
-    background: white;
+    background: rgb(200, 193, 193);
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    width: 100%;
     text-align: center;
+    width: 100%;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+/* Profile Titles */
 .profile-title {
     font-family: "Poiret One", cursive;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.profile-subtitle {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 /* Profile Picture */
@@ -35,7 +64,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .profile-picture {
@@ -67,7 +96,7 @@
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .form-group label {
@@ -86,63 +115,15 @@
     border-radius: 5px;
 }
 
-.profile-form .form-group input,
-.profile-form .form-group select {
-    border-radius: 5px !important;
-    transition: all 0.3s ease-in-out;
-}
-
-.profile-form input:focus,
-.profile-form select:focus,
-.profile-form input:not(:placeholder-shown),
-.profile-form select:not(:placeholder-shown) {
-    background-color: #e9f0ff;
-    border-color: #4a90e2;
-    outline: none;
-}
-
-/* Save Button */
-.save-profile-btn {
-    background-color: #7c7575;
-    color: white;
-    padding: 10px;
-    width: 100%;
-    border-radius: 5px;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.save-profile-btn:hover {
-    background-color: #5a5252;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .profile-card {
-        width: 100%;
-        padding: 1.5rem;
-    }
-
-    .profile-title {
-        font-size: 1.8rem;
-    }
-
-    .form-group input, .form-group select {
-        font-size: 0.85rem;
+/* Responsive Adjustments */
+@media (min-width: 992px) {
+    .carousel-item {
+        justify-content: center;
     }
 }
 
 @media (min-width: 1024px) {
-    .card {
-        max-width: 550px;
-    }
-}
-
-@media (min-width: 1200px) {
-    div.profile-card {
-        max-width: 50%;
-        margin-top: 3.75rem;
+    .profile-container {
+        padding-top: 8rem;
     }
 }

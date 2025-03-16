@@ -5,67 +5,130 @@
 <link rel="stylesheet" href="{% static 'user_profiles/css/profile.css' %}">
 {% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'user_profiles/js/profile_script.js' %}" defer></script>
+{% endblock %}
+
 {% block head_title %}My Profile{% endblock head_title %}
 
 {% block content %}
 <section class="profile-container" aria-label="Manage your profile data and order history here">
-    <div class="profile-card">
-        <h2 class="profile-title">Welcome, {{ user.username }}!</h2>
-        <p class="profile-subtitle">Manage your personal details and preferences below.</p>
-        
-        <!-- Profile Picture Section -->
-        <div class="profile-picture-container">
-            {% if user.userprofile.profile_picture %}
-                <img src="{{ user.userprofile.profile_picture.url }}" aria-label="Profile Picture" class="profile-picture">
-            {% else %}
-                <img src="{% static 'user_profiles/images/image_placeholder.jpg' %}" aria-label="no image selected" class="profile-picture">
-            {% endif %}
-            <label for="id_profile_picture" class="upload-btn">Upload New Picture</label>
+    <div class="container">
+
+        <!-- Profile Carousel -->
+        <div id="profileCarousel" class="carousel slide">
+            
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="2"></button>
+            </div>
+
+            <div class="carousel-inner">
+                <!-- User Contact Details -->
+                <div class="carousel-item active">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-12 col-lg-6">
+                            <div class="profile-card user_contact_details">
+                                <h2 class="profile-title">My Contact Details</h2>
+
+                                <!-- Profile Picture Section -->
+                                <div class="profile-picture-container">
+                                    {% if user.userprofile.profile_picture %}
+                                        <img src="{{ user.userprofile.profile_picture.url }}" aria-label="Profile Picture" class="profile-picture">
+                                    {% else %}
+                                        <img src="{% static 'user_profiles/images/image_placeholder.jpg' %}" aria-label="No image selected" class="profile-picture">
+                                    {% endif %}
+                                    <label for="id_profile_picture" class="upload-btn">Upload New Picture</label>
+                                </div>
+
+                                <form method="POST" enctype="multipart/form-data" class="profile-form">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="id_email">Email Address:</label>
+                                        <input type="email" name="email" id="id_email" value="{{ user.email }}" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_language_preference">Language Preference:</label>
+                                        {{ form.language_preference }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_default_phone_number">Phone Number:</label>
+                                        {{ form.default_phone_number }}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Address Details -->
+                <div class="carousel-item">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-12 col-lg-6">
+                            <div class="profile-card user_address_details">
+                                <h2 class="profile-title">My Address Details</h2>
+
+                                <form method="POST" enctype="multipart/form-data" class="profile-form">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="id_default_country">Country:</label>
+                                        {{ form.default_country }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_default_postcode">Postcode:</label>
+                                        {{ form.default_postcode }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_default_town_or_city">Town / City:</label>
+                                        {{ form.default_town_or_city }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_default_street_address1">Street Address 1:</label>
+                                        {{ form.default_street_address1 }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_default_street_address2">Street Address 2:</label>
+                                        {{ form.default_street_address2 }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="id_default_county">County:</label>
+                                        {{ form.default_county }}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order History -->
+                <div class="carousel-item">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-12 col-lg-6">
+                            <div class="profile-card user_order_history">
+                                <h2 class="profile-title">My Order History</h2>
+                                <p class="profile-subtitle">Your past orders will be displayed here.</p>
+                                <div class="order-history-content">
+                                    <p class="text-muted">You have no past orders yet.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#profileCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#profileCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+
         </div>
-
-        <!-- Profile Form -->
-        <form method="POST" enctype="multipart/form-data" class="profile-form">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_email">Email Address:</label>
-                <input type="email" name="email" id="id_email" value="{{ user.email }}" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="id_language_preference">Language Preference:</label>
-                {{ form.language_preference }}
-            </div>
-            <div class="form-group">
-                <label for="id_default_phone_number">Phone Number:</label>
-                {{ form.default_phone_number }}
-            </div>
-            <div class="form-group">
-                <label for="id_default_country">Country:</label>
-                {{ form.default_country }}
-            </div>
-            <div class="form-group">
-                <label for="id_default_postcode">Postcode:</label>
-                {{ form.default_postcode }}
-            </div>
-            <div class="form-group">
-                <label for="id_default_town_or_city">Town / City:</label>
-                {{ form.default_town_or_city }}
-            </div>
-            <div class="form-group">
-                <label for="id_default_street_address1">Street Address 1:</label>
-                {{ form.default_street_address1 }}
-            </div>
-            <div class="form-group">
-                <label for="id_default_street_address2">Street Address 2:</label>
-                {{ form.default_street_address2 }}
-            </div>
-            <div class="form-group">
-                <label for="id_default_county">County:</label>
-                {{ form.default_county }}
-            </div>
-
-            <!-- Save Button -->
-            <button type="submit" class="btn btn-primary save-profile-btn">Save Changes</button>
-        </form>
     </div>
 </section>
 {% endblock %}
