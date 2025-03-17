@@ -30,14 +30,26 @@
                     <span>Gifts</span>
                 </div>
                 <div class="lower-content">
-                    <div class="special-offer">
-                        <h2>Special Offer</h2>
-                        <p>Get 20% off all digital downloads this week!</p>
-                    </div>
-                    <div class="road-signs">
+
+                    <!-- Digital Sign Section -->
+                    <article class="digital-sign" aria-label="image of information board with special offer and timer">
+                        <h2 class="mb-0"><strong>Special Offer</strong></h2>
+                        <img src="{% static 'home/images/advertising-board.png' %}" alt="Information Board" class="info-board">
+                        <div class="sign-content">
+                            <div class="sign-upper">
+                                <p>{{ special_offer.text }}</p>
+                            </div>
+                            <div class="sign-lower">
+                                <h2 id="countdown-timer"></h2>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Road sign page navigation -->
+                    <article class="road-signs">
                         <img id="gallery-sign" src="{% static 'home/images/gallery_sign.png' %}" alt="This way to the gallery">
                         <img id="about-sign" src="{% static 'home/images/about_sign.png' %}" alt="About Us">
-                    </div>
+                    </article>
                 </div>
             </div>
         </section>
@@ -51,7 +63,7 @@
         <!-- About Section (Initially Hidden) -->
         <section id="about-section" class="homepage-section hidden">
             <div class="about-content">
-                <img src="{% static 'images/profile-pic.jpg' %}" alt="Your Picture" class="profile-pic">
+                <img src="{% static 'home/images/profile-pic.jpg' %}" alt="Your Picture" class="profile-pic">
                 <p class="about-text">This is the about text. You can edit this from the admin panel.</p>
             </div>
         </section>

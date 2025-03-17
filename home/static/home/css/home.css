@@ -47,17 +47,47 @@ video.background-video {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0 10%;
+    padding: 0 10% 0 0;
 }
 
-/* Special Offer */
-.special-offer {
-    background: rgba(255, 255, 255, 0.8);
-    color: black;
-    padding: 20px;
-    border-radius: 8px;
-    width: 30%;
+/* Digital Sign Styling */
+.digital-sign {
+    position: relative;
+    width: 500px;
+    margin: 0 2rem;
 }
+
+img.info-board {
+    height: 250px;
+    width: 100%;
+    display: block;
+}
+
+.sign-content {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    width: 80%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: black;
+}
+
+.sign-upper h2 {
+    font-size: 1.8rem;
+}
+
+.sign-upper p {
+    font-size: 1.2rem;
+}
+
+.sign-lower h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 10px;
+    color: red; /* Standout color for countdown */
+}
+
 
 /* Road Signs */
 .road-signs {
@@ -68,7 +98,7 @@ video.background-video {
 }
 
 .road-signs img {
-    width: 200px;
+    width: 100px;
     cursor: pointer;
 }
 
@@ -106,6 +136,12 @@ video.background-video {
 
 
 /* Responsive Adjustments */
+@media (min-width: 768px) {
+
+    .road-signs img {
+        width: 200px;
+    }
+}
 
 @media (min-width: 992px) {
 
