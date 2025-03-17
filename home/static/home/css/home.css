@@ -20,7 +20,7 @@ video.background-video {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    color: #ce4d4d;
+    color: #aca4a4;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -85,9 +85,12 @@ img.info-board {
     font-size: 1.5rem;
     font-weight: bold;
     margin-top: 10px;
-    color: red; /* Standout color for countdown */
+    color: red;
 }
 
+h2#countdown-timer {
+    margin-top: 25rem;
+}
 
 /* Road Signs */
 .road-signs {
@@ -137,6 +140,10 @@ img.info-board {
 
 /* Responsive Adjustments */
 @media (min-width: 768px) {
+
+    h2#countdown-timer {
+        margin-top: 30rem;
+    }
 
     .road-signs img {
         width: 200px;
