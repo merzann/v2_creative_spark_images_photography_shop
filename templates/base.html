@@ -185,18 +185,6 @@
         {% endblock content %}
 
     </main>
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-        <li>
-            <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous Page">&laquo; PREV</a>
-        </li>
-        {% endif %}
-        {% if page_obj.has_next %}
-        <li>
-            <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next Page">NEXT &raquo;</a>
-        </li>
-        {% endif %}
-    </ul>
 
     <!-- Footer -->
     <footer class="footer mt-auto py-4 bg-dark">

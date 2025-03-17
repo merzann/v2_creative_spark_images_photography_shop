@@ -9,13 +9,13 @@ video.background-video {
     position: absolute;
     width: 100%;
     height: 100%;
-    margin-top: 3.75rem;
+    margin-top: 0.5rem;
     object-fit: cover;
 }
 
 .overlay {
     position: absolute;
-    top: 0;
+    margin-top: 0.5rem;
     left: 0;
     width: 100%;
     height: 100%;
@@ -30,7 +30,7 @@ video.background-video {
 
 /* Logo & Catchphrase */
 .catch-phrase {
-    font-size: 2.5rem;
+    font-size: 2.0rem;
     margin-top: 10px;
 }
 
@@ -63,11 +63,12 @@ video.background-video {
 .road-signs {
     display: flex;
     flex-direction: column;
+    margin-top: auto;
     gap: 20px;
 }
 
 .road-signs img {
-    width: 250px;
+    width: 200px;
     cursor: pointer;
 }
 
@@ -101,4 +102,25 @@ video.background-video {
 .about-text {
     font-size: 1.2rem;
     max-width: 600px;
+}
+
+
+/* Responsive Adjustments */
+
+@media (min-width: 992px) {
+
+    .catch-phrase {
+        font-size: 3.0rem;
+    }
+}
+
+@media (min-width: 1200px) {
+
+    video.background-video {
+        margin-top: 1.5rem;
+    }
+    
+    .overlay {
+        margin-top: 1.5rem;
+    }
 }

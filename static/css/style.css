@@ -318,13 +318,12 @@ footer a i {
     }
 }
 
-/* Media Queries for screens from 768px */
+/* Responsive Adjustments */
 #message-container {
     margin-top: 6rem;
 }
 
 
-/* Media Queries for screens from 992px */
 @media (min-width: 992px) {
     #logo-desktop {
         height: 5rem;
