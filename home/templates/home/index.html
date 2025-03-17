@@ -9,15 +9,19 @@
     <div id="homepage">
         <!-- First Section -->
         <section id="intro" class="homepage-section">
-            <video autoplay loop muted class="background-video">
-                <source src="{% static 'videos/ocean.mp4' %}" type="video/mp4">
+            <video autoplay loop muted class="background-video d-block d-lg-none">
+                <source src="{% static 'home/videos/lickeen_forest_loop_walk_mobile.mp4' %}" type="video/mp4">
             </video>
+            
+            <video autoplay loop muted class="background-video d-none d-lg-block">
+                <source src="{% static 'home/videos/waterville_boardwalk_gallery_directions_desktop.mp4' %}" type="video/mp4">
+            </video>            
             <div class="overlay">
-                <h1 class="logo">
-                    <img id="logo-mobile" src="{% static 'images/logo/creative_spark_images_photography_shop_logo.png' %}" class="d-block d-lg-none"
-                            alt="logo with shop name creative sprak images and an Art Deco Portrait of a female photographer">
-                </h1>
-                <p class="catch-phrase">"Your Catchphrase Here"</p>
+                <h1 class="catch-phrase"><strong>Nature and Wildlife Photography
+                    <br>
+                    Landmarks and Historical Sites
+                    <br>
+                    Experimental photography</strong></h1>
                 <div class="product-range">
                     <span>Digital Downloads</span> - 
                     <span>Printed Wall Art</span> - 
