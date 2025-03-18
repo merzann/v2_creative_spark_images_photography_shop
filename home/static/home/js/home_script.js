@@ -48,30 +48,37 @@ document.addEventListener("DOMContentLoaded", function () {
      *
      * @param {number} expirationTime - The expiration timestamp in milliseconds (UTC time).
      */
-    function startCountdown(expirationTime) {
+    function startCountdown() {
         let countdownElement = document.getElementById("countdown-timer");
-
-        /**
-         * Updates the countdown timer by calculating the remaining time
-         * and updating the DOM element accordingly.
-         */
+    
+        // Retrieve expiration date from the HTML element
+        let expirationDateString = countdownElement.getAttribute("data-expiry");
+    
+        // Ensure the expiration date exists
+        if (!expirationDateString) {
+            countdownElement.innerHTML = "Offer Expired";
+            return;
+        }
+    
+        let expirationTime = new Date(expirationDateString).getTime();
+    
         function updateCountdown() {
             let now = new Date().getTime();
             let timeRemaining = expirationTime - now;
-
+    
             if (timeRemaining <= 0) {
                 countdownElement.innerHTML = "Offer Expired";
                 return;
             }
-
+    
             let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
             let hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             let minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
+    
             countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         }
-
+    
         // Initialize and update the countdown every second
         updateCountdown();
         setInterval(updateCountdown, 1000);

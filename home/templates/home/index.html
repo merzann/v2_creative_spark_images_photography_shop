@@ -49,7 +49,7 @@
                                     <p>{{ special_offer.text }}</p>
                                 </div>
                                 <div class="sign-lower">
-                                    <h2 id="countdown-timer"></h2>
+                                    <h2 id="countdown-timer" data-expiry="{{ special_offer.expiry_date|date:'c' }}"></h2>
                                 </div>
                             </div>
                         </article>
