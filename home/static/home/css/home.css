@@ -95,13 +95,12 @@ img.info-board {
     flex: 1;
 }
 
-.sign-lower h2 {
+.sign-lower p {
     font-size: clamp(1rem, 2.5vw, 2rem);
     width: 100% !important;
     font-weight: bold;
 }
-
-h2#countdown-timer {
+p#countdown-timer {
     margin-top: 5.5rem;
     margin-left: -15px !important;
 }
@@ -170,12 +169,11 @@ h2#countdown-timer {
         font-size: clamp(1rem, 2.5vw, 1.5rem);
     }
     
-    .sign-lower h2 {
+    .sign-lower p {
         font-size: 1.2rem;
-        font-weight: bold;
     }
     
-    h2#countdown-timer {
+   p#countdown-timer {
         margin-top: 8rem;
         margin-left: -1.6rem !important;
         font-size: clamp(1.2rem, 3vw, 2.2rem);

@@ -46,10 +46,10 @@
                             <img src="{% static 'home/images/advertising-board.png' %}" alt="Information Board" class="info-board">
                             <div class="sign-content">
                                 <div class="sign-upper">
-                                    <p>{{ special_offer.text }}</p>
+                                    <p>{{ special_offer.text|safe }}</p>
                                 </div>
                                 <div class="sign-lower">
-                                    <h2 id="countdown-timer" data-expiry="{{ special_offer.expiry_date|date:'c' }}"></h2>
+                                    <p id="countdown-timer" data-expiry="{{ special_offer.expiry_date|date:'c' }}"></p>
                                 </div>
                             </div>
                         </article>

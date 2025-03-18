@@ -1,15 +1,18 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 from .models import SpecialOffer
 
 
 @admin.register(SpecialOffer)
-class SpecialOfferAdmin(admin.ModelAdmin):
+class SpecialOfferAdmin(SummernoteModelAdmin):
     """
-    Admin interface configuration for the :model:`SpecialOffer` model.
+    Admin configuration for the `SpecialOffer` model.
 
-    Attributes:
-        list_display (tuple): Fields to display in the admin list view.
-        ordering (tuple): Specifies the default ordering of offers.
+    **Features:**
+    - Displays relevant offer details (`text`, `expiry_date`).
+    - Orders offers by `expiry_date` in descending order.
     """
+    summernote_fields = ('text',)
+
     list_display = ('text', 'expiry_date')
     ordering = ('-expiry_date',)

@@ -7,11 +7,11 @@ class SpecialOffer(models.Model):
     expiry date.
 
     Attributes:
-        text (CharField): The promotional message of the special offer.
+        text (TextField): The promotional message of the special offer.
         expiry_date (DateTimeField): The date and time when the
             offer expires.
     """
-    text = models.CharField(max_length=255)
+    text = models.TextField(max_length=255)
     expiry_date = models.DateTimeField()
 
     def __str__(self):
