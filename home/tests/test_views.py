@@ -44,4 +44,4 @@ class SpecialOfferViewTest(TestCase):
         """
         response = self.client.get(reverse('shop'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "shop.html")
+        self.assertTemplateUsed(response, "shop/shop.html")
