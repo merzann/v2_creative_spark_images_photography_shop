@@ -20,6 +20,7 @@
             <video autoplay loop muted class="background-video d-none d-md-block">
                 <source src="{% static 'home/videos/waterville_boardwalk_gallery_directions_desktop.mp4' %}" type="video/mp4">
             </video>            
+
             <div class="overlay">
                 <h1 class="catch-phrase"><strong>Nature and Wildlife Photography
                     <br>
@@ -33,27 +34,33 @@
                     <span>Printed Wall Art</span> - 
                     <span>Gifts</span>
                 </div>
-                <div class="lower-content">
+            </div>
 
-                    <!-- Digital Sign Section -->
-                    <article class="digital-sign" aria-label="image of information board with special offer and timer">
-                        <h2 class="mb-0"><strong>Special Offer</strong></h2>
-                        <img src="{% static 'home/images/advertising-board.png' %}" alt="Information Board" class="info-board">
-                        <div class="sign-content">
-                            <div class="sign-upper">
-                                <p>{{ special_offer.text }}</p>
+            <!-- Lower Content with Bootstrap Grid -->
+            <div class="container-fluid lower-content">
+                <div class="row align-items-end">
+                    <!-- Digital Sign on Left -->
+                    <div class="col-12 col-md-6 text-center">
+                        <article class="digital-sign" aria-label="Information board with special offer and timer">
+                            <img src="{% static 'home/images/advertising-board.png' %}" alt="Information Board" class="info-board">
+                            <div class="sign-content">
+                                <div class="sign-upper">
+                                    <p>{{ special_offer.text }}</p>
+                                </div>
+                                <div class="sign-lower">
+                                    <h2 id="countdown-timer"></h2>
+                                </div>
                             </div>
-                            <div class="sign-lower">
-                                <h2 id="countdown-timer"></h2>
-                            </div>
-                        </div>
-                    </article>
+                        </article>
+                    </div>
 
-                    <!-- Road sign page navigation -->
-                    <article class="road-signs">
-                        <img id="gallery-sign" src="{% static 'home/images/gallery_sign.png' %}" alt="This way to the gallery">
-                        <img id="about-sign" src="{% static 'home/images/about_sign.png' %}" alt="About Us">
-                    </article>
+                    <!-- Road Signs on Right -->
+                    <div class="col-12 col-md-6 text-center">
+                        <article class="road-signs">
+                            <img id="gallery-sign" src="{% static 'home/images/gallery_sign.png' %}" alt="This way to the gallery">
+                            <img id="about-sign" src="{% static 'home/images/about_sign.png' %}" alt="About Us">
+                        </article>
+                    </div>
                 </div>
             </div>
         </section>
