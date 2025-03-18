@@ -47,7 +47,7 @@ video.background-video {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0 10% 0 0;
+    padding: 0;
 }
 
 /* Digital Sign Styling */
@@ -61,34 +61,49 @@ video.background-video {
 img.info-board {
     position: relative;
     height: 10rem;
-    display: inline-block;
-    bottom: 0;
+    display: block;
 }
 
 .sign-content {
     position: absolute;
     top: 20%;
-    left: 18%;
-    width: 80%;
+    left: 65%;
+    width: calc(100% - 74px);
+    transform: translateX(-50%);
     text-align: center;
     color: red;
 }
 
-.sign-upper p {
+.sign-upper {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    width: 75%;
-    font-size: 1.5rem;
+    flex: 1;
+}
+
+.sign-upper p {
+    width: 80%;
+    font-size: clamp(1rem, 2.5vw, 2rem);
     font-weight: bold;
+    line-height: 1.2;
+}
+
+.sign-lower {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .sign-lower h2 {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vw, 2rem);
+    width: 100% !important;
     font-weight: bold;
 }
 
 h2#countdown-timer {
-    margin-top: 2.5rem;
+    margin-top: 5.5rem;
+    margin-left: -15px !important;
 }
 
 /* Road Signs */
@@ -144,16 +159,15 @@ h2#countdown-timer {
 
     img.info-board {
         height: 15rem;
-        width: fit-content;
     }
 
     .sign-content {
-        top: 20%;
+        left: 57%;
         width: 80%;
     }
     
     .sign-upper p {
-        font-size: 1.5rem;
+        font-size: clamp(1rem, 2.5vw, 1.5rem);
     }
     
     .sign-lower h2 {
@@ -162,7 +176,9 @@ h2#countdown-timer {
     }
     
     h2#countdown-timer {
-        margin-top: 2.5rem;
+        margin-top: 8rem;
+        margin-left: -1.6rem !important;
+        font-size: clamp(1.2rem, 3vw, 2.2rem);
     }
 
     .road-signs img {
@@ -170,20 +186,42 @@ h2#countdown-timer {
     }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 912px) {
 
     .catch-phrase {
         font-size: 3.0rem;
     }
 
-    img.info-board {
-        display: block;
-        margin-left: 1.5rem;
+    .sign-content {
+        left: 53%;
+        width: 80%;
     }
 
-    .sign-content {
-        top: 20%;
-        left: 10%;
-        width: 80%;
+    h2#countdown-timer {
+        margin-top: 7.5rem;
+        margin-left: -2.8rem !important;
+        width: 100%;
+    }
+
+    .road-signs {
+        bottom: 50px;
+        right: 50px;
+    }
+}
+
+@media (min-width: 1200px) {
+
+    img.info-board {
+        height: 18rem;
+    }
+
+    h2#countdown-timer {
+        margin-top: 9.5rem;
+        margin-left: -3.4rem !important;
+    }
+
+    .road-signs {
+        bottom: 50px;
+        right: 50px;
     }
 }
