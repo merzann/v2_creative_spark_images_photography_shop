@@ -3,6 +3,17 @@ from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
 
+class Tag(models.Model):
+    """
+    Represents a tag for categorizing products.
+    """
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True)
+
+    def __str__(self):
+        return self.name
+    
+
 class Product(models.Model):
     """
     Unified model for both digital and printed products.
@@ -29,7 +40,7 @@ class Product(models.Model):
 
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField()
-    theme = models.CharField(max_length=100)  # Hidden from users, Admin Only
+    theme = models.CharField(max_length=100)  # Admin Only
     tags = models.ManyToManyField("Tag", blank=True)  # Admin Only
     product_type = models.CharField(
         max_length=10, choices=PRODUCT_TYPE_CHOICES

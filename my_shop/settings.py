@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "cloudinary_storage",
     "django.contrib.sites",
+
+    # Third party apps
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -55,7 +57,10 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "django_summernote",
     "cloudinary",
+
+    # Custom apps
     "home",
+    "products",
     "shop",
     "user_profiles",
 ]

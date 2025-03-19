@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import random
 from cloudinary.models import CloudinaryField
+from products.models import Product
 
 
 class ImageTheme(models.Model):
@@ -14,22 +15,11 @@ class ImageTheme(models.Model):
     """
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField()
-    image = models.ImageField(upload_to='themes/', blank=True, null=True)
+    image = CloudinaryField("image", folder='themes/', null=True, blank=True)
     slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.title
-
-
-class Tag(models.Model):
-    """
-    Represents a tag for categorizing products.
-    """
-    name = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(unique=True)
-
-    def __str__(self):
-        return self.name
 
 
 def generate_unique_order_number():
@@ -73,7 +63,7 @@ class OrderModel(models.Model):
     )
 
     products = models.ManyToManyField(
-        "Product",
+        "products.Product",
         blank=True,
         related_name="orders",
     )

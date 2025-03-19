@@ -1,19 +1,18 @@
 from django.contrib import admin
-from .models import DigitalProduct, PrintedProduct, OrderModel
-
-admin.site.register(DigitalProduct)
-admin.site.register(PrintedProduct)
+from .models import OrderModel
 
 
-class OrderModelAdmin(admin.ModelAdmin):
-    """Customizes OrderModel name in Admin Panel"""
-    class Media:
+@admin.register(OrderModel)
+class OrderAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for managing orders.
+    """
+    class Meta:
+
         css = {
             "all": ("css/admin_custom.css",)
         }
 
-    model = OrderModel
-    verbose_name_plural = "Order History"
-
-
-admin.site.register(OrderModel, OrderModelAdmin)
+    list_display = ("order_number", "user", "status", "total_price")
+    search_fields = ("order_number", "user__username")
+    list_filter = ("status", "created_at")
