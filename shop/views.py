@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import ImageTheme, Product
 
 
-def shop_page(request):
+def gallery_page(request):
     """
     Display all :model:`shop.ImageTheme` instances in the gallery.
 
@@ -13,10 +13,10 @@ def shop_page(request):
 
     **Template:**
 
-    :template:`shop/shop.html`
+    :template:`shop/gallery_page.html`
     """
     themes = ImageTheme.objects.all()
-    return render(request, "shop/shop.html", {"themes": themes})
+    return render(request, "shop/gallery_page.html", {"themes": themes})
 
 
 def images_by_theme(request, theme_slug):
