@@ -83,7 +83,7 @@ img.info-board {
 
 .sign-upper p {
     width: 80%;
-    font-size: clamp(1rem, 2.5vw, 2rem);
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
     font-weight: bold;
     line-height: 1.2;
 }
@@ -97,7 +97,7 @@ img.info-board {
 }
 
 .sign-lower p {
-    font-size: clamp(1rem, 2.5vw, 2rem);
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
     font-weight: bold;
 }
 
@@ -162,27 +162,27 @@ p#countdown-timer {
     }
 
     .sign-content {
-        left: 50%;
+        left: 40%;
         width: 80%;
+        transform: translateX(-28%);
     }
-    
    
     .sign-upper p {
-        margin-left: 2rem !important;
+        width: 60%;
         font-size: clamp(1rem, 2.5vw, 1.5rem);
     }
     
     .sign-lower {
-        width: 100%;
+        width: 80%;
     }
+
     .sign-lower p {
-        font-size: 1.2rem;
+        font-size: clamp(1.2rem, 3vw, 1.8rem);
     }
     
     p#countdown-timer {
         margin-top: 8rem;
         margin-left: -2.6rem !important;
-        font-size: clamp(1.2rem, 3vw, 1.8rem);
     }
 
     .road-signs img {
@@ -196,13 +196,13 @@ p#countdown-timer {
         font-size: 3.0rem;
     }
 
-    .sign-content {
-        left: 53%;
-        width: 80%;
+    img.info-board {
+        height: 18rem;
     }
 
-    .sign-upper p {
-        margin-left: 1rem !important
+    .sign-content {
+        width: 75%;
+        padding-right: 2px;
     }
 
     p#countdown-timer {
@@ -216,16 +216,24 @@ p#countdown-timer {
         right: 50px;
     }
 }
-
+@media (min-width: 912px) {
+    p#countdown-timer {
+        margin-top: 10.5rem;
+        text-align: center;
+        margin-left: -2.5rem !important;
+    }
+}
 @media (min-width: 1200px) {
 
-    img.info-board {
-        height: 18rem;
+    .sign-content {
+        left: 40%;
+        width: 50%;
+        transform: translateX(-48%);
     }
 
     p#countdown-timer {
-        margin-top: 9.5rem;
-        margin-left: -10.4rem !important;
+        text-align: center;
+        margin-left: -3.5rem !important;
     }
 
     .road-signs {

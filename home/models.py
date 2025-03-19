@@ -11,7 +11,7 @@ class SpecialOffer(models.Model):
         expiry_date (DateTimeField): The date and time when the
             offer expires.
     """
-    text = models.TextField(max_length=255)
+    text = models.TextField(max_length=40)
     expiry_date = models.DateTimeField()
 
     def __str__(self):
