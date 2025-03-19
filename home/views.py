@@ -3,7 +3,7 @@ from .models import SpecialOffer
 
 
 def shop(request):
-    return render(request, "shops.html")
+    return render(request, "shop/shop.html")
 
 
 def home(request):

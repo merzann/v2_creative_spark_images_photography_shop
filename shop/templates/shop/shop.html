@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="container my-5">
+    <h1 class="text-center">Gallery</h1>
+    
+    <!-- Search Bar -->
+    <div class="search-bar text-center my-4">
+        <form method="GET" action="{% url 'images_by_theme' theme_slug='all' %}">
+            <input type="text" name="q" placeholder="Search images by keyword..." class="form-control d-inline-block w-50">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <!-- Image Theme Cards -->
+    <div class="row">
+        {% for theme in themes %}
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <img src="{{ theme.image.url }}" class="card-img-top" alt="{{ theme.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ theme.title }}</h5>
+                    <p class="card-text">{{ theme.description }}</p>
+                    <a href="{% url 'images_by_theme' theme.slug %}" class="btn btn-primary">View Images</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
