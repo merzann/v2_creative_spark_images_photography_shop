@@ -50,7 +50,7 @@ video.background-video {
     padding: 0;
 }
 
-/* Digital Sign Styling */
+/* Info-board Styling */
 .digital-sign {
     position: absolute;
     width: 50%;
@@ -93,13 +93,14 @@ img.info-board {
     display: flex;
     flex-direction: column;
     flex: 1;
+    width: 100px;
 }
 
 .sign-lower p {
     font-size: clamp(1rem, 2.5vw, 2rem);
-    width: 100% !important;
     font-weight: bold;
 }
+
 p#countdown-timer {
     margin-top: 5.5rem;
     margin-left: -15px !important;
@@ -161,22 +162,27 @@ p#countdown-timer {
     }
 
     .sign-content {
-        left: 57%;
+        left: 50%;
         width: 80%;
     }
     
+   
     .sign-upper p {
+        margin-left: 2rem !important;
         font-size: clamp(1rem, 2.5vw, 1.5rem);
     }
     
+    .sign-lower {
+        width: 100%;
+    }
     .sign-lower p {
         font-size: 1.2rem;
     }
     
-   p#countdown-timer {
+    p#countdown-timer {
         margin-top: 8rem;
-        margin-left: -1.6rem !important;
-        font-size: clamp(1.2rem, 3vw, 2.2rem);
+        margin-left: -2.6rem !important;
+        font-size: clamp(1.2rem, 3vw, 1.8rem);
     }
 
     .road-signs img {
@@ -195,9 +201,13 @@ p#countdown-timer {
         width: 80%;
     }
 
-    h2#countdown-timer {
-        margin-top: 7.5rem;
-        margin-left: -2.8rem !important;
+    .sign-upper p {
+        margin-left: 1rem !important
+    }
+
+    p#countdown-timer {
+        margin-top: 8rem;
+        margin-left: -6rem !important;
         width: 100%;
     }
 
@@ -213,9 +223,9 @@ p#countdown-timer {
         height: 18rem;
     }
 
-    h2#countdown-timer {
+    p#countdown-timer {
         margin-top: 9.5rem;
-        margin-left: -3.4rem !important;
+        margin-left: -10.4rem !important;
     }
 
     .road-signs {
