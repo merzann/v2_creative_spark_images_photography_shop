@@ -1,5 +1,21 @@
 from django.contrib import admin
-from .models import OrderModel
+from .models import OrderModel, ImageTheme
+
+
+@admin.register(ImageTheme)
+class ImageThemeAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the :model:`shop.ImageTheme` model.
+
+    **Attributes:**
+
+    - ``list_display``: Displays the "title" field in the admin list view.
+    - ``prepopulated_fields``: Automatically generates the "slug" field
+      based on the "title" field.
+    """
+
+    list_display = ("title",)
+    prepopulated_fields = {"slug": ("title",)}
 
 
 @admin.register(OrderModel)
