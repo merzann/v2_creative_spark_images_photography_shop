@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 animationVideo.style.opacity = "0";
     
                 setTimeout(() => {
-                    window.location.href = "/shop/";
+                    window.location.href = "/shop/gallery/";
                 }, 2000);
             }, 4000);
         }, 2000);
