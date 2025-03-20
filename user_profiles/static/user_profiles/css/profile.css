@@ -1,9 +1,10 @@
 /* Profile Page Styling */
+
 .profile-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
     padding: 4rem 2rem;
 }
 
@@ -34,15 +35,14 @@
 /* Profile Cards */
 .profile-card {
     background: rgb(200, 193, 193);
+    margin-left: 10%;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 100%;
-    min-height: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    width: 80%;
+    min-height: fit-content;
+    overflow: hidden;
 }
 
 .row {
@@ -59,6 +59,10 @@
     margin-bottom: 1rem;
 }
 
+h2.profile-title {
+    margin-top: 40px;
+}
+
 /* Profile Picture */
 .profile-picture-container {
     display: flex;
@@ -73,21 +77,6 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #7c7575;
-}
-
-.upload-btn {
-    background-color: #7c7575;
-    color: white;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 1rem;
-    display: inline-block;
-}
-
-.upload-btn:hover {
-    background-color: #5a5252;
 }
 
 /* Form Styling */
@@ -117,13 +106,14 @@
 
 /* Responsive Adjustments */
 @media (min-width: 992px) {
-    .carousel-item {
-        justify-content: center;
+    .profile-card{
+        width: 100%;
     }
 }
 
 @media (min-width: 1024px) {
-    .profile-container {
-        padding-top: 8rem;
+    .profile-card{
+        width: 100%;
+        margin: 0;
     }
 }

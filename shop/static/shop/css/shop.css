@@ -1,0 +1,44 @@
+/* Search bar styles */
+.search-bar {
+    margin: auto;
+}
+
+.search-bar input {
+    padding: 10px;
+}
+
+/* Card styles */
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 8px solid #000;
+    overflow: hidden;
+    margin: 10px;
+    padding: 2px 2px 20px 2px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-img {
+    object-fit: cover;
+    height: 25vh;
+    padding: 5px;
+
+}
+
+.full-text {
+    display: none;
+}
+
+.read-more-btn {
+    cursor: pointer;
+    color: #403e3e;;
+    border: none;
+    background: none;
+    font-weight: bold;
+    padding: 0;
+}
+
+.read-more-btn:hover {
+    text-decoration: underline;
+}

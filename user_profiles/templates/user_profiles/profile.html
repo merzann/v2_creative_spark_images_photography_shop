@@ -12,7 +12,7 @@
 {% block head_title %}My Profile{% endblock head_title %}
 
 {% block content %}
-<section class="profile-container" aria-label="Manage your profile data and order history here">
+<section class="container-fluid py-4 profile-container" aria-label="Manage your profile data and order history here">
     <div class="container">
 
         <!-- Profile Carousel -->
@@ -40,7 +40,7 @@
                                     {% else %}
                                         <img src="{% static 'user_profiles/images/image_placeholder.jpg' %}" aria-label="No image selected" class="profile-picture">
                                     {% endif %}
-                                    <label for="id_profile_picture" class="upload-btn">Upload New Picture</label>
+                                    <label for="id_profile_picture" class="btn-custom">Upload New Picture</label>
                                 </div>
 
                                 <form method="POST" enctype="multipart/form-data" class="profile-form">

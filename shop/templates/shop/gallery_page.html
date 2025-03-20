@@ -23,31 +23,33 @@
 </section>   
 
 
-
-    <!-- Image Theme Cards -->
-<section id="image-themes" class="py-3" aria-label="image themes section">
-    <div class="container">
-        <h2 class="section-title text-center">Image Themes</h2>
-        <div class="row g-4">
-            {% for theme in themes %}
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    {% if theme.image %}
-                        <img src="{{ theme.image.url }}" class="card-img-top" alt="{{ theme.title }}">
-                    {% else %}
-                        <img src="{% static 'shop/images/default-placeholder.jpg' %}" alt="Default Image" class="card-img-top">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ theme.title }}</h5>
-                        <p class="card-text">{{ theme.description }}</p>
-                        <a href="{% url 'images_by_theme' theme.slug %}" class="btn btn-primary">View Images</a>
-                    </div>
-                </div>
+<!-- Image Theme Cards -->
+<section id="image-themes" class="container-fluid col-md- col-xl-11 py-4" aria-label="image themes section">
+    <div class="row g-4 justify-content-center">
+        {% for theme in themes %}
+        <div class="col-12 col-md-6">
+            <div class="card h-100 shadow-md">
+                {% if theme.image %}
+                    <img src="{{ theme.image.url }}" class="card-img" alt="{{ theme.title }}">
+                {% else %}
+                    <img src="{% static 'shop/images/default-placeholder.jpg' %}" alt="Default Image" class="card-img-top">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ theme.title }}</h5>
+                    <p class="card-text short-text">{{ theme.description|truncatewords:20 }}</p>
+                    <p class="card-text full-text d-none">{{ theme.description }}</p>
+                    <button class="btn btn-link read-more-btn mt-auto">Read More</button>
+                    <br>
+                    <a href="{% url 'images_by_theme' theme.slug %}" class="btn btn-primary mt-3 mx-auto btn-custom w-50">View Images</a>
+                </div>                
             </div>
-            {% empty %}
-                <p class="text-center">No themes available.</p>
-            {% endfor %}
         </div>
+        {% empty %}
+            <p class="text-center">No themes available.</p>
+        {% endfor %}
     </div>
 </section>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="back-to-top-btn">⬆ Back to Top</button>
 {% endblock %}

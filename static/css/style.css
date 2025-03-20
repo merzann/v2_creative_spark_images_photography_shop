@@ -195,6 +195,21 @@ a.dropdown-item {
     background-color: #5e5959 !important;
 }
 
+.btn-custom {
+    background-color: #7c7575;
+    color: white;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.btn-custom:hover {
+    background-color: #5a5252;
+}
+
 /* Forgot Password & Sign-up Link */
 .forgot-password {
     color: #7c7575;
