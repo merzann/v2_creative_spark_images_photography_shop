@@ -20,29 +20,34 @@
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
     </div>
+</section>   
 
 
 
     <!-- Image Theme Cards -->
-    <div class="row">
-        {% for theme in themes %}
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                {% if theme.image %}
-                    <img src="{{ theme.image.url }}" class="card-img-top" alt="{{ theme.title }}">
-                {% else %}
-                    <img src="default-image.jpg" alt="Default Image">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ theme.title }}</h5>
-                    <p class="card-text">{{ theme.description }}</p>
-                    <a href="{% url 'images_by_theme' theme.slug %}" class="btn btn-primary">View Images</a>
+<section id="image-themes" class="py-3" aria-label="image themes section">
+    <div class="container">
+        <h2 class="section-title text-center">Image Themes</h2>
+        <div class="row g-4">
+            {% for theme in themes %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    {% if theme.image %}
+                        <img src="{{ theme.image.url }}" class="card-img-top" alt="{{ theme.title }}">
+                    {% else %}
+                        <img src="{% static 'shop/images/default-placeholder.jpg' %}" alt="Default Image" class="card-img-top">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ theme.title }}</h5>
+                        <p class="card-text">{{ theme.description }}</p>
+                        <a href="{% url 'images_by_theme' theme.slug %}" class="btn btn-primary">View Images</a>
+                    </div>
                 </div>
             </div>
-        {% empty %}
-            <p>No themes available.</p>
+            {% empty %}
+                <p class="text-center">No themes available.</p>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </section>
 {% endblock %}

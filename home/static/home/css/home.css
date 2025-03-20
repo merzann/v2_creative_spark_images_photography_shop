@@ -1,7 +1,6 @@
 /* First Section - Ocean Background */
 #intro {
     position: relative;
-    width: 100%;
     height: 100vh;
 }
 
@@ -9,13 +8,11 @@ video.background-video {
     position: absolute;
     width: 100%;
     height: 100%;
-    margin-top: 0.5rem;
     object-fit: cover;
 }
 
 .overlay {
     position: absolute;
-    margin-top: 0.5rem;
     left: 0;
     width: 100%;
     height: 100%;

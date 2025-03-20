@@ -2,26 +2,26 @@
 html,
 body {
     font-family: "Montserrat", sans-serif;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
 }
 
 h1,
 h2, h3 {
-    font-family: "Poiret", cursive;
+    font-family: "Poiret";
     margin-top: 5rem;
     margin-bottom: 3rem;
 }
 
-.heading {
-    color:#333 !important;
+header {
+    height: 7vh;
 }
 
-/* Header Background */
-header {
-    height: 10vh;
-    color: #ddd;
+#message-container .alert {
+    font-size: 13px;
+    padding: 8px;
+}
+
+#message-container button.btn-close {
+    padding: 12px !important;
 }
 
 /* Navbar */
@@ -144,29 +144,6 @@ a.dropdown-item {
     height: 1rem;
     object-fit: cover;
     margin-right: 4px !important;
-}
-
-/* Messages */
-#message-container {
-    position: relative;
-    font-size: 13px;
-    margin-top: 3.5rem;
-    width: 100%;
-    z-index: 1050;
-}
-
-#message-container .alert {
-    padding: 10px;
-}
-
-#message-container button.btn-close {
-    padding: 14px 12px 12px;
-}
-
-/* AllAuth forms */
-.container.d-flex {
-    min-height: 80vh;
-    padding-top: 5rem;
 }
 
 /* Card Layout */
@@ -319,14 +296,15 @@ footer a i {
 }
 
 /* Responsive Adjustments */
-#message-container {
-    margin-top: 6rem;
-}
-
 
 @media (min-width: 992px) {
+
     #logo-desktop {
         height: 5rem;
+    }
+
+    #message-container {
+        margin-top: 2rem;
     }
 
     .fa-user, .fa-cart-shopping {
