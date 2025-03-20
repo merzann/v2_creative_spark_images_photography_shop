@@ -21,18 +21,26 @@
         </form>
     </div>
 
+
+
     <!-- Image Theme Cards -->
     <div class="row">
         {% for theme in themes %}
         <div class="col-md-4">
             <div class="card shadow-sm">
-                <img src="{{ theme.image.url }}" class="card-img-top" alt="{{ theme.title }}">
+                {% if theme.image %}
+                    <img src="{{ theme.image.url }}" class="card-img-top" alt="{{ theme.title }}">
+                {% else %}
+                    <img src="default-image.jpg" alt="Default Image">
+                {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ theme.title }}</h5>
                     <p class="card-text">{{ theme.description }}</p>
                     <a href="{% url 'images_by_theme' theme.slug %}" class="btn btn-primary">View Images</a>
                 </div>
             </div>
+        {% empty %}
+            <p>No themes available.</p>
         </div>
         {% endfor %}
     </div>

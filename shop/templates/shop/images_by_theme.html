@@ -18,7 +18,7 @@
         {% for image in images %}
         <div class="col-md-4">
             <div class="card shadow-sm">
-                <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.title }}">
+                <img src="{{ theme.image.url|default:'no-image-added.jpg' }}" class="card-img-top" alt="{{ image.title }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ image.title }}</h5>
                     <p class="card-text">{{ image.description }}</p>

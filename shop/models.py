@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-import random
 from cloudinary.models import CloudinaryField
 from products.models import Product
+import random
 
 
 class ImageTheme(models.Model):
