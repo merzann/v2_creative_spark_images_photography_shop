@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const aboutSign = document.getElementById("about-sign");
     const introSection = document.getElementById("intro");
     const cottageSection = document.getElementById("cottage-animation");
-    const aboutSection = document.getElementById("about-section");
+    const animationVideo = document.getElementById("cottage-video");
     const walkingSound = document.getElementById("walking-sound");
+    const aboutSection = document.getElementById("about-section");
 
     /**
      * Handles the click event for the "This way to the gallery" sign.
@@ -16,19 +17,40 @@ document.addEventListener("DOMContentLoaded", function () {
      * before redirecting to the shop page.
      */
     gallerySign.addEventListener("click", function () {
-        introSection.classList.add("fade-out");
-
+        introSection.style.transition = "opacity 2s ease-out";
+        introSection.style.opacity = "0";
+    
         setTimeout(() => {
             introSection.style.display = "none";
-            cottageSection.style.display = "block";
+            cottageSection.classList.remove("hidden");
+    
+            // Start video and sound
+            animationVideo.style.opacity = "1";
+            animationVideo.style.visibility = "visible";
+            animationVideo.play().catch(error => console.error("Video play error:", error));
             walkingSound.play();
-
-            // Simulate walking animation
+    
+            // Overlay text animation
+            const overlayText = document.getElementById("video-overlay");
+            overlayText.style.visibility = "visible";
+            overlayText.style.opacity = "1";
+    
             setTimeout(() => {
-                window.location.href = "/shop/";
-            }, 5000);
+                overlayText.style.opacity = "0";
+            }, 2000);
+    
+            // Simulate animation duration before redirecting
+            setTimeout(() => {
+                animationVideo.style.transition = "opacity 2s ease-out";
+                animationVideo.style.opacity = "0";
+    
+                setTimeout(() => {
+                    window.location.href = "/shop/";
+                }, 2000);
+            }, 4000);
         }, 2000);
     });
+    
 
     /**
      * Handles the click event for the "About Us" sign.
