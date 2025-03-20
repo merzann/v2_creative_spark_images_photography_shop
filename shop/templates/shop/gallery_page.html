@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'shop/css/shop.css' %}">
+{% endblock extra_css %}
+
+{% block extra_js %}
+<script src="{% static 'shop/js/shop_script.js' %}" defer></script>
+{% endblock %}
+
 {% block content %}
 <section class="container my-5">
     <h1 class="text-center">Gallery</h1>
