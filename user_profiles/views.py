@@ -29,12 +29,26 @@ def profile(request):
         form = UserProfileForm(
             request.POST,
             request.FILES,
-            instance=user_profile,
+            instance=user_profile
         )
         if form.is_valid():
-            form.save()
+            try:
+                form.save()
+                messages.success(
+                    request,
+                    "Your profile has been updated successfully."
+                )
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"An error occurred while updating your profile: {str(e)}"
+                )
             return redirect("profile")
-
+        else:
+            messages.warning(
+                request,
+                "Invalid form submission. Please check the fields."
+            )
     else:
         form = UserProfileForm(instance=user_profile)
 
@@ -47,47 +61,47 @@ def request_account_deletion(request):
     Handle a user-submitted request to delete their account.
 
     A POST request triggers an email to the site administrator containing
-    the user's information and their
-    optional message.
+    the user's information and their optional message.
 
     **Context:**
-
-    This view does not render a template. It redirects to the
-    "profile" page after handling the request.
-
-    **Request Method:**
-
-    - ``POST``: Sends the deletion request via email.
+    - This view does not render a template. It redirects to the "profile"
+      page after handling the request.
 
     **Behavior:**
-
     - On success, a success message is shown and the user is redirected.
     - On non-POST requests, the view immediately redirects.
 
     **Email Content:**
-
     - Username and email of the requesting user.
     - Optional message provided in the request.
 
     **Redirects:**
-
-    :redirect:`profile`
+    - :redirect:`profile`
     """
     if request.method == "POST":
-        message = request.POST.get("message", "No message provided.")
-        user = request.user
-        email_body = (
-            f"User {user.username} ({user.email}) has requested "
-            f"account deletion.\n\nMessage:\n{message}"
-        )
+        try:
+            message = request.POST.get("message", "No message provided.")
+            user = request.user
+            email_body = (
+                f"User {user.username} ({user.email}) has requested "
+                f"account deletion.\n\nMessage:\n{message}"
+            )
 
-        # You can save this to the DB instead of emailing if preferred
-        send_mail(
-            subject="Account Deletion Request",
-            message=email_body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.DEFAULT_FROM_EMAIL],
-        )
+            send_mail(
+                subject="Account Deletion Request",
+                message=email_body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.DEFAULT_FROM_EMAIL],
+            )
 
-        messages.success(request, "Your request has been submitted.")
+            messages.success(
+                request,
+                "Your request has been submitted successfully."
+            )
+        except Exception as e:
+            messages.error(
+                request,
+                f"An error occurred: {str(e)}. Please try again."
+            )
+
     return redirect("profile")
