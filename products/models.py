@@ -1,12 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
 
 class Tag(models.Model):
-    """
-    Represents a tag for categorizing products.
-    """
+    """Represents a product tag."""
+
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True)
 
@@ -14,16 +12,27 @@ class Tag(models.Model):
         return self.name
 
 
-class Product(models.Model):
-    """
-    Unified model for both digital and printed products.
-    Supports both digital downloads and physical prints.
-    """
+class ProductType(models.Model):
+    """Represents a type/category of product."""
 
-    PRODUCT_TYPE_CHOICES = [
-        ("digital", "Digital Download"),
-        ("printed", "Printed Product"),
-    ]
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class LicenseType(models.Model):
+    """Represents a license type for digital products."""
+
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Product(models.Model):
+    """Represents a product for sale."""
 
     PRINT_TYPE_CHOICES = [
         ("canvas", "Canvas Wrap"),
@@ -32,84 +41,60 @@ class Product(models.Model):
         ("poster", "Poster Print"),
     ]
 
-    LICENSE_CHOICES = [
-        ("personal", "Personal License"),
-        ("commercial", "Commercial License"),
-        ("advertising", "Advertising License"),
-    ]
-
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField()
-    theme = models.CharField(max_length=100)  # Admin Only
-    tags = models.ManyToManyField("Tag", blank=True)  # Admin Only
-    product_type = models.CharField(
-        max_length=10, choices=PRODUCT_TYPE_CHOICES
+    theme = models.ForeignKey(
+        "shop.ImageTheme", on_delete=models.SET_NULL,
+        null=True, blank=True
     )
+    tags = models.ManyToManyField("Tag", blank=True)
+    product_types = models.ManyToManyField(ProductType, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-
-    # Licensing (for digital downloads)
-    license_type = models.CharField(
-        max_length=20, choices=LICENSE_CHOICES, blank=True, null=True
-    )
-
-    # Ratings
+    license_types = models.ManyToManyField(LicenseType, blank=True)
     rating = models.DecimalField(
-        max_digits=3, decimal_places=2, default=0.0, blank=True, null=True
+        max_digits=3, decimal_places=2,
+        default=0.0, blank=True, null=True
     )
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    # Visibility
-    created_at = models.DateTimeField(auto_now_add=True)  # Admin Only
-
-    # Image previews (shown to users in Owl Carousel)
     image_preview = CloudinaryField(
         "image_preview", folder="product_previews"
     )
     image_framed = CloudinaryField(
-        "image_framed", folder="product_previews", blank=True, null=True
+        "image_framed", folder="product_previews",
+        blank=True, null=True
     )
     image_canvas = CloudinaryField(
-        "image_canvas", folder="product_previews", blank=True, null=True
+        "image_canvas", folder="product_previews",
+        blank=True, null=True
     )
     image_room_mockup = CloudinaryField(
-        "image_room_mockup", folder="product_previews", blank=True, null=True
+        "image_room_mockup", folder="product_previews",
+        blank=True, null=True
     )
 
-    # Digital File (only for digital products)
     file = CloudinaryField(
-        "file",
-        resource_type="raw",
+        "file", resource_type="raw",
         folder="digital_products",
-        blank=True,
-        null=True,
+        blank=True, null=True
     )
 
-    # Print options (only for printed products)
     print_type = models.CharField(
-        max_length=20, choices=PRINT_TYPE_CHOICES, blank=True, null=True
+        max_length=20, choices=PRINT_TYPE_CHOICES,
+        blank=True, null=True
     )
     size = models.CharField(
-        max_length=50, default="Standard", blank=True, null=True
+        max_length=50, default="Standard",
+        blank=True, null=True
     )
-    stock = models.PositiveIntegerField(default=10, blank=True, null=True)
+    stock = models.PositiveIntegerField(
+        default=10, blank=True, null=True
+    )
 
     def price_with_vat(self, vat_rate=0.21):
-        """
-        Calculates price including VAT.
-
-        Args:
-            vat_rate (float, optional): VAT percentage as a decimal.
-                Defaults to 0.21 (21%).
-
-        Returns:
-            float: Price including VAT.
-        """
+        """Return price including VAT."""
         return round(self.price * (1 + vat_rate), 2)
 
     def __str__(self):
-        """
-        Returns a string representation of the Product instance.
-
-        Returns:
-            str: Product title with its type display name.
-        """
-        return f"{self.title} ({self.get_product_type_display()})"
+        """Return string representation of the product."""
+        return f"{self.title}"
