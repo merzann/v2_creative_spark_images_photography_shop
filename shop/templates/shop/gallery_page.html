@@ -16,8 +16,8 @@
     <!-- Search Bar -->
     <div class="search-bar text-center my-4">
         <form method="GET" action="">
-            <input type="text" name="q" placeholder="Search our image catalogue..." class="form-control d-inline-block w-50">
-            <button type="submit" class="btn btn-primary">Search</button>
+            <input type="text" name="q" placeholder="Browse catalogue..." class="form-control d-inline-block w-50">
+            <button type="submit" class="btn btn-primary btn-custom search-button">Search</button>
         </form>
     </div>
 </section>   
@@ -35,7 +35,7 @@
                     <img src="{% static 'shop/images/default-placeholder.jpg' %}" alt="Default Image" class="card-img-top">
                 {% endif %}
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ theme.title }}</h5>
+                    <h3 class="card-title">{{ theme.title }}</h3>
                     <p class="card-text short-text">{{ theme.description|truncatewords:20 }}</p>
                     <p class="card-text full-text d-none">{{ theme.description }}</p>
                     <button class="btn btn-link read-more-btn mt-auto">Read More</button>

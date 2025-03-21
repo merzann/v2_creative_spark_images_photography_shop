@@ -4,7 +4,41 @@
 }
 
 .search-bar input {
-    padding: 10px;
+    padding: 5px;
+}
+
+/* Buttons */
+.search-button {
+    margin: 0 0 0 5px;
+    padding: 6px 12px;
+}
+
+.read-more-btn {
+    cursor: pointer;
+    color: #403e3e;;
+    border: none;
+    background: none;
+    font-weight: bold;
+    padding: 0;
+}
+
+.read-more-btn:hover {
+    text-decoration: underline;
+}
+
+#backToTop {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 5px 10px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
 /* Card styles */
@@ -20,34 +54,28 @@
     transition: min-height 0.3s ease-in-out;
 }
 
+h1 {
+    margin: 5rem auto 2rem;
+}
+
 .card-img {
     object-fit: cover;
     height: 25vh;
     padding: 5px;
+}
 
+h3.card-title {
+    margin: 20px auto 15px;
 }
 
 .card-body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Keeps button at the bottom */
+    justify-content: space-between;
 }
 
 .card-text {
     overflow: hidden;
     transition: max-height 0.3s ease-in-out;
-}
-
-.read-more-btn {
-    cursor: pointer;
-    color: #403e3e;;
-    border: none;
-    background: none;
-    font-weight: bold;
-    padding: 0;
-}
-
-.read-more-btn:hover {
-    text-decoration: underline;
 }
