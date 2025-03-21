@@ -14,98 +14,92 @@
 {% block content %}
 <section class="container-fluid py-4 profile-container" aria-label="Manage your profile data and order history here">
     <div class="container">
-
-        <!-- Profile Carousel -->
         <div id="profileCarousel" class="carousel slide">
-            
+
             <!-- Carousel Indicators -->
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
                 <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="2"></button>
             </div>
 
             <div class="carousel-inner">
-                <!-- User Contact Details -->
+
+                <!-- Combined Form: Contact + Address Details -->
                 <div class="carousel-item active">
                     <div class="row g-4 justify-content-center">
-                        <div class="col-12 col-lg-6">
+                        <div class="col-12 col-lg-8">
                             <div class="profile-card user_contact_details">
-                                <h2 class="profile-title">My Contact Details</h2>
-
-                                <!-- Profile Picture Section -->
-                                <div class="profile-picture-container">
-                                    {% if user.userprofile.profile_picture %}
-                                        <img src="{{ user.userprofile.profile_picture.url }}" aria-label="Profile Picture" class="profile-picture">
-                                    {% else %}
-                                        <img src="{% static 'user_profiles/images/image_placeholder.jpg' %}" aria-label="No image selected" class="profile-picture">
-                                    {% endif %}
-                                    <label for="id_profile_picture" class="btn-custom">Upload New Picture</label>
-                                </div>
+                                <h2 class="profile-title">My Profile Details</h2>
 
                                 <form method="POST" enctype="multipart/form-data" class="profile-form">
                                     {% csrf_token %}
-                                    <div class="form-group">
+
+                                    <!-- Profile Picture -->
+                                    <div class="profile-picture-container mb-4">
+                                        {% if user.userprofile.profile_picture %}
+                                            <img src="{{ user.userprofile.profile_picture.url }}" class="profile-picture" alt="Profile Picture">
+                                        {% else %}
+                                            <img src="{% static 'user_profiles/images/image_placeholder.jpg' %}" class="profile-picture" alt="No image selected">
+                                        {% endif %}
+                                        <input type="file" name="profile_picture" id="id_profile_picture" class="d-none">
+                                        <label for="id_profile_picture" class="btn btn-custom mt-3">Upload New Picture</label>
+                                    </div>
+
+                                    <!-- Contact Info -->
+                                    <div class="form-group mb-3">
                                         <label for="id_email">Email Address:</label>
                                         <input type="email" name="email" id="id_email" value="{{ user.email }}" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="id_language_preference">Language Preference:</label>
                                         {{ form.language_preference }}
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="id_default_phone_number">Phone Number:</label>
                                         {{ form.default_phone_number }}
                                     </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- User Address Details -->
-                <div class="carousel-item">
-                    <div class="row g-4 justify-content-center">
-                        <div class="col-12 col-lg-6">
-                            <div class="profile-card user_address_details">
-                                <h2 class="profile-title">My Address Details</h2>
-
-                                <form method="POST" enctype="multipart/form-data" class="profile-form">
-                                    {% csrf_token %}
-                                    <div class="form-group">
+                                    <!-- Address Info -->
+                                    <div class="form-group mb-3">
                                         <label for="id_default_country">Country:</label>
                                         {{ form.default_country }}
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="id_default_postcode">Postcode:</label>
                                         {{ form.default_postcode }}
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="id_default_town_or_city">Town / City:</label>
                                         {{ form.default_town_or_city }}
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="id_default_street_address1">Street Address 1:</label>
                                         {{ form.default_street_address1 }}
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="id_default_street_address2">Street Address 2:</label>
                                         {{ form.default_street_address2 }}
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="id_default_county">County:</label>
                                         {{ form.default_county }}
                                     </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn btn-custom">Save All Changes</button>
+                                    </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Order History -->
+                <!-- Order History (no form) -->
                 <div class="carousel-item">
                     <div class="row g-4 justify-content-center">
-                        <div class="col-12 col-lg-6">
+                        <div class="col-12 col-lg-8">
                             <div class="profile-card user_order_history">
                                 <h2 class="profile-title">My Order History</h2>
                                 <p class="profile-subtitle">Your past orders will be displayed here.</p>
@@ -116,6 +110,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- Carousel Controls -->

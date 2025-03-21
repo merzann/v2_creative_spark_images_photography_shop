@@ -111,6 +111,6 @@ h1.heading {
     .gallery-background {
         background-image: url('../images/gallery_background_xl_screens.jpg');
         width: 100vw;
-        margin-top: 2rem;
+        margin-top: 1rem;
     }
 }
