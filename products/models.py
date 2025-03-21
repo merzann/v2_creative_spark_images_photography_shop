@@ -2,16 +2,6 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 
 
-class Tag(models.Model):
-    """Represents a product tag."""
-
-    name = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class ProductType(models.Model):
     """Represents a type/category of product."""
 
@@ -98,3 +88,27 @@ class Product(models.Model):
     def __str__(self):
         """Return string representation of the product."""
         return f"{self.title}"
+
+
+class Tag(models.Model):
+    """Represents a product tag, optionally grouped for SEO purposes."""
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True)
+    group = models.ForeignKey(
+        "TagGroup",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="tags"
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class TagGroup(models.Model):
+    """Represents a group or category of tags (for SEO, filtering, etc.)."""
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name

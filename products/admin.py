@@ -1,17 +1,31 @@
 from django.contrib import admin
-from .models import Tag, LicenseType, ProductType, Product
+from .models import Product, ProductType, LicenseType, Tag, TagGroup
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """
     Admin configuration for the :model:`shop.Tag` model.
+    Related to :model:`shop.TagGroup`
 
     **Attributes:**
 
     - ``list_display``: Displays the "name" field in the admin list view.
     """
+    list_display = ("name",)
+    prepopulated_fields = {"slug": ("name",)}
 
+
+@admin.register(TagGroup)
+class TagGroupAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the :model:`shop.TagGroup` model.
+    Related to :model:`shop.Tag`
+
+    **Attributes:**
+
+    - ``list_display``: Displays the "name" field in the admin list view.
+    """
     list_display = ("name",)
 
 
