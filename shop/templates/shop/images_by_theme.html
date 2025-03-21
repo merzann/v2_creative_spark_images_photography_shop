@@ -10,18 +10,20 @@
 {% endblock %}
 
 {% block content %}
-<section class="container my-5">
-    <h1 class="text-center">{{ theme.title }}</h1>
-    <p class="text-center">{{ theme.description }}</p>
+<section id="image-themes" class="container-fluid gallery-background col-md- col-xl-11 py-4 gallery-background overlay">
+    <h1 class="heading text-center">{{ theme.title }}</h1>
 
-    <div class="row">
+    <div class="row g-4 justify-content-center">
         {% for image in images %}
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <img src="{{ theme.image.url|default:'no-image-added.jpg' }}" class="card-img-top" alt="{{ image.title }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ image.title }}</h5>
-                    <p class="card-text">{{ image.description }}</p>
+        <div class="col-12 col-md-3">
+            <div class="card h-100 shadow-md">
+                <img src="{{ theme.image.url|default:'no-image-added.jpg' }}" class="card-img" alt="{{ image.title }}">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title">{{ image.title }}</h3>
+                    <p class="card-text short-text">{{ theme.description|truncatewords:20 }}</p>
+                    <p class="card-text full-text d-none">{{ theme.description }}</p>
+                    <button class="btn btn-link read-more-btn mt-auto">Read More</button>
+                    <br>
                     <p class="text-muted">Price: €{{ image.price }}</p>
                 </div>
             </div>
@@ -31,5 +33,26 @@
         <p class="text-center"><strong>No images available in this theme.</strong></p>
         {% endfor %}
     </div>
+
+    <!-- Pagination -->
+    <div class="d-flex flex-row">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous Page">
+                    &laquo; Back to Gallery</a>
+            </li>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <li>
+                <a href="" class="page-link" aria-label="Add product to cart">
+                    <i class="fa-solid fa-cart-shopping"></i>Add to cart</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
 </section>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="back-to-top-btn">⬆ Back to Top</button>
 {% endblock %}
