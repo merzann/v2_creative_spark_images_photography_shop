@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'products/css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <img src="{{ product.image_preview.url }}" class="card-img-top" alt="{{ product.title }}">
+                <div class="card-body">
+                    <h2 class="card-title">{{ product.title }}</h2>
+                    <p class="card-text">{{ product.description }}</p>
+
+                    {% if product.price %}
+                    <p><strong>Price (excl. VAT):</strong> €{{ product.price }}</p>
+                    <p><strong>Price (incl. VAT):</strong> €{{ product.price_with_vat }}</p>
+                    {% endif %}
+
+                    {% if product.product_types.all %}
+                    <p><strong>Available As:</strong>
+                        {% for type in product.product_types.all %}
+                            {{ type.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+
+                    {% if product.license_types.all %}
+                    <p><strong>Licenses:</strong>
+                        {% for license in product.license_types.all %}
+                            <br><strong>{{ license.name }}</strong>: {{ license.description }}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+
+                    {% if product.print_types.all %}
+                    <p><strong>Print Options:</strong>
+                        {% for print in product.print_types.all %}
+                            {{ print.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

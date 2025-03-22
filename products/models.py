@@ -21,6 +21,14 @@ class LicenseType(models.Model):
         return self.name
 
 
+class PrintType(models.Model):
+    """Represents an available print option (e.g. Framed, Canvas, etc.)."""
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     """Represents a product for sale."""
 
@@ -69,10 +77,6 @@ class Product(models.Model):
         blank=True, null=True
     )
 
-    print_type = models.CharField(
-        max_length=20, choices=PRINT_TYPE_CHOICES,
-        blank=True, null=True
-    )
     size = models.CharField(
         max_length=50, default="Standard",
         blank=True, null=True

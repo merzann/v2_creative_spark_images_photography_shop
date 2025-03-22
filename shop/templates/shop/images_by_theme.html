@@ -20,11 +20,8 @@
                 <img src="{{ theme.image.url|default:'no-image-added.jpg' }}" class="card-img" alt="{{ image.title }}">
                 <div class="card-body d-flex flex-column">
                     <h3 class="card-title">{{ image.title }}</h3>
-                    <p class="card-text short-text">{{ theme.description|truncatewords:20 }}</p>
-                    <p class="card-text full-text d-none">{{ theme.description }}</p>
-                    <button class="btn btn-link read-more-btn mt-auto">Read More</button>
                     <br>
-                    <p class="text-muted">Price: €{{ image.price }}</p>
+                    <p class="text-muted">Price: from €{{ image.price }}</p>
                 </div>
             </div>
         </div>

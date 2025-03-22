@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductType, LicenseType, Tag, TagGroup
+from .models import Product, ProductType, PrintType, LicenseType, Tag, TagGroup
 
 
 @admin.register(Tag)
@@ -11,6 +11,7 @@ class TagAdmin(admin.ModelAdmin):
     **Attributes:**
 
     - ``list_display``: Displays the "name" field in the admin list view.
+    - ``prepopulated_fields``: Automatically creates "slug" from "name" field
     """
     list_display = ("name",)
     prepopulated_fields = {"slug": ("name",)}
@@ -42,6 +43,18 @@ class LicenseTypeAdmin(admin.ModelAdmin):
 
     list_display = ("name", "description")
     search_fields = ("name",)
+
+
+@admin.register(PrintType)
+class PrintTypeAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the :model:`shop.PrintType` model.
+
+    **Attributes:**
+
+    - ``list_display``: Displays the Print Types available for a product.
+    """
+    list_display = ("name",)
 
 
 @admin.register(Product)
