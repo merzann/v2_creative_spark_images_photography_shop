@@ -1,5 +1,6 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
+from decimal import Decimal
 
 
 class ProductType(models.Model):
@@ -47,7 +48,7 @@ class Product(models.Model):
     )
     tags = models.ManyToManyField("Tag", blank=True)
     product_types = models.ManyToManyField(ProductType, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
     license_types = models.ManyToManyField(LicenseType, blank=True)
     rating = models.DecimalField(
         max_digits=3, decimal_places=2,
@@ -85,9 +86,9 @@ class Product(models.Model):
         default=10, blank=True, null=True
     )
 
-    def price_with_vat(self, vat_rate=0.21):
+    def price_with_vat(self, vat_rate=Decimal("0.21")):
         """Return price including VAT."""
-        return round(self.price * (1 + vat_rate), 2)
+        return self.price * (Decimal("1.00") + vat_rate)
 
     def __str__(self):
         """Return string representation of the product."""

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 from .models import Product, ProductType, PrintType, LicenseType, Tag, TagGroup
 
 
@@ -31,7 +32,7 @@ class TagGroupAdmin(admin.ModelAdmin):
 
 
 @admin.register(LicenseType)
-class LicenseTypeAdmin(admin.ModelAdmin):
+class LicenseTypeAdmin(SummernoteModelAdmin):
     """
     Admin configuration for the :model:`shop.LicenseType` model.
 
@@ -43,6 +44,7 @@ class LicenseTypeAdmin(admin.ModelAdmin):
 
     list_display = ("name", "description")
     search_fields = ("name",)
+    summernote_fields = ("description",)
 
 
 @admin.register(PrintType)

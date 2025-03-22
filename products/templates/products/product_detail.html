@@ -17,11 +17,10 @@
 
                     {% if product.price %}
                     <p><strong>Price (excl. VAT):</strong> €{{ product.price }}</p>
-                    <p><strong>Price (incl. VAT):</strong> €{{ product.price_with_vat }}</p>
                     {% endif %}
 
                     {% if product.product_types.all %}
-                    <p><strong>Available As:</strong>
+                    <p><strong>Format:</strong>
                         {% for type in product.product_types.all %}
                             {{ type.name }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
@@ -29,9 +28,10 @@
                     {% endif %}
 
                     {% if product.license_types.all %}
-                    <p><strong>Licenses:</strong>
+                    <p><strong>License:</strong>
                         {% for license in product.license_types.all %}
-                            <br><strong>{{ license.name }}</strong>: {{ license.description }}
+                            <a href="{% url 'image_licenses' %}#{{ license.name|slugify }}">{{ license.name }}</a>
+                            {% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </p>
                     {% endif %}

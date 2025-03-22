@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from .models import Product, LicenseType
 
 
 def product_detail(request, product_id):
@@ -20,4 +20,13 @@ def product_detail(request, product_id):
         request,
         "products/product_detail.html",
         {"product": product},
+    )
+
+
+def image_licenses(request):
+    licenses = LicenseType.objects.all()
+    return render(
+        request,
+        "products/includes/image_licenses.html",
+        {"licenses": licenses},
     )

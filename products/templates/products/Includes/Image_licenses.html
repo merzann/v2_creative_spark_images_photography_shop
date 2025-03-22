@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'products/css/licenses.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="container py-5 license-section">
+    <h1 class="text-center mb-5">Image Licensing Information</h1>
+        <div class="row g-4">
+        {% for license in licenses %}
+          <div class="col-12 col-lg-4">
+            <div class="card license-card h-100 shadow">
+              <div class="card-body">
+                <h5 class="card-title">{{ license.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Overview</h6>
+                <p class="card-text">{{ license.overview|safe }}</p>
+                <p class="text-muted small">{{ license.slug }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>      
+</section>
+{% endblock %}
