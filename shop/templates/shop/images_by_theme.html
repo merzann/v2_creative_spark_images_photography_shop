@@ -10,47 +10,33 @@
 {% endblock %}
 
 {% block content %}
-<section id="image-themes" class="image-card-container container-fluid gallery-background py-4">
 
-    <div class="row g-4 justify-content-center">
-        {% for image in images %}
-        <div class="image-card col-12 col-md-6 col-xl-4">
-            <h1 class="heading text-center">{{ theme.title }}</h1>
-            <div class="card shadow-md">
-                <a href="{% url 'product_detail' image.id %}">
-                    <img src="{{ image.image_preview.url|default:'no-image-added.jpg' }}" class="card-img" alt="{{ image.title }}">
-                </a>
-                <div class="card-body d-flex flex-column">
-                    <h4 class="card-title">{{ image.title }}</h4>
-                    <p class="text-muted">Price: from €{{ image.price }}</p>
+<section class="container-fluid gallery-background py-4">
+    <h1 class="heading text-center">{{ theme.title }}</h1>
+        <div class="row g-4 justify-content-center">
+            {% for image in images %}
+            <div class="col-12 col-sm-6 col-md-6 col-xl-4">
+                <div class="image-card shadow-md">
+                    <a href="{% url 'product_detail' image.id %}">
+                        <img src="{{ image.image_preview.url|default:'no-image-added.jpg' }}" class="card-img" alt="{{ image.title }}">
+                    </a>
+                    <div class="card-body d-flex flex-column text-center">
+                        <h4 class="card-title">{{ image.title }}</h4>
+                        <p class="text-muted">Price: from €{{ image.price }}</p>
+                    </div>
                 </div>
             </div>
+            {% empty %}
+            <hr>
+            <p class="text-center"><strong>No images available in this theme.</strong></p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <hr>
-        <p class="text-center"><strong>No images available in this theme.</strong></p>
-        {% endfor %}
-    </div>
-
-    <!-- Pagination -->
-    <div class="d-flex flex-row">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li>
-                <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous Page">
-                    &laquo; Back to Gallery</a>
-            </li>
-            {% endif %}
-            {% if page_obj.has_next %}
-            <li>
-                <a href="" class="page-link" aria-label="Add product to cart">
-                    <i class="fa-solid fa-cart-shopping"></i>Add to cart</a>
-            </li>
-            {% endif %}
-        </ul>
-    </div>
 </section>
 
+<!-- Back to Gallery button -->
+<a href="{% url 'gallery_page' %}" id="backToGallery" class="back-to-top-btn" aria-label="Back to Gallery">
+    ⬅ Back to Gallery
+</a>
 <!-- Back to Top Button -->
-<button id="backToTop" class="back-to-top-btn">⬆ Back to Top</button>
+<button id="backToTop" class="back-to-top-btn" aria-label="back to top button">⬆ Back to Top</button>
 {% endblock %}
