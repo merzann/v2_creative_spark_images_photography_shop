@@ -26,13 +26,15 @@
                         {% endfor %}
                     </p>
                     {% endif %}
-
+                    <hr>
                     {% if product.license_types.all %}
                     <p><strong>License:</strong>
                         {% for license in product.license_types.all %}
                             <a href="{% url 'image_licenses' %}#{{ license.name|slugify }}">{{ license.name }}</a>
                             {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                        {% empty %}
+                           <p>No licenses attached to this product.</p>
+                    {% endfor %}
                     </p>
                     {% endif %}
 

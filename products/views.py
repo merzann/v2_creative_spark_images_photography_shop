@@ -24,7 +24,7 @@ def product_detail(request, product_id):
 
 
 def image_licenses(request):
-    licenses = LicenseType.objects.all()
+    licenses = LicenseType.objects.filter(is_active=True)
     return render(
         request,
         "products/includes/image_licenses.html",
