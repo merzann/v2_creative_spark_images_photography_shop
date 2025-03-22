@@ -106,6 +106,10 @@ h2.profile-title {
     border-radius: 5px;
 }
 
+.btn-link {
+    color: #403e3e;
+}
+
 /* Responsive Adjustments */
 @media (min-width: 992px) {
     .profile-card{
