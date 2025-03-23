@@ -124,6 +124,13 @@ class TagGroup(models.Model):
 class Shipper(models.Model):
     """Shipping provider (e.g. AnPost, DHL)."""
     name = models.CharField(max_length=100, unique=True)
+    tracking_url = models.URLField(
+        max_length=500,
+        blank=True,
+        help_text=(
+            "URL to the tracking page (use {tracking_number} as a placeholder)"
+        )
+    )
 
     def __str__(self):
         return self.name

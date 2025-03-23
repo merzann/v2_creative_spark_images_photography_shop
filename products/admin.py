@@ -108,8 +108,8 @@ class ShipperAdmin(admin.ModelAdmin):
     **Attributes:**
     - ``list_display``: Displays the shipper's name in the list view.
     """
-
-    list_display = ("name",)
+    list_display = ('name', 'tracking_url')
+    search_fields = ('name',)
 
 
 @admin.register(ShippingRate)
