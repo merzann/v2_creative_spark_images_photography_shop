@@ -87,11 +87,13 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Get references to DOM elements
         const toggle = document.getElementById('productTypeToggle');
         const label = document.getElementById('toggleLabel');
         const digital = document.getElementById('digitalOptions');
         const printed = document.getElementById('printedOptions');
 
+        // Toggle visibility and label based on product type selection
         toggle.addEventListener('change', () => {
             if (toggle.checked) {
                 label.textContent = "Printed Product";
@@ -104,7 +106,9 @@
             }
         });
 
-        // Block for price calculation in product_detail.html
+        // --- Price Calculation Section for product_detail.html ---
+
+        // Get base price and display elements
         const basePrice = parseFloat(document.getElementById('basePrice').textContent);
         const vatDisplay = document.getElementById('vatAmount');
         const shippingDisplay = document.getElementById('shippingAmount');
@@ -112,29 +116,36 @@
         const shippingRow = document.getElementById('shippingRow');
 
         const VAT_RATE = 0.21;
-        const SHIPPING_COST = 5.00;
+        const SHIPPING_COST = parseFloat("{{ shipping_cost|floatformat:2 }}");
 
+        // Update price summary depending on product type
         function updateSummary(isPrinted) {
             const vat = (basePrice * VAT_RATE).toFixed(2);
             const shipping = isPrinted ? SHIPPING_COST.toFixed(2) : (0.00).toFixed(2);
             const total = (basePrice + parseFloat(vat) + parseFloat(shipping)).toFixed(2);
 
+            // Update DOM with calculated values
             vatDisplay.textContent = vat;
             shippingDisplay.textContent = shipping;
             shippingRow.classList.toggle('d-none', !isPrinted);
             totalDisplay.textContent = total;
         }
 
-        // Initial update on load (defaults to digital)
+        // Set initial price summary for digital product
         updateSummary(false);
 
+        // Rebind toggle logic with price calculation
         toggle.addEventListener('change', () => {
             const isPrinted = toggle.checked;
-            label.textContent = isPrinted ? "Printed Product" : "Digital Product";
+
+            // Update UI and price summary
+            label.textContent = isPrinted 
+                ? "Printed Product" 
+                : "Digital Product";
             digital.classList.toggle("d-none", isPrinted);
             printed.classList.toggle("d-none", !isPrinted);
             updateSummary(isPrinted);
         });
     });
-    </script>
+</script>
 {% endblock %}
