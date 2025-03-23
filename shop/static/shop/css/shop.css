@@ -140,20 +140,19 @@ h1.heading {
 }
 
 /* licenses */
-.license-tags {
+.image-card .license-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
     margin: 0 auto;
 }
 
-.license-tag {
+.image-card .license-tag {
     background-color: #7c7575;
     color: #fff;
-    font-size: 10px !important;
     padding: 3px 8px;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
 }
 
 /* Responsiveness Adjustement */

@@ -32,11 +32,11 @@
                         </div>
 
                         <!-- Digital License -->
-                        <div id="digitalOptions">
+                        <div id="digitalOptions" class="mb-3">
                             <label for="licenseSelect" class="form-label" style="color: #333;">Choose License:</label>
-                            <select class="form-select mb-4">
+                            <select class="form-select">
                                 {% for license in product.license_types.all %}
-                                    <option>{{ license.name }}</option>
+                                <option value="{{ license.id }}">{{ license.name }}</option>
                                 {% empty %}
                                     <option disabled>No license available</option>
                                 {% endfor %}
@@ -44,9 +44,9 @@
                         </div>
 
                         <!-- Printed Product -->
-                        <div id="printedOptions" class="d-none">
+                        <div id="printedOptions" class="d-none mb-3">
                             <label for="printSelect" class="form-label" style="color: #333;">Choose Print Type:</label>
-                            <select class="form-select mb-4">
+                            <select class="form-select">
                                 {% for print in product.print_types.all %}
                                     <option>{{ print.name }}</option>
                                 {% empty %}
@@ -79,7 +79,7 @@
                             class="btn btn-secondary mt-3">⬅ Back to Gallery</a>
                         </div>
                         <div class="text-end mt-4">
-                            <button class="btn btn-dark">Add to Cart</button>
+                            <button class="btn btn-custom">Add to Cart</button>
                         </div>
                         </div>
                     </div>
