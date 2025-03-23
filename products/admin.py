@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 from .models import (
-    Product, ProductType, PrintType, LicenseType, Tag, TagGroup
+    Product, ProductType, PrintType, LicenseType,
+    CountryVAT, Shipper, ShippingRate, Tag, TagGroup
 )
 
 
@@ -97,3 +98,45 @@ class ProductTypeAdmin(admin.ModelAdmin):
     """
 
     list_display = ("name",)
+
+
+@admin.register(Shipper)
+class ShipperAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the :model:`shipping.Shipper` model.
+
+    **Attributes:**
+    - ``list_display``: Displays the shipper's name in the list view.
+    """
+
+    list_display = ("name",)
+
+
+@admin.register(ShippingRate)
+class ShippingRateAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the :model:`shipping.ShippingRate` model.
+
+    **Attributes:**
+    - ``list_display``: Shows product type, shipper, country, and price.
+    - ``list_filter``: Enables filtering by shipper, country, and product type.
+    - ``search_fields``: Allows searching by country name.
+    """
+
+    list_display = ("product_type", "shipper", "country", "price")
+    list_filter = ("shipper", "country", "product_type")
+    search_fields = ("country",)
+
+
+@admin.register(CountryVAT)
+class CountryVATAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the :model:`shipping.CountryVAT` model.
+
+    **Attributes:**
+    - ``list_display``: Shows country name and its VAT rate.
+    - ``search_fields``: Enables search by country name.
+    """
+
+    list_display = ("country", "vat_rate")
+    search_fields = ("country",)
