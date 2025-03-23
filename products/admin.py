@@ -57,6 +57,7 @@ class PrintTypeAdmin(admin.ModelAdmin):
     - ``list_display``: Displays the Print Types available for a product.
     """
     list_display = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Product)
@@ -75,7 +76,12 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ("title", "price", "created_at")
     search_fields = ("title", "description")
     list_filter = ("theme", "tags", "product_types", "license_types")
-    filter_horizontal = ("tags", "product_types", "license_types")
+    filter_horizontal = (
+        "tags",
+        "product_types",
+        "license_types",
+        "print_types"
+    )
 
 
 @admin.register(ProductType)

@@ -51,6 +51,7 @@ class Product(models.Model):
     product_types = models.ManyToManyField(ProductType, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     license_types = models.ManyToManyField(LicenseType, blank=True)
+    print_types = models.ManyToManyField(PrintType, blank=True)
     rating = models.DecimalField(
         max_digits=3, decimal_places=2,
         default=0.0, blank=True, null=True
