@@ -46,9 +46,9 @@
                         <!-- Printed Product -->
                         <div id="printedOptions" class="d-none mb-3">
                             <label for="printSelect" class="form-label" style="color: #333;">Choose Print Type:</label>
-                            <select class="form-select">
+                            <select class="form-select" id="printSelect">
                                 {% for print in product.print_types.all %}
-                                    <option>{{ print.name }}</option>
+                                    <option value="{{ print.name }}">{{ print.name }}</option>
                                 {% empty %}
                                     <option disabled>No print option available</option>
                                 {% endfor %}
@@ -59,12 +59,11 @@
 
                         <!-- Summary -->
                         <div id="costSummary" class="mt-3" style="color: #333;">
-                            <div id="costSummary" class="mt-3" style="color: #333;">
-                                <p><strong>Price (excl. VAT):</strong> €<span id="basePrice">{{ product.price }}</span></p>
-                                <p><strong>VAT:</strong> €<span id="vatAmount">0.00</span></p>
-                                <p id="shippingRow" class="d-none"><strong>Shipping:</strong> €<span id="shippingAmount">0.00</span></p>
-                                <p><strong>Total:</strong> €<span id="totalPrice">0.00</span></p>
-                            </div>
+                            <p><strong>Price (excl. VAT):</strong> €<span id="basePrice">{{ product.price }}</span></p>
+                            <p><strong>VAT:</strong> €<span id="vatAmount">0.00</span></p>
+                            <p id="shippingRow" class="d-none"><strong>Shipping:</strong> €<span id="shippingAmount">0.00</span></p>
+                            <p><strong>Total:</strong> €<span id="totalPrice">0.00</span></p>
+                        </div>
                         </div>
 
                         <div>
@@ -82,33 +81,18 @@
         </div>
     </div>    
 </section>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Get references to DOM elements
         const toggle = document.getElementById('productTypeToggle');
         const label = document.getElementById('toggleLabel');
         const digital = document.getElementById('digitalOptions');
         const printed = document.getElementById('printedOptions');
+        const printSelect = document.getElementById('printSelect');
 
-        // Toggle visibility and label based on product type selection
-        toggle.addEventListener('change', () => {
-            if (toggle.checked) {
-                label.textContent = "Printed Product";
-                digital.classList.add("d-none");
-                printed.classList.remove("d-none");
-            } else {
-                label.textContent = "Digital Product";
-                digital.classList.remove("d-none");
-                printed.classList.add("d-none");
-            }
-        });
-
-        // --- Price Calculation Section for product_detail.html ---
-
-        // Get base price and display elements
         const basePrice = parseFloat(document.getElementById('basePrice').textContent);
         const vatDisplay = document.getElementById('vatAmount');
         const shippingDisplay = document.getElementById('shippingAmount');
@@ -116,36 +100,47 @@
         const shippingRow = document.getElementById('shippingRow');
 
         const VAT_RATE = 0.21;
-        const SHIPPING_COST = parseFloat("{{ shipping_cost|floatformat:2 }}");
+        const shippingRates = JSON.parse('{{ shipping_rates|escapejs }}');
 
-        // Update price summary depending on product type
-        function updateSummary(isPrinted) {
+        function getSelectedShipping() {
+            const selected = printSelect?.value?.trim();
+            const shipping = shippingRates[selected];
+            return shipping ? parseFloat(shipping) : 0;
+        }
+
+        function updateSummary() {
+            const isPrinted = toggle.checked;
+            const shipping = isPrinted ? getSelectedShipping() : 0;
             const vat = (basePrice * VAT_RATE).toFixed(2);
-            const shipping = isPrinted ? SHIPPING_COST.toFixed(2) : (0.00).toFixed(2);
-            const total = (basePrice + parseFloat(vat) + parseFloat(shipping)).toFixed(2);
+            const total = (basePrice + parseFloat(vat) + shipping).toFixed(2);
 
-            // Update DOM with calculated values
             vatDisplay.textContent = vat;
-            shippingDisplay.textContent = shipping;
+            shippingDisplay.textContent = shipping.toFixed(2);
             shippingRow.classList.toggle('d-none', !isPrinted);
             totalDisplay.textContent = total;
         }
 
-        // Set initial price summary for digital product
-        updateSummary(false);
-
-        // Rebind toggle logic with price calculation
         toggle.addEventListener('change', () => {
             const isPrinted = toggle.checked;
 
-            // Update UI and price summary
-            label.textContent = isPrinted 
-                ? "Printed Product" 
-                : "Digital Product";
+            label.textContent = isPrinted ? "Printed Product" : "Digital Product";
             digital.classList.toggle("d-none", isPrinted);
             printed.classList.toggle("d-none", !isPrinted);
-            updateSummary(isPrinted);
+
+            updateSummary();
         });
+
+        printSelect?.addEventListener('change', () => {
+            updateSummary();
+        });
+
+        // Set visibility and price correctly on initial load
+        const isInitiallyPrinted = toggle.checked;
+        label.textContent = isInitiallyPrinted ? "Printed Product" : "Digital Product";
+        digital.classList.toggle("d-none", isInitiallyPrinted);
+        printed.classList.toggle("d-none", !isInitiallyPrinted);
+
+        updateSummary();
     });
 </script>
 {% endblock %}

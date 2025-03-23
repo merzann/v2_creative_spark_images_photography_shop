@@ -1,5 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product, LicenseType, ShippingRate
+import json
+
+
+PRINT_TYPE_TO_SHIPPING_TYPE = {
+    "Poster Print": "poster",
+    "Canvas Wrap": "canvas",
+    "Framed Print": "framed",
+    "Mug": "mug",
+}
 
 
 def product_detail(request, product_id):
@@ -21,19 +30,34 @@ def product_detail(request, product_id):
     :template:`products/product_detail.html`
     """
     product = get_object_or_404(Product, id=product_id)
-    default_shipping = (
-        ShippingRate.objects
-        .filter(product_type="poster")  # adjust dynamically in future
-        .first()
-    )
-    shipping_cost = default_shipping.price if default_shipping else 0
+    shipping_rates = {}
+
+    # Build shipping rates dict using matching PrintType
+    for print_type in product.print_types.all():
+        name = str(print_type.name)
+        print(f"PrintType: {print_type.name}")
+        shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(name)
+        print(f"→ Mapped to shipping_key: {shipping_key}")
+
+        if shipping_key:
+            rate = (
+                ShippingRate.objects
+                .filter(product_type=shipping_key)
+                .first()
+            )
+            print(f"→ Found rate: {rate.price if rate else 'None'}")
+            if rate:
+                shipping_rates[name] = float(rate.price)
+
+    default_shipping_cost = next(iter(shipping_rates.values()), 0.00)
 
     return render(
         request,
         "products/product_detail.html",
         {
             "product": product,
-            "shipping_cost": float(shipping_cost),  # Pass to template
+            "shipping_cost": default_shipping_cost,
+            "shipping_rates": json.dumps(shipping_rates),
         },
     )
 
