@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 from .models import (
-    Product, ProductType, PrintType, LicenseType,
-    ShippingOption, Tag, TagGroup
+    Product, ProductType, PrintType, LicenseType, Tag, TagGroup
 )
 
 
@@ -98,16 +97,3 @@ class ProductTypeAdmin(admin.ModelAdmin):
     """
 
     list_display = ("name",)
-
-
-@admin.register(ShippingOption)
-class ShippingOptionAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for the :model:`shop.ShippingOption` model.
-
-    **Attributes:**
-    - ``list_display``: Shows country and flat rate in the list view.
-    - ``search_fields``: Enables search by country.
-    """
-    list_display = ("country", "flat_rate")
-    search_fields = ("country",)

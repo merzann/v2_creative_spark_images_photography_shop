@@ -121,10 +121,49 @@ class TagGroup(models.Model):
         return self.name
 
 
-class ShippingOption(models.Model):
-    """Represents a flat shipping fee set in Admin Panel."""
-    country = models.CharField(max_length=100, default="Ireland")
-    flat_rate = models.DecimalField(max_digits=5, decimal_places=2)
+class Shipper(models.Model):
+    """Shipping provider (e.g. AnPost, DHL)."""
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
-        return f"{self.country} - €{self.flat_rate}"
+        return self.name
+
+
+class CountryVAT(models.Model):
+    """Stores VAT rates by country."""
+    country = models.CharField(max_length=100, unique=True)
+    vat_rate = models.DecimalField(
+        max_digits=4, decimal_places=2,
+        help_text="Set VAT as a decimal (e.g. 0.21 for 21%)"
+    )
+
+    def __str__(self):
+        return f"{self.country} – {self.vat_rate * 100:.0f}%"
+
+
+class ShippingRate(models.Model):
+    """Shipping cost per product type, shipper, and country."""
+    PRODUCT_CATEGORY_CHOICES = [
+        ("poster", "Poster"),
+        ("canvas", "Canvas"),
+        ("framed", "Framed"),
+        ("mug", "Mug"),
+        ("other", "Other"),
+    ]
+
+    product_type = models.CharField(
+        max_length=20,
+        choices=PRODUCT_CATEGORY_CHOICES
+        )
+    shipper = models.ForeignKey(Shipper, on_delete=models.CASCADE)
+    country = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    class Meta:
+        unique_together = ("product_type", "shipper", "country")
+
+    def __str__(self):
+        return (
+            f"{self.get_product_type_display()} to {self.country} via "
+            f"{self.shipper.name} – €{self.price}"
+        )
