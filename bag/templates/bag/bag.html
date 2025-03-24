@@ -1,0 +1,9 @@
+<h1>Your Cart</h1>
+{% if bag_items %}
+  {% for item in bag_items %}
+    {{ item.product_id }} – {{ item.quantity }}
+  {% endfor %}
+{% else %}
+  <p>No items added to the cart yet.</p>
+  <a href="{% url 'gallery_page' %}" class="btn btn-secondary">Continue Shopping</a>
+{% endif %}

@@ -57,6 +57,14 @@
                             </select>
                         </div>
 
+                        <!-- Quantity Selector -->
+                        <label for="quantitySelect" class="form-label mt-2" style="color: #333;">Choose a quantity (max.10):</label>
+                        <select class="form-select w-25" id="quantitySelect" aria-label="Select quantity to purchase">
+                            {% for i in product.stock|get_range:10 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>                        
+
                         <hr>
 
                         <!-- Summary -->
@@ -85,12 +93,12 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Get DOM elements for the format toggle buttons
+        // DOM elements
         const digital = document.getElementById('digitalOptions');
         const printed = document.getElementById('printedOptions');
         const printSelect = document.getElementById('printSelect');
+        const quantitySelect = document.getElementById('quantitySelect');
 
-        // Get price and summary display elements
         const basePrice = parseFloat(document.getElementById('basePrice').textContent);
         const vatDisplay = document.getElementById('vatAmount');
         const shippingDisplay = document.getElementById('shippingAmount');
@@ -99,12 +107,11 @@
 
         const VAT_RATE = 0.21;
 
-        // Parse shipping rates passed from Django context (as a JSON string)
+        // Parse shipping rates passed from Django
         const shippingRates = JSON.parse('{{ shipping_rates|escapejs }}');
 
         /**
-         * Retrieve the shipping cost based on the currently selected print type.
-         * Falls back to 0 if not found.
+         * Get the selected print type's shipping rate.
          * @returns {number}
          */
         function getSelectedShipping() {
@@ -113,13 +120,15 @@
         }
 
         /**
-         * Updates the pricing summary UI (VAT, shipping, total) based on format.
-         * @param {boolean} isPrinted - Whether the printed format is selected
+         * Update summary: VAT, shipping, and total based on selection.
+         * @param {boolean} isPrinted - Whether printed format is selected.
          */
         function updateSummary(isPrinted) {
+            const quantity = quantitySelect ? parseInt(quantitySelect.value) : 1;
+            const subtotal = basePrice * quantity;
+            const vat = (subtotal * VAT_RATE).toFixed(2);
             const shipping = isPrinted ? getSelectedShipping() : 0;
-            const vat = (basePrice * VAT_RATE).toFixed(2);
-            const total = (basePrice + parseFloat(vat) + shipping).toFixed(2);
+            const total = (subtotal + parseFloat(vat) + shipping).toFixed(2);
 
             vatDisplay.textContent = vat;
             shippingDisplay.textContent = shipping.toFixed(2);
@@ -127,7 +136,7 @@
             totalDisplay.textContent = total;
         }
 
-        // Toggle buttons
+        // Format toggle buttons
         const btnDigital = document.getElementById('btnDigital');
         const btnPrinted = document.getElementById('btnPrinted');
 
@@ -143,17 +152,22 @@
             updateSummary(true);
         });
 
-        // Update summary when print type selection changes
+        // Update on print type change
         printSelect?.addEventListener('change', function () {
             if (btnPrinted.checked) {
                 updateSummary(true);
             }
         });
 
-        // Initial setup on page load
+        // Update on quantity change
+        quantitySelect?.addEventListener('change', function () {
+            updateSummary(btnPrinted.checked);
+        });
+
+        // Initial setup
         const isPrinted = btnPrinted.checked;
-        digital.classList.toggle("d-none", isPrinted);
-        printed.classList.toggle("d-none", !isPrinted);
+        digital.classList.toggle('d-none', isPrinted);
+        printed.classList.toggle('d-none', !isPrinted);
         updateSummary(isPrinted);
     });
 </script>
