@@ -1,3 +1,48 @@
-from django.shortcuts import render
+import stripe
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from products.models import Product
 
-# Create your views here.
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+def checkout(request):
+    return render(request, 'checkout/checkout.html')
+
+
+def checkout_success(request):
+    # clear session cart
+    request.session['bag'] = {}
+    return render(request, 'checkout/checkout_success.html')
+
+
+@csrf_exempt
+def create_checkout_session(request):
+    bag = request.session.get('bag', {})
+    line_items = []
+
+    for item in bag.values():
+        product = Product.objects.get(id=item['product_id'])
+        quantity = item['quantity']
+        price = int(float(product.price) * 100)
+
+        line_items.append({
+            'price_data': {
+                'currency': 'eur',
+                'unit_amount': price,
+                'product_data': {
+                    'name': product.title,
+                },
+            },
+            'quantity': quantity,
+        })
+
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=line_items,
+        mode='payment',
+        success_url=request.build_absolute_uri('/checkout/success/'),
+        cancel_url=request.build_absolute_uri('/bag/'),
+    )
+    return redirect(session.url, code=303)
