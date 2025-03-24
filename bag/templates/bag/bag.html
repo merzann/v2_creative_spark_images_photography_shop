@@ -2,16 +2,29 @@
 {% block content %}
 <section class="container py-5">
   <h2>Your Shopping Bag</h2>
+
   {% if bag %}
-    <ul>
-      {% for key, item in bag.items %}
-        <li>
-          {{ item.quantity }}x Product ID: {{ item.product_id }} ({{ item.format }})
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>Your bag is empty!</p>
-  <a href="{% url 'gallery_page' %}" class="btn btn-secondary">Continue Shopping</a>
+  <ul class="list-group mb-4">
+    {% for key, item in bag.items %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Product ID:</strong> {{ item.product_id }}<br>
+          <strong>Format:</strong> {{ item.format }}<br>
+          <strong>Quantity:</strong> {{ item.quantity }}
+        </div>
+        <a href="{% url 'remove_from_bag' key %}" class="btn btn-danger btn-sm">Remove</a>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="d-flex justify-content-between">
+    <a href="{% url 'gallery_page' %}" class="btn btn-secondary">⬅ Continue Shopping</a>
+    <a href="#" class="btn btn-success">Proceed to Checkout ➡</a>
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    <p>No items added to the cart yet.</p>
+    <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-2">⬅ Continue Shopping</a>
+  </div>
 {% endif %}
+</section>
 {% endblock %}

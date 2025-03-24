@@ -159,6 +159,7 @@
         btnPrinted.addEventListener('change', function () {
             digital.classList.add('d-none');
             printed.classList.remove('d-none');
+            formatInput.value = "printed";
             updateSummary(true);
         });
 

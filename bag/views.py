@@ -49,15 +49,16 @@ def view_bag(request):
     return render(request, 'bag/bag.html', {'bag': bag})
 
 
-def remove_from_bag(request, product_id):
-    """ Remove item from shopping bag """
+def remove_from_bag(request, item_key):
+    """Remove a specific item from the bag using its composite key."""
     try:
         bag = request.session.get("bag", {})
-        if str(product_id) in bag:
-            bag.pop(str(product_id))
+        if item_key in bag:
+            bag.pop(item_key)
             request.session["bag"] = bag
             messages.success(request, "Item removed from your bag.")
-        return redirect("view_bag")
+        else:
+            messages.warning(request, "Item not found in your bag.")
     except Exception:
-        messages.error(request, "Error removing item.")
-        return redirect("view_bag")
+        messages.error(request, "Error removing item from bag.")
+    return redirect("view_bag")
