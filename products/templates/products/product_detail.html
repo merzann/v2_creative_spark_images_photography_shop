@@ -42,7 +42,7 @@
                             <!-- Digital License -->
                             <div id="digitalOptions" class="mb-3">
                                 <label for="licenseSelect" class="form-label" style="color: #333;">Choose License:</label>
-                                <select class="form-select" id="licenseSelect" aria-label="select license type">
+                                <select name="license" class="form-select" id="licenseSelect" aria-label="select license type">
                                     {% for license in product.license_types.all %}
                                     <option value="{{ license.id }}">{{ license.name }}</option>
                                     {% empty %}
@@ -54,7 +54,7 @@
                             <!-- Printed Product -->
                             <div id="printedOptions" class="d-none mb-3">
                                 <label for="printSelect" class="form-label" style="color: #333;">Choose Print Type:</label>
-                                <select class="form-select" id="printSelect" aria-label="Printed product select purchase option">
+                                <select name="print_type" class="form-select" id="printSelect" aria-label="Printed product select purchase option">
                                     {% for print in product.print_types.all %}
                                         <option value="{{ print.name }}">{{ print.name }}</option>
                                     {% empty %}
@@ -151,7 +151,6 @@
         btnDigital.addEventListener('change', function () {
             digital.classList.remove('d-none');
             printed.classList.add('d-none');
-            formatInput.value = "digital";
             formatInput.value = "digital";
             updateSummary(false);
         });

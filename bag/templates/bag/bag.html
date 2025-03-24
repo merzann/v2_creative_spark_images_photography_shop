@@ -1,30 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="container py-5">
+<section class="container h-100 py-5">
   <h2>Your Shopping Bag</h2>
 
-  {% if bag %}
-  <ul class="list-group mb-4">
-    {% for key, item in bag.items %}
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <div>
-          <strong>Product ID:</strong> {{ item.product_id }}<br>
-          <strong>Format:</strong> {{ item.format }}<br>
-          <strong>Quantity:</strong> {{ item.quantity }}
-        </div>
-        <a href="{% url 'remove_from_bag' key %}" class="btn btn-danger btn-sm">Remove</a>
-      </li>
-    {% endfor %}
-  </ul>
-  <div class="d-flex justify-content-between">
-    <a href="{% url 'gallery_page' %}" class="btn btn-secondary">⬅ Continue Shopping</a>
-    <a href="#" class="btn btn-success">Proceed to Checkout ➡</a>
-  </div>
-{% else %}
-  <div class="alert alert-info">
-    <p>No items added to the cart yet.</p>
-    <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-2">⬅ Continue Shopping</a>
-  </div>
-{% endif %}
+  {% if bag_items %}
+    <ul class="list-group mb-4">
+      {% for item in bag_items %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <img src="{{ item.product.image_preview.url }}" alt="{{ item.product.title }}" class="me-3" style="width: 60px; height: auto;">
+            <div>
+              <strong>{{ item.product.title }}</strong><br>
+              Format: {{ item.format|capfirst }}
+              {% if item.print_type %}
+                ({{ item.print_type }})
+              {% elif item.license %}
+                ({{ item.license }})
+              {% endif %}
+              <br>
+              Qty: {{ item.quantity }}
+            </div>
+          </div>
+          <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-danger btn-sm">Remove</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'gallery_page' %}" class="btn btn-secondary">⬅ Continue Shopping</a>
+      <a href="" class="btn btn-success">Proceed to Checkout ➡</a>
+    </div>
+
+  {% else %}
+    <div class="alert alert-info">
+      <p>No items added to the cart yet.</p>
+      <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-2">⬅ Continue Shopping</a>
+    </div>
+  {% endif %}
 </section>
 {% endblock %}
