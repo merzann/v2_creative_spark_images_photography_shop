@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from products.models import Product
 from django.contrib import messages
-from django.urls import reverse
 
 
 def add_to_bag(request, product_id):
@@ -43,15 +42,12 @@ def add_to_bag(request, product_id):
     if print_type_raw and product_format == 'printed':
         print_type_name = print_type_raw.strip()
 
-
-    # Create a composite item key
     item_key = f"{product_id}-{product_format}"
     if product_format == 'digital' and license_id:
         item_key += f"-{license_id}"
     elif product_format == 'printed' and print_type:
         item_key += f"-{print_type}"
 
-    # Add or update the item in the bag
     if item_key in bag:
         bag[item_key]['quantity'] += quantity
     else:
@@ -71,20 +67,37 @@ def add_to_bag(request, product_id):
 def view_bag(request):
     bag = request.session.get('bag', {})
     bag_items = []
+    total = 0
+    VAT_RATE = 0.21
 
     for key, item in bag.items():
         product = get_object_or_404(Product, pk=item['product_id'])
+        price = float(product.price)
+        quantity = item['quantity']
+        subtotal = price * quantity
+        total += subtotal
 
         bag_items.append({
             'key': key,
             'product': product,
-            'quantity': item['quantity'],
+            'quantity': quantity,
             'format': item.get('format'),
             'license': item.get('license'),
             'print_type': item.get('print_type'),
+            'price': price,
+            'subtotal': subtotal,
         })
 
-    return render(request, 'bag/bag.html', {'bag_items': bag_items})
+    vat = round(total * VAT_RATE, 2)
+    grand_total = total + vat
+
+    context = {
+        'bag_items': bag_items,
+        'bag_total': total,
+        'vat': vat,
+        'grand_total': grand_total,
+    }
+    return render(request, 'bag/bag.html', context)
 
 
 def remove_from_bag(request, item_key):
