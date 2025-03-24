@@ -1,5 +1,6 @@
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from products.models import Product
+from django.contrib import messages
 
 
 def add_to_bag(request, product_id):
@@ -13,6 +14,17 @@ def add_to_bag(request, product_id):
     product_format = request.POST.get('format')
     license_id = request.POST.get('license')
     print_type = request.POST.get('print_type')
+
+    raw_quantity = request.POST.get('quantity')
+    if not raw_quantity:
+        messages.error(request, "Quantity is required.")
+        return redirect('product_detail', product_id=product_id)
+
+    try:
+        quantity = int(raw_quantity)
+    except ValueError:
+        messages.error(request, "Invalid quantity.")
+        return redirect('product_detail', product_id=product_id)
 
     bag = request.session.get('bag', {})
 
@@ -35,3 +47,11 @@ def add_to_bag(request, product_id):
 
     request.session['bag'] = bag
     return redirect('view_bag')
+
+
+def view_bag(request):
+    """
+    Show the contents of the bag.
+    """
+    bag = request.session.get('bag', {})
+    return render(request, 'bag/bag.html', {'bag': bag})
