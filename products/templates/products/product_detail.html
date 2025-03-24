@@ -21,20 +21,22 @@
             <div class="col-lg-6">
                 <div class="card shadow-md p-4" style="background-color: #ddd;">
                     <div class="card-body">
-                        <h2 class="card-title mb-3">{{ product.title }}</h2>
+                        <h2 class="card-title mb-3 mt-4">{{ product.title }}</h2>
                         <p class="card-text">{{ product.description }}</p>
 
                         <!-- Product Toggle -->
-                        <label class="form-label" for="productTypeToggle" style="color: #333;">Select Format:</label>
-                        <div class="form-check form-switch mb-4">
-                            <input class="form-check-input" type="checkbox" id="productTypeToggle">
-                            <label class="form-check-label" for="productTypeToggle" id="toggleLabel" style="color: #333;">Digital Product</label>
+                        <div class="btn-group mb-4 mt-3" role="group" aria-label="Format toggle">
+                            <input type="radio" class="btn-check" name="productFormat" id="btnDigital" autocomplete="off" checked>
+                            <label class="btn btn-outline-dark" for="btnDigital">Digital Product</label>
+                        
+                            <input type="radio" class="btn-check" name="productFormat" id="btnPrinted" autocomplete="off">
+                            <label class="btn btn-outline-dark" for="btnPrinted">Printed Product</label>
                         </div>
 
                         <!-- Digital License -->
                         <div id="digitalOptions" class="mb-3">
                             <label for="licenseSelect" class="form-label" style="color: #333;">Choose License:</label>
-                            <select class="form-select">
+                            <select class="form-select" id="licenseSelect">
                                 {% for license in product.license_types.all %}
                                 <option value="{{ license.id }}">{{ license.name }}</option>
                                 {% empty %}
@@ -64,16 +66,12 @@
                             <p id="shippingRow" class="d-none"><strong>Shipping:</strong> €<span id="shippingAmount">0.00</span></p>
                             <p><strong>Total:</strong> €<span id="totalPrice">0.00</span></p>
                         </div>
-                        </div>
 
-                        <div>
-                        <div class="text-start mt-3">
-                            <a href="{% url 'gallery_page' %}"
-                            class="btn btn-secondary mt-3">⬅ Back to Gallery</a>
-                        </div>
-                        <div class="text-end mt-4">
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-3">
+                                ⬅ Back to Gallery
+                            </a>
                             <button class="btn btn-custom">Add to Cart</button>
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -87,12 +85,12 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const toggle = document.getElementById('productTypeToggle');
-        const label = document.getElementById('toggleLabel');
+        // Get DOM elements for the format toggle buttons
         const digital = document.getElementById('digitalOptions');
         const printed = document.getElementById('printedOptions');
         const printSelect = document.getElementById('printSelect');
 
+        // Get price and summary display elements
         const basePrice = parseFloat(document.getElementById('basePrice').textContent);
         const vatDisplay = document.getElementById('vatAmount');
         const shippingDisplay = document.getElementById('shippingAmount');
@@ -100,16 +98,25 @@
         const shippingRow = document.getElementById('shippingRow');
 
         const VAT_RATE = 0.21;
+
+        // Parse shipping rates passed from Django context (as a JSON string)
         const shippingRates = JSON.parse('{{ shipping_rates|escapejs }}');
 
+        /**
+         * Retrieve the shipping cost based on the currently selected print type.
+         * Falls back to 0 if not found.
+         * @returns {number}
+         */
         function getSelectedShipping() {
             const selected = printSelect?.value?.trim();
-            const shipping = shippingRates[selected];
-            return shipping ? parseFloat(shipping) : 0;
+            return parseFloat(shippingRates[selected] || 0);
         }
 
-        function updateSummary() {
-            const isPrinted = toggle.checked;
+        /**
+         * Updates the pricing summary UI (VAT, shipping, total) based on format.
+         * @param {boolean} isPrinted - Whether the printed format is selected
+         */
+        function updateSummary(isPrinted) {
             const shipping = isPrinted ? getSelectedShipping() : 0;
             const vat = (basePrice * VAT_RATE).toFixed(2);
             const total = (basePrice + parseFloat(vat) + shipping).toFixed(2);
@@ -120,27 +127,34 @@
             totalDisplay.textContent = total;
         }
 
-        toggle.addEventListener('change', () => {
-            const isPrinted = toggle.checked;
+        // Toggle buttons
+        const btnDigital = document.getElementById('btnDigital');
+        const btnPrinted = document.getElementById('btnPrinted');
 
-            label.textContent = isPrinted ? "Printed Product" : "Digital Product";
-            digital.classList.toggle("d-none", isPrinted);
-            printed.classList.toggle("d-none", !isPrinted);
-
-            updateSummary();
+        btnDigital.addEventListener('change', function () {
+            digital.classList.remove('d-none');
+            printed.classList.add('d-none');
+            updateSummary(false);
         });
 
-        printSelect?.addEventListener('change', () => {
-            updateSummary();
+        btnPrinted.addEventListener('change', function () {
+            digital.classList.add('d-none');
+            printed.classList.remove('d-none');
+            updateSummary(true);
         });
 
-        // Set visibility and price correctly on initial load
-        const isInitiallyPrinted = toggle.checked;
-        label.textContent = isInitiallyPrinted ? "Printed Product" : "Digital Product";
-        digital.classList.toggle("d-none", isInitiallyPrinted);
-        printed.classList.toggle("d-none", !isInitiallyPrinted);
+        // Update summary when print type selection changes
+        printSelect?.addEventListener('change', function () {
+            if (btnPrinted.checked) {
+                updateSummary(true);
+            }
+        });
 
-        updateSummary();
+        // Initial setup on page load
+        const isPrinted = btnPrinted.checked;
+        digital.classList.toggle("d-none", isPrinted);
+        printed.classList.toggle("d-none", !isPrinted);
+        updateSummary(isPrinted);
     });
 </script>
 {% endblock %}
