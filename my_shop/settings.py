@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "cloudinary",
 
     # Custom apps
+    "bag",
     "home",
     "products",
     "shop",

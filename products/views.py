@@ -35,9 +35,7 @@ def product_detail(request, product_id):
     # Build shipping rates dict using matching PrintType
     for print_type in product.print_types.all():
         name = str(print_type.name)
-        print(f"PrintType: {print_type.name}")
         shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(name)
-        print(f"→ Mapped to shipping_key: {shipping_key}")
 
         if shipping_key:
             rate = (
@@ -45,7 +43,6 @@ def product_detail(request, product_id):
                 .filter(product_type=shipping_key)
                 .first()
             )
-            print(f"→ Found rate: {rate.price if rate else 'None'}")
             if rate:
                 shipping_rates[name] = float(rate.price)
 
