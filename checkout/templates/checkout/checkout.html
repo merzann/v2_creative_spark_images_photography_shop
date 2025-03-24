@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid text-center py-5 mt-5 mb-3" style="height: 100vh !important">
+    <div class="row">
+        <h2 mb-3>Ready to Checkout?</h2>
+        <p>Total to pay: <strong>€{{ bag_total|floatformat:2 }}</strong></p>
+        <form action="{% url 'create_checkout_session' %}" method="POST">
+            {% csrf_token %}
+            <a href="{% url 'gallery_page' %}" class="btn btn-primary mt-3">Back to Gallery</a>
+            <button type="submit" class="btn btn-success">Proceed to Stripe Checkout</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

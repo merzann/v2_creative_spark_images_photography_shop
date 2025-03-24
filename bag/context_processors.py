@@ -1,12 +1,13 @@
 from django.conf import settings
 from products.models import Product
+from decimal import Decimal
 
 
 def bag_contents(request):
     bag = request.session.get('bag', {})
     bag_items = []
-    total = 0
-    VAT_RATE = 0.21
+    total = Decimal("0.00")
+    VAT_RATE = Decimal("0.21")
 
     for item_id, item in bag.items():
         try:
@@ -35,4 +36,16 @@ def bag_contents(request):
         'vat': vat,
         'grand_total': grand_total,
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+    }
+
+
+def bag_summary(request):
+    bag = request.session.get('bag', {})
+    total_items = 0
+
+    for item in bag.values():
+        total_items += item.get('quantity', 0)
+
+    return {
+        'cart_count': total_items,
     }
