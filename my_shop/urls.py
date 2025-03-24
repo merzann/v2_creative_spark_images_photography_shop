@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import handler404
 
 
 urlpatterns = [
@@ -29,3 +30,4 @@ urlpatterns = [
     path('summernote/', include('django_summernote.urls')),
     path('', include('home.urls'), name='home-urls'),
 ]
+handler404 = 'my_shop.views.handler404'

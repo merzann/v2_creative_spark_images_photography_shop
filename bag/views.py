@@ -121,6 +121,11 @@ def view_bag(request):
     vat = round(total * VAT_RATE, 2)
     grand_total = total + vat
 
+    # Store the totals in the session
+    request.session['bag_total'] = total
+    request.session['vat'] = vat
+    request.session['grand_total'] = grand_total
+
     context = {
         'bag_items': bag_items,
         'bag_total': total,
