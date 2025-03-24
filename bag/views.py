@@ -5,8 +5,17 @@ from django.contrib import messages
 
 def add_to_bag(request, product_id):
     """
-    Add a product to the shopping bag.
-    Stores quantity and configuration (license/print type).
+    Add a :model:`products.Product` to the shopping bag.
+
+    Handles digital and printed formats, storing related info like
+    :model:`products.LicenseType` and print type if applicable.
+
+    **Context:**
+
+    Updates the session-based shopping bag and redirects to view.
+
+    **Redirects:**
+    :redirect:`view_bag`
     """
     product = get_object_or_404(Product, pk=product_id)
     bag = request.session.get("bag", {})
@@ -65,6 +74,27 @@ def add_to_bag(request, product_id):
 
 
 def view_bag(request):
+    """
+    Display the shopping bag with :model:`products.Product` details.
+
+    Calculates pricing, VAT, and totals for each item in the session bag.
+    May include configuration from :model:`products.LicenseType`,
+    :model:`products.PrintType`, and :model:`products.ProductType`.
+
+    **Context:**
+
+    ``bag_items``
+        List of products and their cart configurations.
+    ``bag_total``
+        Total cost before VAT.
+    ``vat``
+        Calculated VAT based on a 21% rate.
+    ``grand_total``
+        Final price including VAT.
+
+    **Template:**
+    :template:`bag/bag.html`
+    """
     bag = request.session.get('bag', {})
     bag_items = []
     total = 0
@@ -101,7 +131,18 @@ def view_bag(request):
 
 
 def remove_from_bag(request, item_key):
-    """Remove a specific item from the bag using its composite key."""
+    """
+    Remove a :model:`products.Product` item from the shopping bag.
+
+    Uses a composite key to remove specific configurations of a product.
+
+    **Context:**
+
+    Updates session bag data and redirects back to the bag view.
+
+    **Redirects:**
+    :redirect:`view_bag`
+    """
     try:
         bag = request.session.get("bag", {})
         if item_key in bag:

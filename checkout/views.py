@@ -8,17 +8,43 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def checkout(request):
+    """
+    Render the main checkout page.
+
+    **Template:**
+    :template:`checkout/checkout.html`
+    """
     return render(request, 'checkout/checkout.html')
 
 
 def checkout_success(request):
-    # clear session cart
+    """
+    Render the success page after successful payment.
+
+    Also clears the shopping bag from the session.
+
+    **Template:**
+    :template:`checkout/checkout_success.html`
+    """
     request.session['bag'] = {}
     return render(request, 'checkout/checkout_success.html')
 
 
 @csrf_exempt
 def create_checkout_session(request):
+    """
+    Create a Stripe checkout session using items in the shopping bag.
+
+    Converts the session bag into Stripe line items and redirects the user
+    to Stripe's hosted checkout page.
+
+    **Context:**
+    - ``bag``: The session-based shopping cart.
+    - ``line_items``: A list of items formatted for Stripe checkout.
+
+    **Redirects:**
+    - To Stripe checkout session URL (303 status).
+    """
     bag = request.session.get('bag', {})
     line_items = []
 
