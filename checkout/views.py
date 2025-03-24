@@ -1,8 +1,10 @@
-import stripe
+from django.shortcuts import render, redirect, get_current_site
 from django.conf import settings
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.core.mail import send_mail
 from products.models import Product
+import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -72,3 +74,54 @@ def create_checkout_session(request):
         cancel_url=request.build_absolute_uri('/bag/'),
     )
     return redirect(session.url, code=303)
+
+
+# Webhook view to handle Stripe events
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    # Set your webhook secret
+    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+
+    try:
+        # Verify the webhook signature
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+
+    except ValueError as e:
+        # Invalid payload
+        print('Invalid payload', e)
+        return JsonResponse({'status': 'fail'}, status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        print('Invalid signature', e)
+        return JsonResponse({'status': 'fail'}, status=400)
+
+    # Handle the event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        customer_email = session.get('customer_email')
+
+        send_confirmation_email(customer_email, session)
+
+    return JsonResponse({'status': 'success'}, status=200)
+
+
+def send_confirmation_email(customer_email, session):
+    """
+    Send an email confirmation to the customer after successful payment.
+    """
+    subject = 'Your Order Confirmation'
+    message = f'Thank you for your purchase! Your order ID is {session["id"]}.'
+
+    # Send confirmation email
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [customer_email],
+    )
