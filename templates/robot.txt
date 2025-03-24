@@ -1,0 +1,16 @@
+# robots.txt for Creative Spark Images Photography Shop
+
+User-agent: *
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /bag/
+Disallow: /accounts/
+Disallow: /static/
+Disallow: /media/
+
+# Allow product and gallery pages to be indexed
+Allow: /products/
+Allow: /gallery/
+
+# Sitemap (if you've set one up)
+Sitemap: https://yourdomain.com/sitemap.xml
