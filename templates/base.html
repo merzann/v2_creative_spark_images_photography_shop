@@ -133,9 +133,11 @@
                     </div>
     
                     <!-- Shopping Cart -->
-                    <a class="nav-link" href="#">
+                    <a class="nav-link position-relative" href="{% url 'view_bag' %}" aria-label="View shopping cart">
                         <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="badge bg-dark text-white ms-1">{{ cart_count|default:0 }}</span>
                     </a>
+                                       
 
                     <!-- Language Selector Dropdown -->
                     <div class="dropdown">
