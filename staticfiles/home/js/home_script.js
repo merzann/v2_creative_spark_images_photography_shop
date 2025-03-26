@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const walkingSound = document.getElementById("walking-sound");
     const aboutSection = document.getElementById("about-section");
 
-
     /**
      * Handles the click event for the "This way to the gallery" sign.
      * Fades out the intro section, then transitions to the gallery animation
@@ -20,29 +19,38 @@ document.addEventListener("DOMContentLoaded", function () {
     gallerySign.addEventListener("click", function () {
         introSection.style.transition = "opacity 2s ease-out";
         introSection.style.opacity = "0";
-
+    
         setTimeout(() => {
             introSection.style.display = "none";
             cottageSection.classList.remove("hidden");
-
+    
             // Start video and sound
             animationVideo.style.opacity = "1";
             animationVideo.style.visibility = "visible";
             animationVideo.play().catch(error => console.error("Video play error:", error));
             walkingSound.play();
-
-            // Simulate animation duration
+    
+            // Overlay text animation
+            const overlayText = document.getElementById("video-overlay");
+            overlayText.style.visibility = "visible";
+            overlayText.style.opacity = "1";
+    
+            setTimeout(() => {
+                overlayText.style.opacity = "0";
+            }, 2000);
+    
+            // Simulate animation duration before redirecting
             setTimeout(() => {
                 animationVideo.style.transition = "opacity 2s ease-out";
                 animationVideo.style.opacity = "0";
-
-                // After animation ends, redirect to the shop page
+    
                 setTimeout(() => {
-                    window.location.href = "/shop/";
+                    window.location.href = "/shop/gallery/";
                 }, 2000);
-            }, 10000);
+            }, 4000);
         }, 2000);
     });
+    
 
     /**
      * Handles the click event for the "About Us" sign.

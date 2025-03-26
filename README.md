@@ -85,11 +85,15 @@ Behind the scenes, the project is backed by a robust Django framework — dynami
 
 ### Shopping Bag Functionality
 
+- Display of cart items with image, title, pricing, format, license or print type
 - Real-time cart updates
+- Price displayed in transparent structure: subtotal, **VAT**, shipping costs and total 
+- Shipper specific shipping costs (shipment via post, courier) managed via Admin Panel
 - Session persistence
-- Remove items with composite keys (product ID, format, license/print type)
-- Frontend UI feedback with toast messages
-- Dropdown cart preview (like modern eCommerce platforms)
+- Cart preview with the option to remove items with composite keys (product ID, format, license/print type)
+
+![Cart Preview](README_Media/cart_preview.png) ![Real Time Quantity Counter](README_Media/real_time_quantity_counter.png)
+
 
 ### Checkout Flow
 
@@ -103,7 +107,6 @@ Behind the scenes, the project is backed by a robust Django framework — dynami
 
 ## Features Left to Implement
 
-- User profiles with order history
 - Rating and comment system for products
 - Image zoom/lightbox on product detail
 - SEO optimization and sitemap auto-generation
@@ -235,22 +238,22 @@ This project uses clear, user-friendly messaging and fallback logic to maintain 
   ### Mobile
 
 - Home Page
-![Home page](readme_media/)
+![Home page](README_Media/)
 
 - Category Page
-![Category page](readme_media/)
+![Category page](README_Media/)
 
 - Recipe Detail Page
-![Recipe detail page](readme_media/)
+![Recipe detail page](README_Media/)
 
 - About Page
-![About page](readme_media/)
+![About page](README_Media/)
 
 - Weekly Tip
-![Weekly tip page](readme_media/)
+![Weekly tip page](README_Media/)
 
 - Page for Login / Logout / Sign-Up
-![Login_Logout_SignUp](readme_media/)
+![Login_Logout_SignUp](README_Media/)
 
 
 

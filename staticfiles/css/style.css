@@ -1,27 +1,25 @@
 /* General styles */
-html,
 body {
     font-family: "Montserrat", sans-serif;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
+    font-size: 14px;
 }
 
-h1,
-h2, h3 {
-    font-family: "Poiret", cursive;
-    margin-top: 5rem;
-    margin-bottom: 3rem;
+h1, h2, h3, h4, h5 {
+    font-family: "Poiret One", sans-serif;
+    font-weight: 600;
 }
 
-.heading {
-    color:#333 !important;
-}
-
-/* Header Background */
 header {
-    height: 10vh;
-    color: #ddd;
+    height: 7vh;
+}
+
+#message-container .alert {
+    font-size: 13px;
+    padding: 8px;
+}
+
+#message-container button.btn-close {
+    padding: 12px !important;
 }
 
 /* Navbar */
@@ -146,29 +144,6 @@ a.dropdown-item {
     margin-right: 4px !important;
 }
 
-/* Messages */
-#message-container {
-    position: relative;
-    font-size: 13px;
-    margin-top: 3.5rem;
-    width: 100%;
-    z-index: 1050;
-}
-
-#message-container .alert {
-    padding: 10px;
-}
-
-#message-container button.btn-close {
-    padding: 14px 12px 12px;
-}
-
-/* AllAuth forms */
-.container.d-flex {
-    min-height: 80vh;
-    padding-top: 5rem;
-}
-
 /* Card Layout */
 .allauth-card {
     width: 100%;
@@ -216,6 +191,21 @@ a.dropdown-item {
 
 .allauth-btn:hover {
     background-color: #5e5959 !important;
+}
+
+.btn-custom {
+    background-color: #7c7575;
+    color: white;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.btn-custom:hover {
+    background-color: #5a5252;
 }
 
 /* Forgot Password & Sign-up Link */
@@ -275,6 +265,7 @@ a.dropdown-item {
 
 /* footer */
 footer {
+    font-size: 12px;
     color: #ddd;
     text-align: center;
     padding: 2rem;
@@ -319,14 +310,15 @@ footer a i {
 }
 
 /* Responsive Adjustments */
-#message-container {
-    margin-top: 6rem;
-}
-
 
 @media (min-width: 992px) {
+
     #logo-desktop {
         height: 5rem;
+    }
+
+    #message-container {
+        margin-top: 2rem;
     }
 
     .fa-user, .fa-cart-shopping {
@@ -356,5 +348,12 @@ footer a i {
 
     .flag-icon {
         height: 1.5rem;
+    }
+
+    footer {
+        font-size: 15px;
+        color: #ddd;
+        text-align: center;
+        padding: 2rem;
     }
 }
