@@ -50,6 +50,14 @@ These nature-inspired hues create a grounded, peaceful atmosphere — mirroring 
 
 Behind the scenes, the project is backed by a robust Django framework — dynamic shopping bag functionality, Stripe integration, Zapier automation for email confirmations, and a thoughtfully designed order system with metadata-rich order tracking. For photographers and creators like me, the Django Admin panel is a dream to work with — intuitive, powerful, and secure.
 
+## Fonts
+
+In designing Creative Spark Images, the selection of Poiret One and Montserrat fonts aligns seamlessly with the project's ethos. Poiret One's sleek, geometric elegance mirrors the refined simplicity of the platform, adding a touch of sophistication that resonates with the artistic nature of the showcased photography. Its graceful curves echo the organic forms found in nature, enhancing the visual narrative of each captured moment.​
+
+Complementing this, Montserrat's modern, geometric structure offers exceptional readability across various devices and screen sizes, ensuring a smooth and engaging user experience. Its design, rooted in urban typography, brings a contemporary flair that balances the natural themes of the artwork, bridging the gap between the digital interface and the organic subjects of the photographs.​
+
+Together, Poiret One and Montserrat create a harmonious typographic duo that embodies the essence of Creative Spark Images—a platform where technology and creativity converge to celebrate the quiet magic of the natural world.​
+
 ---
 ---
 
@@ -69,7 +77,7 @@ Behind the scenes, the project is backed by a robust Django framework — dynami
   - Track orders via a robust **OrderModel**
   - Use Django Admin for full backend control
 
-### Existing Features
+### Existing Features Summary
 
 - Full product catalog and detail pages
 - Format selection toggle (Digital vs Printed)
@@ -83,6 +91,8 @@ Behind the scenes, the project is backed by a robust Django framework — dynami
 - Order management with unique `order_number`
 - Admin control via Django backend
 
+---
+
 ### Shopping Bag Functionality
 
 - Display of cart items with image, title, pricing, format, license or print type
@@ -93,6 +103,60 @@ Behind the scenes, the project is backed by a robust Django framework — dynami
 - Cart preview with the option to remove items with composite keys (product ID, format, license/print type)
 
 ![Cart Preview](README_Media/cart_preview.png) ![Real Time Quantity Counter](README_Media/real_time_quantity_counter.png)
+![Shipping Management](README_Media/shipping_management.png) ![Add Shipping](README_Media/shipping_add_shipping.png)
+
+---
+
+### User Profile Management
+
+The User Profile section of the application provides a clean and intuitive interface for users to manage their personal data, preferences, and order history. It complements the authentication flow handled by Django AllAuth and is visually consistent with the rest of the application’s natural and sophisticated design.
+
+When a user signs up, a UserProfile instance is automatically created via signals (not shown here but assumed to be implemented).
+The profile page is protected and only accessible to authenticated users.
+Data is editable in place and saved via standard Django form POST requests.
+Carousel-based layout ensures a clean, mobile-responsive way to switch between profile info and order history.
+
+### Extended User Model:
+Built using a OneToOneField relationship with Django’s built-in User model. This allows storing additional profile information such as:
+- Profile picture (via Cloudinary)
+- Language preference
+- Full address details (country, city, street, postcode)
+- Phone number
+
+### Dynamic Carousel View
+
+Users can toggle between:
+- My Profile Details – A comprehensive form to edit personal and shipping information
+- My Order History – Displays all past purchases linked to the user (fetched via reverse relation to OrderModel)
+
+### Image Upload Support
+
+Users can upload and update their profile picture with a custom preview display using Cloudinary and Bootstrap styling.
+
+### Language Preference Selector
+
+Users can choose from a list of predefined languages (English, German, French, Spanish), which can be used in the future to customize app behavior or email notifications.
+
+### Data Validation & UX
+
+The form uses placeholder text, Bootstrap styling, and server-side form validation to ensure clean data entry and a pleasant user experience.
+
+### Account Deletion Request Flow
+
+A two-step modal confirmation allows users to request account deletion while optionally submitting feedback. This is handled securely via POST requests.
+
+### Order History Integration
+
+The UserProfile model includes a get_order_history() method to fetch related orders from the OrderModel, making integration with the checkout system seamless.
+
+![User Profile Card](README_Media/user_profile_card.png)
+![Create Account](README_Media/user_create_account.png) ![Sign up error](README_Media/user_sign_up_error.png)
+![Order History Card](README_Media/order_history_card.png) 
+
+
+#### User Dropdown States
+
+![User signed in](README_Media/user_logged_in.png) ![User Signed out](README_Media/user_logged_out.png)
 
 
 ### Checkout Flow
