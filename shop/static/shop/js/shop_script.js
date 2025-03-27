@@ -37,4 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
             backToGalleryBtn.style.visibility = "hidden";
         }
     });
+
+    // Scroll to top when the Back to Top button is clicked
+    backToTopBtn.addEventListener("click", function () {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
 });
