@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<article>
-<section id="shopping-cart" class="container-fluid py-5" style="height: 100vh !important;" aria-label="shopping bag with all items selected including configuration">
+<article aria-label="shopping bag with all items selected including configuration">
+  <section id="shopping-cart" class="container-fluid shopping-bag-section">
   <h2 class="mt-5 mb-3">Your Shopping Bag</h2>
 
       {% if bag_items %}
@@ -30,7 +30,7 @@
         </ul>
         
         <!-- Show Total -->
-        <div class="d-flex flex-column align-items-end mb-3">
+        <div class="d-flex flex-column align-items-end mb-3 totals">
           <p class="mb-1"><strong>Subtotal (excl. VAT):</strong> €{{ bag_total|floatformat:2 }}</p>
           <p class="mb-1"><strong>VAT (21%):</strong> €{{ vat|floatformat:2 }}</p>
           <h5 class="mt-2 mb-4"><strong>Total (incl. VAT):</strong> €{{ grand_total|floatformat:2 }}</h5>
@@ -38,14 +38,8 @@
       
 
         <div class="d-flex justify-content-between">
-          <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-2">⬅ Continue Shopping</a>
+          <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-3">⬅ Continue Shopping</a>
           <a href="{% url 'checkout' %}" class="btn btn-custom">Proceed to Checkout ➡</a>
-        </div>
-
-      {% else %}
-        <div class="alert alert-info">
-          <p>No items added to the cart yet.</p>
-          <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-2">⬅ Continue Shopping</a>
         </div>
       {% endif %}
   </div>

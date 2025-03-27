@@ -1,7 +1,7 @@
 /* General styles */
-#image-themes {
-    height: 100vh;
-    padding: 0 2rem;
+article {
+    margin-top: 8.5rem !important;
+    padding: 0 1.2rem;
 }
 
 /* Search bar styles */

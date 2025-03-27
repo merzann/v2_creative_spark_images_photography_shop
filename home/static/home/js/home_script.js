@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 4000);
         }, 2000);
     });
-    
 
     /**
      * Handles the click event for the "About Us" sign.
@@ -63,7 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-
     /**
      * Starts a countdown timer that updates the countdown display every second
      * until the specified expiration time.
@@ -72,35 +70,35 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function startCountdown() {
         let countdownElement = document.getElementById("countdown-timer");
-    
+
         // Retrieve expiration date from the HTML element
         let expirationDateString = countdownElement.getAttribute("data-expiry");
-    
+
         // Ensure the expiration date exists
         if (!expirationDateString) {
             countdownElement.innerHTML = "Offer Expired";
             return;
         }
-    
+
         let expirationTime = new Date(expirationDateString).getTime();
-    
+
         function updateCountdown() {
             let now = new Date().getTime();
             let timeRemaining = expirationTime - now;
-    
+
             if (timeRemaining <= 0) {
                 countdownElement.innerHTML = "Offer Expired";
                 return;
             }
-    
+
             let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
             let hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             let minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-    
+
             countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         }
-    
+
         // Initialize and update the countdown every second
         updateCountdown();
         setInterval(updateCountdown, 1000);
@@ -109,4 +107,52 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize countdown with an expiration date retrieved dynamically
     let expirationDate = new Date("{{ special_offer.expiry_date|date:'Y-m-d H:i:s' }}").getTime();
     startCountdown(expirationDate);
+
+    /**
+     * Handles the removal of message alerts and their container.
+     * Ensures that the container is removed only when no alerts remain.
+     */
+    function removeMessageContainerIfEmpty() {
+        const container = document.getElementById("message-container");
+        const remainingAlerts = document.querySelectorAll("#message-container .alert");
+        if (container && remainingAlerts.length === 0) {
+            container.remove();
+        }
+    }
+
+    /**
+     * Handles Bootstrap alert dismissals and auto-hide functionality.
+     * Ensures clean DOM removal and avoids spacing issues.
+     */
+    document.querySelectorAll(".alert .btn-close").forEach(function (button) {
+        button.addEventListener("click", function () {
+            // Wait for Bootstrap's fade animation to complete
+            setTimeout(removeMessageContainerIfEmpty, 500);
+        });
+    });
+
+    setTimeout(function () {
+        document.querySelectorAll("#message-container .alert").forEach(function (alertDiv) {
+            alertDiv.remove();
+        });
+        removeMessageContainerIfEmpty();
+    }, 5000);
+
+    /**
+     * Closes the navbar when clicking outside of it.
+     */
+    document.addEventListener("click", function (event) {
+        var navbarToggler = document.querySelector(".navbar-toggler");
+        var navbarCollapse = document.querySelector(".navbar-collapse");
+
+        if (navbarCollapse && navbarToggler) {
+            if (
+                !navbarCollapse.contains(event.target) &&
+                !navbarToggler.contains(event.target) &&
+                navbarCollapse.classList.contains("show")
+            ) {
+                bootstrap.Collapse.getInstance(navbarCollapse).hide();
+            }
+        }
+    });
 });

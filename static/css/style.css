@@ -1,5 +1,14 @@
+/* Asterisk wildcard selector to override default styles added by the browser */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 /* General styles */
+html,
 body {
+    height: 100%;
     font-family: "Montserrat", sans-serif;
     font-size: 14px;
 }
@@ -11,6 +20,10 @@ h1, h2, h3, h4, h5 {
 
 header {
     height: 7vh;
+}
+
+#message-container {
+    margin-top: 5rem;
 }
 
 #message-container .alert {
@@ -285,7 +298,7 @@ footer a i {
     font-size: 1.5rem;
 }
 
-/* Media Queries for screens from 576px */
+/* Responsive Adjustments */
 @media (min-width: 576px) {
 
     .menu-text {
@@ -309,16 +322,16 @@ footer a i {
     }
 }
 
-/* Responsive Adjustments */
+@media (min-width: 768px) {
+    #message-container {
+        margin-top: 8rem;
+    }
+}
 
 @media (min-width: 992px) {
 
     #logo-desktop {
         height: 5rem;
-    }
-
-    #message-container {
-        margin-top: 2rem;
     }
 
     .fa-user, .fa-cart-shopping {

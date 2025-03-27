@@ -1,1 +1,69 @@
+/* Scoped styles for product detail layout only */
+.product-page-section {
+    padding-top: 7rem;
+    padding-bottom: 3rem;
+    background: linear-gradient(to bottom, #f7f7f7, #eaeaea);
+    min-height: 100vh;
+}
+
+/* Image card */
+.product-page-image-card {
+    border: 8px solid #000;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    margin-top: 3rem;
+    overflow: hidden;
+}
+
+.product-page-image-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    padding: 5px;
+}
+
+/* Config card */
+.product-page-config-card {
+    margin-top: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.product-page-config-card .card-title {
+    font-family: 'Montserrat', serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #2d2d2d;
+}
+
+.product-page-config-card .card-text {
+    font-size: 1rem;
+    color: #444;
+}
+
+.product-page-config-card select,
+.product-page-config-card .form-label {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.product-page-config-card .btn-custom {
+    background-color: #7c7575;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    transition: background-color 0.3s ease;
+}
+
+.product-page-config-card .btn-custom:hover {
+    background-color: #222;
+}
+
+.product-page-config-card .btn-outline-dark {
+    font-weight: 500;
+}
+
+.product-page-config-card hr {
+    margin: 1.5rem 0;
+    border-top: 1px solid #aaa;
+}
 
