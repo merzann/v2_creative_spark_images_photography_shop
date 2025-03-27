@@ -155,4 +155,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
+    // Mute toggle logic
+    const audioToggleBtn = document.getElementById("toggle-audio");
+
+    if (audioToggleBtn && walkingSound) {
+        audioToggleBtn.addEventListener("click", () => {
+            walkingSound.muted = !walkingSound.muted;
+            audioToggleBtn.textContent = walkingSound.muted ? "🔇" : "🔊";
+        });
+    }
 });

@@ -72,7 +72,10 @@
                 <span>Your browser does not support the video tag.</span>
             </video>
             <div id="video-overlay" class="overlay-text">&#9752; &#65039; Welcome to Creative Spark Images &#9752; &#65039;</div>
-            <audio id="walking-sound" src="{% static 'home/audio/walking-on-gravel.mp3' %}"></audio>
+            
+            <!-- Audio Toggle Button -->
+            <button id="toggle-audio" aria-label="Toggle walking sound" class="audio-toggle-button">🔇</button>
+            <audio id="walking-sound" src="{% static 'home/audio/walking-on-gravel.mp3' %}" muted></audio>
         </section>
 
         <!-- About Section (Initially Hidden) -->
