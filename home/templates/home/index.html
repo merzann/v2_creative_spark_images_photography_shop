@@ -37,21 +37,18 @@
 
             <!-- Lower Content -->
             <div class="container-fluid lower-content">
-                <div class="row align-items-end">
-                    <!-- Digital Sign on Left -->
-                    <div class="col-12 col-md-6 text-center">
-                        <article class="digital-sign" aria-label="Information board with special offer and timer">
-                            <img src="{% static 'home/images/advertising-board.png' %}" alt="Information Board" class="info-board">
-                            <div class="sign-content">
-                                <div class="sign-upper">
-                                    <p>{{ special_offer.text|safe }}</p>
-                                </div>
-                                <div class="sign-lower">
-                                    <p id="countdown-timer" data-expiry="{{ special_offer.expiry_date|date:'c' }}"></p>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
+                <div class="row">
+                  <div class="col-12">
+                    <article class="digital-sign" aria-label="Information board with special offer and timer">
+                      <div class="sign-content">
+                        <div class="sign-upper">
+                          <p>{{ special_offer.text|safe }}</p>
+                        </div>
+                        <div class="sign-lower">
+                          <p id="countdown-timer" data-expiry="{{ special_offer.expiry_date|date:'c' }}"></p>
+                        </div>
+                      </div>
+                    </article>
 
                     <!-- Road Signs on Right -->
                     <div class="col-12 col-md-6 text-center">
