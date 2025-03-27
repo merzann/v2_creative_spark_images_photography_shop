@@ -57,17 +57,16 @@ video.background-video {
     position: absolute;
     bottom: 0;
     left: 30px;
-    background-image: url('../images/oak-wood.avif');
+    background-image: url('../images/wood-board.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     filter: brightness(1.0) saturate(0.75);
-    height: 8rem;
-    width: 10rem;
-    margin: 2rem auto;
+    height: 9rem;
+    width: 12rem;
+    margin: 1.5rem auto;
     padding: 1rem 1rem;
     text-align: center;
-    box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.3);
   }
   
   /* Text at the top of the board */
@@ -76,7 +75,7 @@ video.background-video {
     font-weight: bold;
     font-size: clamp(0.9rem, 2.5vw, 1rem);
     line-height: 1.4;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
   
   /* Countdown below */
@@ -92,8 +91,8 @@ video.background-video {
     position: absolute;
     display: flex;
     flex-direction: column;
-    bottom: 30px;
-    right: 20px;
+    bottom: 50px;
+    right: 25px;
     gap: 15px;
 }
 
@@ -185,9 +184,9 @@ video.background-video {
     }
 
     .digital-sign {
-        height: 11rem;
-        width: 14rem;
-        bottom: 20px;
+        height: 12rem;
+        width: 15rem;
+        bottom: 15px;
         left: 70px;
         padding: 1.2rem 1rem;
     }
@@ -201,7 +200,6 @@ video.background-video {
     }
 
     .road-signs {
-        bottom: 50px;
         right: 50px;
     }
 
@@ -217,21 +215,20 @@ video.background-video {
     }
 
     .digital-sign {
-        height: 14rem;
-        width: 18rem;
+        height: 12rem;
+        width: 16rem;
+        bottom: 5px;
+        left: 70px;
         padding: 1.4rem 1.2rem;
-    }
-
-    .sign-upper p {
-        font-size: clamp(1.5rem, 2.5vw, 1.7rem);
-    }
-
-    .sign-lower p {
-        font-size: clamp(1.5rem, 2.2vw, 1.7rem);
     }
 }
 
 @media (min-width: 1200px) {
+
+    .digital-sign {
+        height: 14rem;
+        width: 17rem;
+    }
 
     .road-signs {
         bottom: 60px;
