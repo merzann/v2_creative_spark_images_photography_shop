@@ -1,7 +1,7 @@
-// Handles click event for Read More button
 document.addEventListener("DOMContentLoaded", function () {
     const readMoreBtns = document.querySelectorAll(".read-more-btn");
 
+    // Handles Read More toggle
     readMoreBtns.forEach((btn) => {
         btn.addEventListener("click", function () {
             const cardBody = this.parentElement;
@@ -20,29 +20,42 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Handles click event for Back-to-top button
+    // Back to top / gallery buttons
     const backToTopBtn = document.getElementById("backToTop");
     const backToGalleryBtn = document.getElementById("backToGallery");
 
-    window.addEventListener("scroll", function () {
-        if (window.scrollY > 200) {
-            backToTopBtn.style.opacity = "1";
-            backToTopBtn.style.visibility = "visible";
-            backToGalleryBtn.style.opacity = "1";
-            backToGalleryBtn.style.visibility = "visible";
-        } else {
-            backToTopBtn.style.opacity = "0";
-            backToTopBtn.style.visibility = "hidden";
-            backToGalleryBtn.style.opacity = "0";
-            backToGalleryBtn.style.visibility = "hidden";
-        }
-    });
-
-    // Scroll to top when the Back to Top button is clicked
-    backToTopBtn.addEventListener("click", function () {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
+    // Only attach scroll event if either button exists
+    if (backToTopBtn || backToGalleryBtn) {
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 200) {
+                if (backToTopBtn) {
+                    backToTopBtn.style.opacity = "1";
+                    backToTopBtn.style.visibility = "visible";
+                }
+                if (backToGalleryBtn) {
+                    backToGalleryBtn.style.opacity = "1";
+                    backToGalleryBtn.style.visibility = "visible";
+                }
+            } else {
+                if (backToTopBtn) {
+                    backToTopBtn.style.opacity = "0";
+                    backToTopBtn.style.visibility = "hidden";
+                }
+                if (backToGalleryBtn) {
+                    backToGalleryBtn.style.opacity = "0";
+                    backToGalleryBtn.style.visibility = "hidden";
+                }
+            }
         });
-    });
+    }
+
+    // Smooth scroll to top
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener("click", function () {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    }
 });

@@ -466,6 +466,8 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 
 ### Bugs and Resolutions
 
+  ### Bugs and Resolutions
+
   | Bug / Issue | Description | Resolution |
   |-------------|-------------|------------|
   | `ModuleNotFoundError` for `bag.context_processors` | Typo in the context processor path led to an internal server error on homepage load. | Corrected the import path in `settings.py` to properly reference `bag.context_processors.bag_contents`. |
@@ -484,6 +486,8 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
   | Order total recalculated incorrectly in checkout | View re-calculated totals instead of using pre-calculated bag data. | Added session-level calculation and passed it to OrderModel creation. |
   | `request.user` not passed in `OrderModel` | Attempted to save an order without an authenticated user. | Added `login_required` decorator to ensure only logged-in users can complete checkout. |
   | Stripe webhook email not received | Email address was missing from test payload. | Ensured `customer_email` was included in Stripe session and template. |
+  | `Uncaught TypeError: Cannot read properties of null (reading 'style')` | JavaScript attempted to access `.style` on DOM elements that were not present on some pages (e.g., `#backToTop`, `#message-container`). | Added `if (element)` checks before accessing `.style` or attaching event listeners to ensure scripts run safely across all pages. |
+
 
 ---
 ---
