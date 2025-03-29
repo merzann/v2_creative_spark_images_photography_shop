@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from products.models import Product, ShippingRate
+from products.models import Product, ShippingRate, CountryVAT
 
 
 def add_to_bag(request, product_id):
@@ -73,6 +73,18 @@ def add_to_bag(request, product_id):
     return redirect("view_bag")
 
 
+PRINT_TYPE_TO_SHIPPING_TYPE = {
+    "Poster Print": "poster",
+    "Canvas Wrap": "canvas",
+    "Framed Print": "framed",
+    "Mug": "mug",
+}
+
+DEFAULT_COUNTRY = "Ireland"
+DEFAULT_OPTION = "Standard"
+FALLBACK_VAT = 0.21
+
+
 def view_bag(request):
     """
     Display the shopping bag with :model:`products.Product` details.
@@ -97,25 +109,40 @@ def view_bag(request):
     """
     bag = request.session.get('bag', {})
     bag_items = []
+    country = request.session.get('country', DEFAULT_COUNTRY)
+    vat_rate = FALLBACK_VAT
     total = 0
-    VAT_RATE = 0.21
+    total_shipping = 0
+
+    try:
+        vat_obj = CountryVAT.objects.get(country__iexact=country)
+        vat_rate = float(vat_obj.vat_rate)
+    except CountryVAT.DoesNotExist:
+        pass
 
     for key, item in bag.items():
         product = get_object_or_404(Product, pk=item['product_id'])
         price = float(product.price)
         quantity = item['quantity']
         subtotal = price * quantity
-
-        # Add shipping cost only for printed items
         shipping_cost = 0
+
         if item.get('format') == 'printed':
             print_type_name = item.get('print_type')
-            shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(print_type_name)
-            if shipping_key:
-                shipping_obj = ShippingRate.objects.filter(product_type=shipping_key).first()
-                if shipping_obj:
-                    shipping_cost = float(shipping_obj.price) * quantity
-                    total_shipping += shipping_cost
+            print_type = product.print_types.filter(name=print_type_name).first()
+
+            if print_type:
+                shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(print_type_name)
+                if shipping_key:
+                    shipping_obj = ShippingRate.objects.filter(
+                        product_type=shipping_key,
+                        country=country,
+                        shipping_option=DEFAULT_OPTION.lower()
+                    ).first()
+
+                    if shipping_obj:
+                        shipping_cost = float(shipping_obj.price) * quantity
+                        total_shipping += shipping_cost
 
         total += subtotal
 
@@ -131,10 +158,10 @@ def view_bag(request):
             'shipping_cost': shipping_cost,
         })
 
-    vat = round(total * VAT_RATE, 2)
-    grand_total = total + vat + total_shipping
+    vat = round(total * vat_rate, 2)
+    grand_total = round(total + vat + total_shipping, 2)
 
-    # Store the totals in the session
+    # Store totals in session
     request.session['bag_total'] = total
     request.session['vat'] = vat
     request.session['shipping_total'] = total_shipping
@@ -144,9 +171,11 @@ def view_bag(request):
         'bag_items': bag_items,
         'bag_total': total,
         'vat': vat,
+        'vat_rate_display': int(vat_rate * 100),
         'shipping_total': total_shipping,
         'grand_total': grand_total,
     }
+
     return render(request, 'bag/bag.html', context)
 
 
