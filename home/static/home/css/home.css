@@ -188,7 +188,7 @@ video.background-video {
         width: 15rem;
         bottom: 15px;
         left: 70px;
-        padding: 1.2rem 1rem;
+        padding: 1.5rem 1.2rem;
     }
 
     .sign-upper p {
@@ -219,7 +219,6 @@ video.background-video {
         width: 16rem;
         bottom: 5px;
         left: 70px;
-        padding: 1.4rem 1.2rem;
     }
 }
 
@@ -228,6 +227,7 @@ video.background-video {
     .digital-sign {
         height: 14rem;
         width: 17rem;
+        padding: 1.7rem 1.2rem;
     }
 
     .road-signs {

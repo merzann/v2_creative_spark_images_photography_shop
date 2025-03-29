@@ -106,10 +106,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const t = translations[lang];
 
     // Update translated text
-    document.getElementById('heading').textContent = t.heading;
-    document.getElementById('message').textContent = t.message;
-    document.getElementById('note').textContent = t.note;
-    document.getElementById('home-link').textContent = t.homeLink;
+    const headingEl = document.getElementById('heading');
+    if (headingEl) headingEl.textContent = t.heading;
+
+    const messageEl = document.getElementById('message');
+    if (messageEl) messageEl.textContent = t.message;
+
+    const noteEl = document.getElementById('note');
+    if (noteEl) noteEl.textContent = t.note;
+
+    const homeLinkEl = document.getElementById('home-link');
+    if (homeLinkEl) homeLinkEl.textContent = t.homeLink;
+
 
     // Update flag icon
     const flagMap = {
