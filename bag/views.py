@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from products.models import Product
 from django.contrib import messages
+from products.models import Product, ShippingRate
 
 
 def add_to_bag(request, product_id):
@@ -105,6 +105,18 @@ def view_bag(request):
         price = float(product.price)
         quantity = item['quantity']
         subtotal = price * quantity
+
+        # Add shipping cost only for printed items
+        shipping_cost = 0
+        if item.get('format') == 'printed':
+            print_type_name = item.get('print_type')
+            shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(print_type_name)
+            if shipping_key:
+                shipping_obj = ShippingRate.objects.filter(product_type=shipping_key).first()
+                if shipping_obj:
+                    shipping_cost = float(shipping_obj.price) * quantity
+                    total_shipping += shipping_cost
+
         total += subtotal
 
         bag_items.append({
@@ -116,20 +128,23 @@ def view_bag(request):
             'print_type': item.get('print_type'),
             'price': price,
             'subtotal': subtotal,
+            'shipping_cost': shipping_cost,
         })
 
     vat = round(total * VAT_RATE, 2)
-    grand_total = total + vat
+    grand_total = total + vat + total_shipping
 
     # Store the totals in the session
     request.session['bag_total'] = total
     request.session['vat'] = vat
+    request.session['shipping_total'] = total_shipping
     request.session['grand_total'] = grand_total
 
     context = {
         'bag_items': bag_items,
         'bag_total': total,
         'vat': vat,
+        'shipping_total': total_shipping,
         'grand_total': grand_total,
     }
     return render(request, 'bag/bag.html', context)

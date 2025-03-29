@@ -37,30 +37,6 @@ Creative Spark Images isn’t just a portfolio or a shop — it’s a visual lov
 ---
 ---
 
-## Color Palette:
-
-The color palette reflects the deep connection to nature:
-
-- Soft sand beige (#ddd), Sonic Silver (#7c7575)and warm earth brown (#333) echo tree bark and stone
-- Cool slate gray for shadows and depth
-- Hints of forest green and gentle sky blue across UI highlights
-
-Balanced by off-white tones to make every page easy on the eyes and accessible across devices
-These nature-inspired hues create a grounded, peaceful atmosphere — mirroring the very environments these images come from. The goal? To invite people in, let them slow down, and experience photography the way it was meant to be felt: personally.
-
-Behind the scenes, the project is backed by a robust Django framework — dynamic shopping bag functionality, Stripe integration, Zapier automation for email confirmations, and a thoughtfully designed order system with metadata-rich order tracking. For photographers and creators like me, the Django Admin panel is a dream to work with — intuitive, powerful, and secure.
-
-## Fonts
-
-In designing Creative Spark Images, the selection of Poiret One and Montserrat fonts aligns seamlessly with the project's ethos. Poiret One's sleek, geometric elegance mirrors the refined simplicity of the platform, adding a touch of sophistication that resonates with the artistic nature of the showcased photography. Its graceful curves echo the organic forms found in nature, enhancing the visual narrative of each captured moment.​
-
-Complementing this, Montserrat's modern, geometric structure offers exceptional readability across various devices and screen sizes, ensuring a smooth and engaging user experience. Its design, rooted in urban typography, brings a contemporary flair that balances the natural themes of the artwork, bridging the gap between the digital interface and the organic subjects of the photographs.​
-
-Together, Poiret One and Montserrat create a harmonious typographic duo that embodies the essence of Creative Spark Images—a platform where technology and creativity converge to celebrate the quiet magic of the natural world.​
-
----
----
-
 ## Features
 
 - Summary:
@@ -89,8 +65,108 @@ Together, Poiret One and Montserrat create a harmonious typographic duo that emb
 - Stripe integration for payments
 - Zapier email notifications on purchase
 - Order management with unique `order_number`
+- Extendable language selection menu (currently implemented: EN/planned: DE,ES,FR)
 - Admin control via Django backend
 
+---
+
+## Color Palette:
+
+The color palette reflects the deep connection to nature:
+
+- Soft sand beige (#ddd), Sonic Silver (#7c7575)and warm earth brown (#333) echo tree bark and stone
+- Cool slate gray for shadows and depth
+- Hints of forest green and gentle sky blue across UI highlights
+
+Balanced by off-white tones to make every page easy on the eyes and accessible across devices
+These nature-inspired hues create a grounded, peaceful atmosphere — mirroring the very environments these images come from. The goal? To invite people in, let them slow down, and experience photography the way it was meant to be felt: personally.
+
+Behind the scenes, the project is backed by a robust Django framework — dynamic shopping bag functionality, Stripe integration, Zapier automation for email confirmations, and a thoughtfully designed order system with metadata-rich order tracking. For photographers and creators like me, the Django Admin panel is a dream to work with — intuitive, powerful, and secure.
+
+---
+
+## Fonts
+
+In designing Creative Spark Images, the selection of Poiret One and Montserrat fonts aligns seamlessly with the project's ethos. Poiret One's sleek, geometric elegance mirrors the refined simplicity of the platform, adding a touch of sophistication that resonates with the artistic nature of the showcased photography. Its graceful curves echo the organic forms found in nature, enhancing the visual narrative of each captured moment.​
+
+Complementing this, Montserrat's modern, geometric structure offers exceptional readability across various devices and screen sizes, ensuring a smooth and engaging user experience. Its design, rooted in urban typography, brings a contemporary flair that balances the natural themes of the artwork, bridging the gap between the digital interface and the organic subjects of the photographs.​
+
+Together, Poiret One and Montserrat create a harmonious typographic duo that embodies the essence of Creative Spark Images—a platform where technology and creativity converge to celebrate the quiet magic of the natural world.​
+
+---
+
+## The Logo
+
+The Creative Spark Images logo is more than just a visual mark — it's a reflection of the soul behind the lens. The sketched figure of a woman holding a camera isn't just any figure; it's a stylized self-portrait — a symbolic representation of the creator herself.
+
+With flowing hair and a quiet, focused gaze, the woman in the logo captures the meditative stillness that defines much of Annika’s photography. The camera in hand is both a tool and a metaphor — a means of connection, presence, and storytelling. This artistic sketch bridges the digital and natural worlds, just as Creative Spark Images blends technology with emotion and intention.
+
+The elegant, handwritten-style typography of Creative Spark Images mirrors the thoughtful and creative nature of the work — soft, expressive, and inviting. It evokes a personal signature, reminding viewers that this isn’t just a brand — it’s an extension of a lived artistic journey.
+
+Everything about the logo — from its monochrome simplicity to the organic curves — echoes the brand's core philosophy: to create a space that feels both curated and deeply human. It's a gentle nod to the artist behind the scenes, her relationship with nature, and the quiet beauty she captures through the lens.
+
+This logo is not just a visual identity — it's a moment, a mood, and a mirror of the artist's spirit. It invites the viewer into a world where photography becomes more than images — it becomes experience, reflection, and connection.
+
+
+---
+
+## Navbar
+
+### Menu
+
+---
+
+### Logo
+
+The 'home'-url anchored to logo allows the user to return to the home page from any point within the web application.
+
+---
+
+### User dropdown menu
+
+<u>Dropdown States:</u>
+
+When no user is signed the following options are displayed:
+
+- **Create an account:** Allows the user to to create an account using the customised Django Sign up template.
+
+- **Login:** Allows the user to log in using the customised Django Login Template.
+
+![No user signed in](README_Media/user_logged_out.png)
+
+When the user is logged in the following options are displayed:
+
+- **My Profile**: allows the user to access their user profile and update their information or delete their profile or view their order history
+- **Order History:** provides direct access to the order history
+- **Logout:** allows the user to log out and continue to browse the page as guest
+
+![User signed in](README_Media/user_logged_in.png)
+
+---
+
+### Access to Shopping Cart
+
+The shopping cart allows the user to access their shopping bag from any point within the application. Added items are counted in realtime and the counter updates accordingly informing the user about the number of items currently added to the bag.
+
+![Real Time Quantity Counter](README_Media/real_time_quantity_counter.png)
+
+---
+
+### Extendable language selection dropdown menu
+
+The language menu includes four of the most commonly understood languages in Europe, the future target market of Creative Spark Images: English, French, German and Spanish. Currently fully implmeneted is English.
+
+A dynamic multilingual placeholder page was implemented to inform users when a language-specific version of the site is not yet available.
+
+<u>Languages Supported:</u>
+  - English (default fallback)
+  - German
+  - French
+  - Spanish
+
+![Language Menu](README_Media/language_menu.png)
+
+---
 ---
 
 ### Shopping Bag Functionality
@@ -102,7 +178,7 @@ Together, Poiret One and Montserrat create a harmonious typographic duo that emb
 - Session persistence
 - Cart preview with the option to remove items with composite keys (product ID, format, license/print type)
 
-![Cart Preview](README_Media/cart_preview.png) ![Real Time Quantity Counter](README_Media/real_time_quantity_counter.png)
+![Cart Preview](README_Media/cart_preview.png)
 ![Shipping Management](README_Media/shipping_management.png) ![Add Shipping](README_Media/shipping_add_shipping.png)
 
 ---
@@ -154,17 +230,27 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 ![Order History Card](README_Media/order_history_card.png) 
 
 
-#### User Dropdown States
-
-![User signed in](README_Media/user_logged_in.png) ![User Signed out](README_Media/user_logged_out.png)
-
-
 ### Checkout Flow
 
 - Stripe Checkout Session with dynamically populated line items
 - Success page clears cart and saves order
 - Orders are saved with full metadata (user, total price, status)
 - Secure webhook for Stripe confirmations
+
+---
+---
+
+### Custom 404 Page
+
+The project includes two custom 404 pages:
+
+- **404.html** Is displayed whenever an errors occurs while loading the content of a page or a view fails to execute
+
+- **page_under_construction.html** 
+  - A single 404-style “Coming Soon” page is shared across all languages.
+  - Language is determined via ?lang= query string (e.g. ?lang=de, ?lang=fr, ?lang=es).
+  - Translations are handled on the client-side using JavaScript.
+  - The feature includes a language dropdown in the navbar that links users to the under-construction page with the correct language flag and content.
 
 ---
 ---
