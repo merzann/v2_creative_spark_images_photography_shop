@@ -147,22 +147,35 @@
 
                     <!-- Language Selector Dropdown -->
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="{% url 'page_under_construction' %}?lang=en" id="languageDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="{% static 'images/flags/uk-flag.png' %}" alt="English" class="flag-icon me-2"></a>
+                        <a class="nav-link dropdown-toggle d-flex align-items-center"
+                        href="{% url 'page_under_construction' %}?lang=en"
+                        id="languageDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                            <img id="current-flag" src="{% static 'images/flags/uk-flag.png' %}" alt="English" class="flag-icon me-2">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
                             <li>
+                                <a class="dropdown-item d-flex align-items-center" href="{% url 'home' %}?lang=en">
+                                    <img src="{% static 'images/flags/uk-flag.png' %}" alt="English" class="flag-icon me-2">
+                                </a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item d-flex align-items-center" href="{% url 'page_under_construction' %}?lang=de">
-                                    <img src="{% static 'images/flags/de-flag.png' %}" alt="Deutsch" class="flag-icon me-2"></a>
+                                    <img src="{% static 'images/flags/de-flag.png' %}" alt="Deutsch" class="flag-icon me-2">
+                                </a>
                             </li>
                             <li>
                                 <a class="dropdown-item d-flex align-items-center" href="{% url 'page_under_construction' %}?lang=fr">
-                                    <img src="{% static 'images/flags/fr-flag.png' %}" alt="Français" class="flag-icon me-2"></a>
+                                    <img src="{% static 'images/flags/fr-flag.png' %}" alt="Français" class="flag-icon me-2">
+                                </a>
                             </li>
                             <li>
                                 <a class="dropdown-item d-flex align-items-center" href="{% url 'page_under_construction' %}?lang=es">
-                                    <img src="{% static 'images/flags/es-flag.png' %}" alt="Español" class="flag-icon me-2"></a>
+                                    <img src="{% static 'images/flags/es-flag.png' %}" alt="Español" class="flag-icon me-2">
+                                </a>
                             </li>
                         </ul>
                     </div>

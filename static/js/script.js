@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+    
     const translations = {
         en: {
             heading: "Coming Soon",
@@ -87,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
             homeLink: "Volver al inicio"
         }
     };
-
+    
     function detectLang() {
         const urlParams = new URLSearchParams(window.location.search);
         const queryLang = urlParams.get('lang');
@@ -100,13 +101,40 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return 'en';
     }
-
-    // Apply translation to the DOM
+    
     const lang = detectLang();
     const t = translations[lang];
 
+    // Update translated text
     document.getElementById('heading').textContent = t.heading;
     document.getElementById('message').textContent = t.message;
     document.getElementById('note').textContent = t.note;
     document.getElementById('home-link').textContent = t.homeLink;
+
+    // Update flag icon
+    const flagMap = {
+        en: {
+            src: '/static/images/flags/uk-flag.png',
+            alt: 'English'
+        },
+        de: {
+            src: '/static/images/flags/de-flag.png',
+            alt: 'Deutsch'
+        },
+        fr: {
+            src: '/static/images/flags/fr-flag.png',
+            alt: 'Français'
+        },
+        es: {
+            src: '/static/images/flags/es-flag.png',
+            alt: 'Español'
+        }
+    };
+
+    const flag = flagMap[lang] || flagMap['en'];
+    const flagImg = document.getElementById('current-flag');
+    if (flagImg) {
+        flagImg.src = flag.src;
+        flagImg.alt = flag.alt;
+    }
 });
