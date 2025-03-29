@@ -69,44 +69,45 @@ document.addEventListener("DOMContentLoaded", function () {
      * @param {number} expirationTime - The expiration timestamp in milliseconds (UTC time).
      */
     function startCountdown() {
-        let countdownElement = document.getElementById("countdown-timer");
+        const countdownElement = document.getElementById("countdown-timer");
 
-        // Retrieve expiration date from the HTML element
-        let expirationDateString = countdownElement.getAttribute("data-expiry");
+        // Exit if the countdown element is missing
+        if (!countdownElement) return;
 
-        // Ensure the expiration date exists
+        const expirationDateString = countdownElement.getAttribute("data-expiry");
+
+        // If the date is missing or invalid
         if (!expirationDateString) {
-            countdownElement.innerHTML = "Offer Expired";
+            countdownElement.textContent = "Offer Expired";
             return;
         }
 
-        let expirationTime = new Date(expirationDateString).getTime();
+        const expirationTime = new Date(expirationDateString).getTime();
 
         function updateCountdown() {
-            let now = new Date().getTime();
-            let timeRemaining = expirationTime - now;
+            const now = new Date().getTime();
+            const timeRemaining = expirationTime - now;
 
             if (timeRemaining <= 0) {
-                countdownElement.innerHTML = "Offer Expired";
+                countdownElement.textContent = "Offer Expired";
                 return;
             }
 
-            let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-            countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         }
 
-        // Initialize and update the countdown every second
+        // Start the countdown loop
         updateCountdown();
         setInterval(updateCountdown, 1000);
     }
 
-    // Initialize countdown with an expiration date retrieved dynamically
-    let expirationDate = new Date("{{ special_offer.expiry_date|date:'Y-m-d H:i:s' }}").getTime();
-    startCountdown(expirationDate);
+    // Call countdown only after DOM is ready
+    startCountdown();
 
     /**
      * Handles the removal of message alerts and their container.
