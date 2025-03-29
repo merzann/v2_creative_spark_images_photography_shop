@@ -89,15 +89,12 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductType)
 class ProductTypeAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for the :model:`shop.ProductType` model.
+    list_display = ('name', 'print_types_list')
+    search_fields = ('name',)
 
-    **Attributes:**
-
-    - ``list_display``: Displays the "name" field in the admin list view.
-    """
-
-    list_display = ("name",)
+    def print_types_list(self, obj):
+        return ", ".join([pt.name for pt in obj.printtype_set.all()])
+    print_types_list.short_description = "Print Types"
 
 
 @admin.register(Shipper)
@@ -106,7 +103,10 @@ class ShipperAdmin(admin.ModelAdmin):
     Admin configuration for the :model:`shipping.Shipper` model.
 
     **Attributes:**
-    - ``list_display``: Displays the shipper's name in the list view.
+
+    - ``list_display``: Displays the shipper's name and tracking URL
+      in the admin list view.
+    - ``search_fields``: Enables search by shipper name.
     """
     list_display = ('name', 'tracking_url')
     search_fields = ('name',)

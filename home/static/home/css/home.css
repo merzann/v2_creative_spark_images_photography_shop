@@ -39,8 +39,12 @@ video.background-video {
 
 /* Product Range */
 .product-range {
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin-top: 20px;
+    text-shadow: 0 0 10px #ddd,
+                 0 0 10px #0ff,
+                 0 0 20px #0ff,
+                 0 0 40px #0ff;
 }
 
 /* Lower Content Section */
@@ -68,19 +72,21 @@ video.background-video {
     padding: 1rem 1rem;
     text-align: center;
   }
+
+  .sign-content {
+    border-radius: 3px;
+  }
   
-  /* Text at the top of the board */
   .sign-upper p {
-    color: red;
+    color: rgb(226, 29, 29);
     font-weight: bold;
     font-size: clamp(0.9rem, 2.5vw, 1rem);
     line-height: 1.4;
     margin-bottom: 0.5rem;
   }
   
-  /* Countdown below */
   .sign-lower p {
-    color: red;
+    color: rgb(90, 22, 22);
     font-weight: bold;
     font-size: clamp(0.9rem, 2.2vw, 1rem);
     margin-bottom: 0;
@@ -142,7 +148,6 @@ video.background-video {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 2rem;
     color: white;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
     background: rgba(0, 0, 0, 0.5);

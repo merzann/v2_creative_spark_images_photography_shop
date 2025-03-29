@@ -26,6 +26,13 @@ class LicenseType(models.Model):
 class PrintType(models.Model):
     """Represents an available print option (e.g. Framed, Canvas, etc.)."""
     name = models.CharField(max_length=50, unique=True)
+    product_type = models.ForeignKey(
+        'ProductType',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="ProductType used to calculate shipping."
+    )
 
     def __str__(self):
         return self.name
@@ -149,7 +156,15 @@ class CountryVAT(models.Model):
 
 
 class ShippingRate(models.Model):
-    """Shipping cost per product type, shipper, and country."""
+    """
+    Shipping cost per product type, shipper, shipping option, and country.
+    """
+
+    SHIPPING_OPTION_CHOICES = [
+        ("standard", "Standard"),
+        ("courier", "Courier"),
+    ]
+
     PRODUCT_CATEGORY_CHOICES = [
         ("poster", "Poster"),
         ("canvas", "Canvas"),
@@ -161,16 +176,31 @@ class ShippingRate(models.Model):
     product_type = models.CharField(
         max_length=20,
         choices=PRODUCT_CATEGORY_CHOICES
-        )
+    )
+
+    shipping_option = models.CharField(
+        max_length=20,
+        choices=SHIPPING_OPTION_CHOICES,
+        default="standard",
+        help_text="User-selectable shipping option "
+                  "(e.g. standard, courier)"
+    )
+
     shipper = models.ForeignKey(Shipper, on_delete=models.CASCADE)
     country = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
     class Meta:
-        unique_together = ("product_type", "shipper", "country")
+        unique_together = (
+            "product_type",
+            "shipping_option",
+            "shipper",
+            "country"
+        )
 
     def __str__(self):
         return (
-            f"{self.get_product_type_display()} to {self.country} via "
-            f"{self.shipper.name} – €{self.price}"
+            f"{self.get_product_type_display()} "
+            f"({self.get_shipping_option_display()}) "
+            f"to {self.country} via {self.shipper.name} – €{self.price}"
         )
