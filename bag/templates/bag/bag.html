@@ -10,7 +10,11 @@
         <ul class="list-group mb-4">
           {% for item in bag_items %}
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            <form method="POST" action="{% url 'update_bag_item' item.key %}" class="d-flex align-items-center w-100">
+            <form method="POST"
+                  action="{% url 'update_bag_item' item.key %}"
+                  class="d-flex align-items-center w-100"
+                  data-item-form
+                  data-pending-update="false">
               {% csrf_token %}
           
               <img src="{{ item.product.image_preview.url }}" alt="{{ item.product.title }}" class="me-3" style="width: 60px; height: auto;">
@@ -88,8 +92,20 @@
       
 
         <div class="d-flex justify-content-between">
-          <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-3 mb-5">⬅ Continue Shopping</a>
-          <a href="{% url 'checkout' %}" id="checkout-btn"class="btn btn-custom mb-5">Proceed to Checkout ➡</a>
+          <a href="{% url 'gallery_page' %}"
+              class="btn btn-secondary mt-3 mb-5">
+              ⬅ Continue shopping
+          </a>
+          <p id="checkout-warning" class="text-danger small mb-2" style="display: none;">
+            Have you selected a Print Type for all Printed Products?<br>
+            Please click "Update" to save your changes before proceeding.
+          </p>          
+          <a id="checkout-btn"
+              href="{% url 'checkout' %}"
+              class="btn btn-custom mb-5"
+              aria-disbaled="true"
+              tabindex="-1">Proceed to Checkout ➡
+          </a>
         </div>
       {% else %}
         <div class="alert text-center mt-5">
@@ -106,33 +122,82 @@
   document.addEventListener('DOMContentLoaded', function () {
     const formatSelects = document.querySelectorAll('.format-select');
     const printTypeSelects = document.querySelectorAll('.print-type-select');
+    const itemForms = document.querySelectorAll('[data-item-form]');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const warningText = document.getElementById('checkout-warning');
 
+    function checkEligibility() {
+      let allUpdated = true;
+
+      itemForms.forEach(form => {
+        if (form.dataset.pendingUpdate === "true") {
+          allUpdated = false;
+        }
+      });
+
+      if (allUpdated) {
+        checkoutBtn.classList.remove('disabled');
+        checkoutBtn.setAttribute('aria-disabled', 'false');
+        checkoutBtn.setAttribute('tabindex', '0');
+        warningText.style.display = 'none';
+      } else {
+        checkoutBtn.classList.add('disabled');
+        checkoutBtn.setAttribute('aria-disabled', 'true');
+        checkoutBtn.setAttribute('tabindex', '-1');
+        warningText.style.display = 'block';
+      }
+    }
+
+    // Mark form as needing update if format or print type is changed
     formatSelects.forEach(select => {
       select.addEventListener('change', function () {
-        const printWrapper = document.getElementById(this.dataset.printWrapperId);
+        const form = this.closest('[data-item-form]');
         const updateBtn = document.getElementById(this.dataset.updateBtnId);
+        const printWrapper = document.getElementById(this.dataset.printWrapperId);
         const printSelect = document.getElementById(this.dataset.printSelectId);
 
         if (this.value === 'printed') {
           printWrapper.style.display = 'block';
+          form.dataset.pendingUpdate = "true";
           updateBtn.disabled = true;
         } else {
           printWrapper.style.display = 'none';
+          form.dataset.pendingUpdate = "false";
           updateBtn.disabled = false;
         }
+
+        checkEligibility();
       });
     });
 
     printTypeSelects.forEach(select => {
       select.addEventListener('change', function () {
+        const form = this.closest('[data-item-form]');
         const updateBtn = document.getElementById(this.dataset.updateBtnId);
+
+        form.dataset.pendingUpdate = "true";
+
         if (this.value) {
           updateBtn.disabled = false;
         } else {
           updateBtn.disabled = true;
         }
+
+        checkEligibility();
       });
     });
+
+    // Mark form as updated when clicking Update button
+    itemForms.forEach(form => {
+      const updateBtn = form.querySelector('button[type="submit"]');
+      updateBtn.addEventListener('click', function () {
+        form.dataset.pendingUpdate = "false";
+        checkEligibility();
+      });
+    });
+
+    // Initial check
+    checkEligibility();
   });
 </script>
 {% endblock extra_js %}
