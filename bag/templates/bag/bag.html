@@ -12,15 +12,20 @@
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <form method="POST" action="{% url 'update_bag_item' item.key %}" class="d-flex align-items-center w-100">
               {% csrf_token %}
-              
+          
               <img src="{{ item.product.image_preview.url }}" alt="{{ item.product.title }}" class="me-3" style="width: 60px; height: auto;">
-              
+          
               <div class="flex-grow-1">
                 <strong>{{ item.product.title }}</strong><br>
-                
+          
                 <!-- Format -->
                 <label class="form-label mb-0"><small>Format:</small></label>
-                <select name="format" class="form-select form-select-sm mb-1" style="max-width: 150px;">
+                <select name="format"
+                        class="form-select form-select-sm mb-1 format-select"
+                        style="max-width: 150px;"
+                        data-print-wrapper-id="print-wrapper-{{ forloop.counter }}"
+                        data-update-btn-id="update-btn-{{ forloop.counter }}"
+                        data-print-select-id="print-type-{{ forloop.counter }}">
                   <option value="digital" {% if item.format == 'digital' %}selected{% endif %}>Digital</option>
                   <option value="printed" {% if item.format == 'printed' %}selected{% endif %}>Printed</option>
                 </select>
@@ -33,23 +38,38 @@
                   {% endfor %}
                 </select>
           
-                <!-- Print Type (only for printed items) -->
-                {% if item.format == 'printed' %}
+                <!-- Print Type (hidden unless printed selected) -->
+                <div id="print-wrapper-{{ forloop.counter }}"
+                     class="print-type-wrapper"
+                     {% if item.format != 'printed' %}
+                     style="display: none;"
+                     {% endif %}>
                   <label class="form-label mb-0"><small>Print Type:</small></label>
-                  <select name="print_type" class="form-select form-select-sm mb-1" style="max-width: 150px;">
+                  <select name="print_type"
+                          id="print-type-{{ forloop.counter }}"
+                          class="form-select form-select-sm mb-1 print-type-select"
+                          style="max-width: 150px;"
+                          data-update-btn-id="update-btn-{{ forloop.counter }}">
                     <option value="" disabled {% if not item.print_type %}selected{% endif %}>---</option>
                     {% for option in item.print_type_options %}
                       <option value="{{ option }}" {% if option == item.print_type %}selected{% endif %}>{{ option }}</option>
                     {% endfor %}
                   </select>
-                {% endif %}
+                </div>
           
                 <small>Subtotal: €{{ item.subtotal|floatformat:2 }}</small><br>
               </div>
-              
+          
+              <!-- Update Button -->
               <div class="ms-3">
-                <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                <button type="submit"
+                        class="btn btn-sm btn-outline-primary"
+                        id="update-btn-{{ forloop.counter }}"
+                        {% if item.format == 'printed' and not item.print_type %}disabled{% endif %}>
+                  Update
+                </button>
               </div>
+          
               <div class="ms-3">
                 <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-outline-danger btn-sm">Remove</a>
               </div>
@@ -69,7 +89,7 @@
 
         <div class="d-flex justify-content-between">
           <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-3 mb-5">⬅ Continue Shopping</a>
-          <a href="{% url 'checkout' %}" class="btn btn-custom mb-5">Proceed to Checkout ➡</a>
+          <a href="{% url 'checkout' %}" id="checkout-btn"class="btn btn-custom mb-5">Proceed to Checkout ➡</a>
         </div>
       {% else %}
         <div class="alert text-center mt-5">
@@ -80,3 +100,39 @@
     </div>
 </section>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const formatSelects = document.querySelectorAll('.format-select');
+    const printTypeSelects = document.querySelectorAll('.print-type-select');
+
+    formatSelects.forEach(select => {
+      select.addEventListener('change', function () {
+        const printWrapper = document.getElementById(this.dataset.printWrapperId);
+        const updateBtn = document.getElementById(this.dataset.updateBtnId);
+        const printSelect = document.getElementById(this.dataset.printSelectId);
+
+        if (this.value === 'printed') {
+          printWrapper.style.display = 'block';
+          updateBtn.disabled = true;
+        } else {
+          printWrapper.style.display = 'none';
+          updateBtn.disabled = false;
+        }
+      });
+    });
+
+    printTypeSelects.forEach(select => {
+      select.addEventListener('change', function () {
+        const updateBtn = document.getElementById(this.dataset.updateBtnId);
+        if (this.value) {
+          updateBtn.disabled = false;
+        } else {
+          updateBtn.disabled = true;
+        }
+      });
+    });
+  });
+</script>
+{% endblock extra_js %}
