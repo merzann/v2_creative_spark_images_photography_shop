@@ -2,7 +2,12 @@
 {% load static %}
 {% load bag_extras %}
 {% block content %}
-<article style="margin-top: 90px;" aria-label="shopping bag with all items selected including configuration">
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'bag/css/bag.css' %}">
+{% endblock %}
+
+<article aria-label="shopping bag with all items selected including configuration">
   <section id="shopping-cart" class="container-fluid shopping-bag-section">
   <h2 class="mt-5 mb-3">Your Shopping Bag</h2>
     <div>
@@ -17,7 +22,7 @@
                   data-pending-update="false">
               {% csrf_token %}
           
-              <img src="{{ item.product.image_preview.url }}" alt="{{ item.product.title }}" class="me-3" style="width: 60px; height: auto;">
+              <img src="{{ item.product.image_preview.url }}" alt="{{ item.product.title }}" class="me-3">
           
               <div class="flex-grow-1">
                 <strong>{{ item.product.title }}</strong><br>
@@ -62,21 +67,29 @@
                 </div>
           
                 <small>Subtotal: €{{ item.subtotal|floatformat:2 }}</small><br>
-              </div>
-          
-              <!-- Update Button -->
-              <div class="ms-3">
-                <button type="submit"
-                        class="btn btn-sm btn-outline-primary"
-                        id="update-btn-{{ forloop.counter }}"
-                        {% if item.format == 'printed' and not item.print_type %}disabled{% endif %}>
-                  Update
-                </button>
-              </div>
-          
-              <div class="ms-3">
-                <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-outline-danger btn-sm">Remove</a>
-              </div>
+
+                <!-- Button Group -->
+                <div class="ms-3 d-none d-sm-flex flex-column align-items-end">
+                  <button type="submit"
+                          class="btn btn-sm btn-outline-primary mb-2"
+                          id="update-btn-{{ forloop.counter }}"
+                          {% if item.format == 'printed' and not item.print_type %}disabled{% endif %}>
+                    Update
+                  </button>
+                  <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-outline-danger btn-sm">Remove</a>
+                </div>
+
+                <!-- Mobile button group (shown only on xs screens) -->
+                <div class="mt-2 d-flex d-sm-none gap-2">
+                  <button type="submit"
+                          class="btn btn-sm btn-outline-primary flex-fill"
+                          id="update-btn-{{ forloop.counter }}-mobile"
+                          {% if item.format == 'printed' and not item.print_type %}disabled{% endif %}>
+                    Update
+                  </button>
+                  <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-outline-danger btn-sm flex-fill">Remove</a>
+                </div>
+                </div>
             </form>
           </li>          
           {% endfor %}
