@@ -77,13 +77,11 @@
   }
 
   .shopping-bag-section .btn-outline-primary {
-    min-width: 2rem;
-    width: 6rem;
+    max-width: 6rem;
   }
 
   .shopping-bag-section .btn-outline-danger {
-    min-width: 2rem;
-    width: 6rem;
+    max-width: 6rem;
   }
   
   /* Alerts */

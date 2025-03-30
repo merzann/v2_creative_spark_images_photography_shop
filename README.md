@@ -169,17 +169,82 @@ A dynamic multilingual placeholder page was implemented to inform users when a l
 ---
 ---
 
-### Shopping Bag Functionality
+### Shopping Bag 
 
-- Display of cart items with image, title, pricing, format, license or print type
-- Real-time cart updates
-- Price displayed in transparent structure: subtotal, **VAT**, shipping costs and total 
-- Shipper specific shipping costs (shipment via post, courier) managed via Admin Panel
-- Session persistence
-- Cart preview with the option to remove items with composite keys (product ID, format, license/print type)
+A polished, user-friendly feature that dynamically adapts to product configurations, provides transparency in costs, and enforces validation to reduce user error or skipped inputs.
+
+**Summary**
+- **Display of cart items** including image, title, pricing, format, and either license or print type.
+- **Real-time cart updates** without page reloads, thanks to smart JavaScript event listeners.
+- **Transparent pricing structure**:
+  - Subtotal (excl. VAT)
+  - VAT (dynamically fetched from `CountryVAT`)
+  - Shipping (based on `ShippingRate` model)
+  - Grand total (incl. VAT and shipping)
+- **Country-specific VAT** and **shipper-specific shipping costs** handled dynamically via Admin Panel.
+- **Session-based persistence** of bag items and totals.
+- **Composite key system** ensures unique identification of item configurations (e.g. same product with different formats or licenses).
+- **Form-based cart item updates**, including quantity, format, and print type.
+- **Responsive layout** with special UX handling on small screens (buttons stacked vertically).
+
+---
+
+### Structure & Components
+
+#### From the User's perspective
+
+Upon opening the shopping cart, users are greeted with a clean, visually structured layout that displays every product they’ve added to their bag. Each item is accompanied by:
+
+- A **thumbnail image** (takes up 50% of form height),
+- The **product title**,
+- A **Format dropdown** (Digital or Printed),
+- A **Quantity selector** (1–10),
+- A **Print Type selector** (if Printed is chosen),
+- A **Subtotal display** (based on quantity × unit price),
+- **two buttons for making changes to the shopping cart content**: `Update` and `Remove`.
+- **two buttons to navigate back to the gallery and checkout**: `Continue Shopping` and `Proceed to Checkout`
+
+**Smart Behavior:**
+- If the user switches from Digital to Printed, the *Print Type* dropdown appears automatically.
+- The **Update** and **Proceed to Checkout** buttons are automatically disabled when necessary **preventing the user from proceeding** until all changes made to items in the bag are confirmed
+- An inline warning informs users if any updates still need confirmation.
+
+This provides clarity and control while avoiding any accidental submissions with incomplete data.
+
+**User Experience Highlights:**
+- Immediate visual feedback on updates.
+- No reloads needed to change format, quantity, or type.
+- Responsive layout: buttons adapt on mobile and desktop.
+- Intuitive validation logic — the user is guided without error popups.
+- Checkout is blocked until all edits are finalized, reducing potential errors and mismatched pricing.
+- Easy navigation back to Gallery Page and Checkout
+- Real-time count of items in the shopping bag displayed by item counter in Navbar
+
+---
+
+### Technical Structure & Functionalities
+
+- **Session Management:** All bag data is stored in `request.session`, with `view_bag`, `add_to_bag`, `update_bag_item`, and `remove_from_bag` views handling logic.
+- **Composite Keys:** Each bag item is uniquely identified by a key composed of `product_id`, `format`, and either `license` or `print_type`, ensuring no collisions between digital and printed variants.
+- **Country-Specific VAT:** Pulled from `CountryVAT` model using session-stored country; fallback to 21% VAT.
+- **Shipping Lookup:** Pulled dynamically from the `ShippingRate` model using mappings like `PRINT_TYPE_TO_SHIPPING_TYPE`.
+- **JS Logic:** Enables/disables buttons based on form state and input changes using `data-` attributes and live listeners.
+
+---
+
+### Security & UX Defenses
+
+| Type                          | Feature                                                                 |
+|-------------------------------|-------------------------------------------------------------------------|
+| Input Validation              | Ensures quantity is within 1–10 and format is selected correctly        |
+| Disabled Buttons              | Prevents proceeding to checkout without confirmed changes               |
+| Conditional Logic             | Print types only shown if format is `printed`                           |
+| Server-Side Validation        | Final `POST` checks in views for invalid data before updating session   |
+| Session Integrity             | Session-based cart data avoids DB bloat and maintains user state        |
+
+---
 
 ![Cart Preview](README_Media/cart_preview.png)
-![Shipping Management](README_Media/shipping_management.png) ![Add Shipping](README_Media/shipping_add_shipping.png)
 
 ---
 
@@ -569,6 +634,13 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
   | `product_format` showed as `None` in bag | JS toggle logic did not update hidden input properly. | Ensured `formatInput.value` is correctly set on both radio button changes. |
   | Shopping bag displayed nothing after adding product | Key logic broke due to mismatch between view and template. | Made sure both view and template used the same composite `item_key` structure. |
   | View crashed due to `b` typo | Typo in `remove_from_bag` function: `b else:` instead of `else:`. | Fixed syntax error by removing stray character and fixing indentation. |
+  | Shipping costs not appearing | Incorrect `product_type` used for ShippingRate query| Mapped `print_type` to correct lowercase keys using `PRINT_TYPE_TO_SHIPPING_TYPE` |
+  | Shipping displayed as €0.00 despite valid config | Print type defaulted silently to first in list | Added `---` placeholder and enforced user selection |
+  | VAT always showed 0% | VAT lookup failed due to missing country session value | Added fallback and ensured country is set in session |
+  | Buttons didn’t disable after selection changes | No JS logic tracking pending updates | Introduced `data-pending-update` attributes and validation logic |
+  | Proceed to Checkout remained active | JS didn’t sync with all forms | Check across all forms before enabling the checkout button |
+  | Buttons misaligned on mobile | Layout didn’t account for responsive wrapping | Used Bootstrap classes to stack buttons on small screens |
+  | Image not resizing | Fixed height and inline styles limited image height | Replaced inline styles and used flexbox with min-height |
   | Order total recalculated incorrectly in checkout | View re-calculated totals instead of using pre-calculated bag data. | Added session-level calculation and passed it to OrderModel creation. |
   | `request.user` not passed in `OrderModel` | Attempted to save an order without an authenticated user. | Added `login_required` decorator to ensure only logged-in users can complete checkout. |
   | Stripe webhook email not received | Email address was missing from test payload. | Ensured `customer_email` was included in Stripe session and template. |
