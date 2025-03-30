@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.views.decorators.http import require_POST
 from products.models import Product, ShippingRate, CountryVAT
 
 
@@ -89,20 +90,27 @@ def view_bag(request):
     """
     Display the shopping bag with :model:`products.Product` details.
 
-    Calculates pricing, VAT, and totals for each item in the session bag.
-    May include configuration from :model:`products.LicenseType`,
+    Calculates subtotal, country-specific VAT, and shipping totals for
+    all items. Supports :model:`products.LicenseType`,
     :model:`products.PrintType`, and :model:`products.ProductType`.
+
+    Shipping is applied only to printed products using
+    :model:`shipping.ShippingRate` based on country and print type.
 
     **Context:**
 
     ``bag_items``
-        List of products and their cart configurations.
+        List of products with quantity, format, license, and shipping.
     ``bag_total``
-        Total cost before VAT.
+        Total cost of items before VAT and shipping.
     ``vat``
-        Calculated VAT based on a 21% rate.
+        Calculated VAT based on user country or fallback rate.
+    ``vat_rate_display``
+        VAT rate as an integer percentage for display.
+    ``shipping_total``
+        Total shipping cost for all printed items.
     ``grand_total``
-        Final price including VAT.
+        Final cost including item total, VAT, and shipping.
 
     **Template:**
     :template:`bag/bag.html`
@@ -129,7 +137,9 @@ def view_bag(request):
 
         if item.get('format') == 'printed':
             print_type_name = item.get('print_type')
-            print_type = product.print_types.filter(name=print_type_name).first()
+            print_type = product.print_types.filter(
+                name=print_type_name
+            ).first()
 
             if print_type:
                 shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(print_type_name)
@@ -153,6 +163,9 @@ def view_bag(request):
             'format': item.get('format'),
             'license': item.get('license'),
             'print_type': item.get('print_type'),
+            'print_type_options': [
+                pt.name for pt in product.print_types.all()
+            ],
             'price': price,
             'subtotal': subtotal,
             'shipping_cost': shipping_cost,
@@ -177,6 +190,52 @@ def view_bag(request):
     }
 
     return render(request, 'bag/bag.html', context)
+
+
+def update_bag_item(request, item_key):
+    """
+    Update a bag item stored in the session.
+
+    Supports quantity changes and format-specific updates like print type
+    for printed products.
+
+    **Context:**
+
+    Updates the session-stored bag and validates quantity and format
+    from the POST request.
+
+    **Redirects:**
+    :redirect:`view_bag`
+    """
+    bag = request.session.get('bag', {})
+
+    if item_key not in bag:
+        messages.error(request, "Item not found in your bag.")
+        return redirect('view_bag')
+
+    new_quantity = request.POST.get('quantity')
+    new_format = request.POST.get('format')
+    new_print_type = request.POST.get('print_type')  # Optional
+
+    try:
+        new_quantity = int(new_quantity)
+        if new_quantity < 1 or new_quantity > 10:
+            raise ValueError
+    except (TypeError, ValueError):
+        messages.error(request, "Invalid quantity selected.")
+        return redirect('view_bag')
+
+    bag[item_key]['quantity'] = new_quantity
+    bag[item_key]['format'] = new_format
+
+    if new_format == 'printed' and new_print_type:
+        bag[item_key]['print_type'] = new_print_type
+    elif new_format == 'digital':
+        bag[item_key]['print_type'] = None
+
+    request.session['bag'] = bag
+    messages.success(request, "Item updated.")
+    return redirect('view_bag')
 
 
 def remove_from_bag(request, item_key):
