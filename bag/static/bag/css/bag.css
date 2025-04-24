@@ -92,7 +92,7 @@
     font-style: italic;
   }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .shopping-bag-section {
     margin-top: 7rem;
   }
@@ -101,5 +101,13 @@
     height: auto;
     width: 100%;
     object-fit: cover;
+  }
+
+  .shopping-bag-section .btn-outline-primary {
+    width: 6rem;
+  }
+
+  .shopping-bag-section .btn-outline-danger {
+    width: 6rem;
   }
 }

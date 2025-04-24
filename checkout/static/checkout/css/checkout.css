@@ -1,0 +1,25 @@
+.checkout-container {
+    max-width: 800px;
+  }
+
+  .progress-steps .step {
+    width: 35px;
+    height: 35px;
+    border: 2px solid #005f73;
+    border-radius: 50%;
+    background-color: white;
+    color: #005f73;
+    font-weight: bold;
+    line-height: 31px;
+  }
+
+  .progress-steps .step-active {
+    background-color: #005f73;
+    color: white;
+  }
+
+  .progress-labels > div {
+    width: 35px;
+    text-align: center;
+    font-size: 0.8rem;
+  }

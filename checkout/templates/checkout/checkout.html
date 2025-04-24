@@ -1,14 +1,120 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<div class="container-fluid text-center py-5 mt-5 mb-3" style="height: 100vh !important">
-    <div class="row">
-        <h2 mb-3>Ready to Checkout?</h2>
-        <p>Total to pay: <strong>€{{ bag_total|floatformat:2 }}</strong></p>
-        <form action="{% url 'create_checkout_session' %}" method="POST">
-            {% csrf_token %}
-            <a href="{% url 'gallery_page' %}" class="btn btn-primary mt-3">Back to Gallery</a>
-            <button type="submit" class="btn btn-success">Proceed to Stripe Checkout</button>
-        </form>
+<section class="container checkout-container mt-5">
+
+  <!-- ✅ Progress Tracker -->
+  <div class="checkout-progress mb-5 text-center">
+    <h2 class="mb-4">Checkout – Printed Product</h2>
+    <div class="progress-steps d-flex justify-content-between align-items-center">
+      <div class="step step-active">1</div>
+      <div class="step">2</div>
+      <div class="step">3</div>
+      <div class="step">4</div>
+      <div class="step">5</div>
+      <div class="step">6</div>
     </div>
-</div>
+    <div class="progress-labels d-flex justify-content-between mt-2 small text-muted">
+      <div>Contact<br>Details</div>
+      <div>Billing<br>Information</div>
+      <div>Product<br>Preview</div>
+      <div>Order<br>Summary</div>
+      <div>Payment</div>
+      <div>Confirmation</div>
+    </div>
+  </div>
+
+  <!-- ✅ Checkout Start Options -->
+  <div class="checkout-choice text-center">
+    <p class="lead mb-4">How would you like to proceed?</p>
+    <button id="btn-login" class="btn btn-primary me-3">Log in & Continue</button>
+    <button id="btn-guest" class="btn btn-outline-secondary">Check Out as Guest</button>
+  </div>
+
+  <!-- ✅ Hidden Checkout Form (loaded later) -->
+  <div id="checkout-form-wrapper" class="mt-5" style="display: none;">
+    <!-- We will load the form here in Step 2 -->
+  </div>
+
+  <!-- ✅ Pagination Footer -->
+  <div class="d-flex justify-content-between align-items-center mt-5">
+    <a href="{% url 'view_bag' %}" class="btn btn-outline-secondary">⬅ Cancel</a>
+    <button id="continue-btn" class="btn btn-success" disabled>Continue ➡</button>
+  </div>
+
+</section>
+
+<style>
+  .checkout-container {
+    max-width: 800px;
+  }
+
+  .progress-steps .step {
+    width: 35px;
+    height: 35px;
+    border: 2px solid #005f73;
+    border-radius: 50%;
+    background-color: white;
+    color: #005f73;
+    font-weight: bold;
+    line-height: 31px;
+  }
+
+  .progress-steps .step-active {
+    background-color: #005f73;
+    color: white;
+  }
+
+  .progress-labels > div {
+    width: 35px;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+</style>
+
 {% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const loginBtn = document.getElementById('btn-login');
+    const guestBtn = document.getElementById('btn-guest');
+    const formWrapper = document.getElementById('checkout-form-wrapper');
+    const continueBtn = document.getElementById('continue-btn');
+
+    function loadForm(isGuest) {
+      formWrapper.innerHTML = ''; // Clear first
+
+      // Simulate loading logic (can be replaced with AJAX)
+      formWrapper.innerHTML = `
+        <div class="card p-4 shadow-sm">
+          <h5 class="mb-3">${isGuest ? 'Guest Checkout' : 'Welcome back!'}</h5>
+          <form id="checkout-form">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="email" placeholder="you@example.com" ${isGuest ? '' : 'value="user@example.com"'}>
+            </div>
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="name" placeholder="John Doe" ${isGuest ? '' : 'value="John Doe"'}>
+            </div>
+          </form>
+        </div>
+      `;
+
+      formWrapper.style.display = 'block';
+      continueBtn.disabled = false;
+    }
+
+    loginBtn.addEventListener('click', function () {
+      loadForm(false);
+    });
+
+    guestBtn.addEventListener('click', function () {
+      loadForm(true);
+    });
+  });
+</script>
+{% endblock %}
+
