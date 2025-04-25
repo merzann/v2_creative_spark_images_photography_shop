@@ -10,7 +10,7 @@
 
   <!-- Progress Tracker -->
   <div class="checkout-progress mb-5 text-center">
-    <h2 class="mb-4">Ready to checkout?</h2>
+    <h2 class="mb-4">Secure Checkout</h2>
     <div class="progress-steps d-flex justify-content-between align-items-center mt-4">
       <div class="step step-active">1</div>
       <div class="step">2</div>
@@ -34,10 +34,15 @@
     <button id="btn-guest" class="btn btn-outline-secondary mt-3 me-3">Check Out as Guest</button>
   </div>
 
-  <!-- Hidden Checkout Form (loaded later) -->
-  <div id="checkout-form-wrapper" class="mt-5" style="display: none;">
-    <!-- We will load the form here in Step 2 -->
+  <!-- Dynamic Checkout Form Container -->
+  <div id="checkout-form-wrapper"
+  class="mt-5"
+  {% if user.is_authenticated %}style="display: block;"{% else %}style="display: none;"{% endif %}>
+  {% if user.is_authenticated %}
+  {% include "checkout/includes/user_form.html" %}
+  {% endif %}
   </div>
+
 
   <!-- Pagination -->
   <div class="d-flex justify-content-between align-items-center mt-5">

@@ -72,7 +72,16 @@
     <link rel="icon" href="favicon.ico">
 </head>
 
-<body class="d-flex flex-column main-bg">
+<body
+  class="d-flex flex-column main-bg"
+  data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+  {% if user.is_authenticated %}
+    data-first-name="{{ user.first_name }}"
+    data-last-name="{{ user.last_name }}"
+    data-email="{{ user.email }}"
+  {% endif %}
+>
+
     <header>
         <nav class="navbar navbar-light bg-light fixed-top">
             <div class="container-fluid d-flex align-items-center justify-content-between">
