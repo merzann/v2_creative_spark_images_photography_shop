@@ -2,6 +2,8 @@ import stripe
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 from products.models import Product
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -9,6 +11,20 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def checkout(request):
     return render(request, 'checkout/checkout.html')
+
+
+def load_guest_form(request):
+    """
+    Load the empty user form for guest checkout.
+
+    **Template:**
+    :template:`checkout/includes/user_form.html`
+    """
+    html = render_to_string(
+        "checkout/includes/user_form.html",
+        {"user": request.user}
+    )
+    return HttpResponse(html)
 
 
 def checkout_success(request):

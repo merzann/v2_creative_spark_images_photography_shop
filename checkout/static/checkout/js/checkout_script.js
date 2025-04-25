@@ -17,14 +17,18 @@ document.addEventListener('DOMContentLoaded', function () {
               aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Do you want to save the changes to your profile?</p>
+            ${isAuthenticated
+              ? `<p>Do you want to save the changes to your profile?</p>`
+              : `<p>Would you like to save your information for future purchases?
+              <br>
+              <small>You can delete your account at any time.</small></p>`}
             <div id="modal-alert" class="alert alert-danger d-none" role="alert">
               An error occurred while saving your profile. Please try again.
             </div>
           </div>
           <div class="modal-footer">
             <button id="save-profile" class="btn btn-success">Save</button>
-            <button id="skip-save" class="btn btn-warning">Don't Save</button>
+            <button id="skip-save" class="btn btn-danger">Don't Save</button>
             <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -116,8 +120,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (guestBtn) {
     guestBtn.addEventListener('click', function () {
-      // Simulate continue action (skipping profile save)
-      continueBtn.click();
+      // Fetch and display the guest form include
+      fetch('/checkout/load-guest-form/')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Failed to load guest form");
+          }
+          return response.text();
+        })
+        .then(html => {
+          // Inject form HTML into wrapper
+          formWrapper.innerHTML = html;
+          formWrapper.style.display = 'block';
+  
+          // Enable the Continue button
+          continueBtn.disabled = false;
+  
+          // Attach modal event for guest as well
+          continueBtn.addEventListener('click', function () {
+            saveModal.show();
+          });
+  
+          // For guests, just skip saving and redirect to billing
+          document.getElementById('skip-save').addEventListener('click', function () {
+            window.location.href = '/checkout/billing/';
+          });
+        })
+        .catch(error => {
+          console.error("Guest form load failed:", error);
+        });
     });
-  }
+  }  
 });
