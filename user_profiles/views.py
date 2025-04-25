@@ -9,50 +9,60 @@ from .forms import UserProfileForm
 @login_required
 def profile(request):
     """
-    Handles the user profile page for :model:`user_profiles.UserProfile`,
-    allowing users to view and update their profile details.
+    Display and update the user profile.
+
+    Handles profile updates from both :model:`auth.User` and
+    :model:`user_profiles.UserProfile`.
 
     **Context:**
 
-    `form`
-        An instance of :form:`user_profiles.UserProfileForm` for updating
-        user information.
+    ``form``
+        Instance of :form:`user_profiles.UserProfileForm` bound to user.
+    ``first_name`` / ``last_name``
+        Populated from the base user model.
 
     **Template:**
-
     :template:`user_profiles/profile.html`
     """
-
     user_profile = request.user.userprofile
+    user = request.user  # Grab the base User model
 
     if request.method == "POST":
         form = UserProfileForm(
-            request.POST,
-            request.FILES,
-            instance=user_profile
+            request.POST, request.FILES, instance=user_profile
         )
+
         if form.is_valid():
             try:
                 form.save()
+
+                # Also update first_name and last_name from POST data
+                user.first_name = request.POST.get("first_name", "").strip()
+                user.last_name = request.POST.get("last_name", "").strip()
+                user.save()
+
                 messages.success(
-                    request,
-                    "Your profile has been updated successfully."
+                    request, "Your profile has been updated successfully."
                 )
             except Exception as e:
                 messages.error(
-                    request,
-                    f"An error occurred while updating your profile: {str(e)}"
+                    request, f"An error occurred: {str(e)}"
                 )
             return redirect("profile")
         else:
-            messages.warning(
-                request,
-                "Invalid form submission. Please check the fields."
-            )
+            messages.warning(request, "Invalid form submission.")
     else:
         form = UserProfileForm(instance=user_profile)
 
-    return render(request, "user_profiles/profile.html", {"form": form})
+    return render(
+        request,
+        "user_profiles/profile.html",
+        {
+            "form": form,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+        },
+    )
 
 
 @login_required

@@ -1,12 +1,19 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import UserProfile
 
 
 class UserProfileForm(forms.ModelForm):
     """
-    Form to allow users to update their profile.
+    Form to update a :model:`user_profiles.UserProfile` instance.
 
-    Related to :model:`UserProfile`.
+    Includes custom fields for user's first and last name from the
+    built-in :model:`auth.User`, as well as editable profile fields
+    like phone number, language, and address.
+
+    **Fields:**
+    - ``first_name`` and ``last_name`` are added manually from `User`.
+    - Remaining fields are taken from the `UserProfile` model.
 
     **Meta Class:**
     - ``model``: Specifies that this form is associated with the `UserProfile`
@@ -17,6 +24,23 @@ class UserProfileForm(forms.ModelForm):
     **Template:**
     :template:`user_profiles/profile.html`
     """
+    first_name = forms.CharField(
+        required=False,
+        label="First Name",
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "First Name"
+        }),
+    )
+    last_name = forms.CharField(
+        required=False,
+        label="Last Name",
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Last Name"
+        }),
+    )
+
     class Meta:
         model = UserProfile
         fields = [
@@ -32,7 +56,13 @@ class UserProfileForm(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+
+        # Pre-fill first and last name
+        if user:
+            self.fields['first_name'].initial = user.first_name
+            self.fields['last_name'].initial = user.last_name
 
         # Custom placeholder text mapping
         placeholders = {
