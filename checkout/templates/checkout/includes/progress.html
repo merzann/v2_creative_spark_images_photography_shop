@@ -1,0 +1,16 @@
+<div class="checkout-progress mb-4 text-center">
+    <div class="progress-steps d-flex justify-content-between align-items-center mt-4">
+      {% for i in "123456" %}
+        <div class="step {% if step|add:'0' == i %}step-active{% endif %}">{{ i }}</div>
+      {% endfor %}
+    </div>
+    <div class="progress-labels d-flex justify-content-between mt-2 small text-muted">
+      <div>Contact<br>Details</div>
+      <div>Billing<br>Information</div>
+      <div>Product<br>Preview</div>
+      <div>Order<br>Summary</div>
+      <div>Payment</div>
+      <div>Confirmation</div>
+    </div>
+  </div>
+  

@@ -1,41 +1,48 @@
+import stripe
+from django.conf import settings
 from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from checkout.forms import BillingForm
+from django.views.decorators.csrf import csrf_exempt
+from products.models import Product
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-def billing_information(request):
-    """
-    Collect and validate billing details using :form:`checkout.BillingForm`.
+def checkout(request):
+    return render(request, 'checkout/checkout.html')
 
-    Prepopulates the form with data from :model:`user_profiles.UserProfile`
-    if the user is authenticated. On POST, the data is saved to the session
-    and the user is redirected to the next step in checkout.
 
-    **Context:**
+def checkout_success(request):
+    # clear session cart
+    request.session['bag'] = {}
+    return render(request, 'checkout/checkout_success.html')
 
-    ``form``
-        A form instance for collecting billing details.
 
-    **Template:**
-    :template:`checkout/billing.html`
+@csrf_exempt
+def create_checkout_session(request):
+    bag = request.session.get('bag', {})
+    line_items = []
 
-    **Redirects:**
-    :redirect:`product_preview`
-    """
-    if request.user.is_authenticated:
-        profile = request.user.userprofile
-        form = BillingForm(instance=profile)
-    else:
-        form = BillingForm()
+    for item in bag.values():
+        product = Product.objects.get(id=item['product_id'])
+        quantity = item['quantity']
+        price = int(float(product.price) * 100)  # cents
 
-    if request.method == "POST":
-        form = BillingForm(request.POST)
-        if form.is_valid():
-            # Store data in session
-            request.session["billing_data"] = form.cleaned_data
-            return redirect("order_summary")
-        else:
-            messages.warning(request, "Please complete all required fields.")
+        line_items.append({
+            'price_data': {
+                'currency': 'eur',
+                'unit_amount': price,
+                'product_data': {
+                    'name': product.title,
+                },
+            },
+            'quantity': quantity,
+        })
 
-    return render(request, "checkout/billing.html", {"form": form})
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=line_items,
+        mode='payment',
+        success_url=request.build_absolute_uri('/checkout/success/'),
+        cancel_url=request.build_absolute_uri('/bag/'),
+    )
+    return redirect(session.url, code=303)
