@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 {% load bag_extras %}
-{% block content %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'bag/css/bag.css' %}">
 {% endblock %}
 
+{% block content %}
 <article aria-label="shopping bag with all items selected including configuration">
   <section id="shopping-cart" class="container-fluid shopping-bag-section">
   <h2 class="mt-5 mb-3">Your Shopping Bag</h2>
