@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from checkout.forms import BillingForm
@@ -34,7 +34,7 @@ def billing_information(request):
         if form.is_valid():
             # Store data in session
             request.session["billing_data"] = form.cleaned_data
-            return redirect("product_preview")  # Next step in checkout
+            return redirect("order_summary")
         else:
             messages.warning(request, "Please complete all required fields.")
 
