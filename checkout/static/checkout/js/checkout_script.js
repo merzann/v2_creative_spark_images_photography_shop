@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
 
   let formInitialData = {};
+  let skipProfileSave = false;
 
   function captureInitialFormValues() {
     const form = document.getElementById('checkout-profile-form');
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     );
   }
 
-  // Attach Save button handler globally
+  // Save button inside modal
   document.addEventListener('click', function (event) {
     if (event.target && event.target.id === 'save-profile') {
       const form = document.getElementById('checkout-profile-form');
@@ -43,21 +44,16 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         body: formData,
       })
-      .then(response => {
-        // First handle non-200 errors with JSON body
-        if (!response.ok) {
-          return response.json().then(err => {
-            throw new Error(err.error || 'Unknown error');
-          });
-        }
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
-        if (data.success) {
+        if (data && data.success) {
           const modalElement = document.getElementById('saveModal');
           const modalInstance = bootstrap.Modal.getInstance(modalElement);
-          modalInstance.hide();  // ✅ close modal
-          window.location.href = '/checkout/billing/';
+          modalInstance.hide();
+
+          continueBtn.dataset.allowRedirect = "true";
+          continueBtn.disabled = false;
+          modalAlert.classList.add('d-none');
         } else {
           throw new Error('Unexpected response from server');
         }
@@ -65,26 +61,51 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => {
         console.error('Error saving profile:', error);
         modalAlert.classList.remove('d-none');
-        modalAlert.textContent =
-          "Unable to save your profile. Please try again.";
+        modalAlert.textContent = "Unable to save your profile. Please try again.";
+        continueBtn.disabled = false;
       });
     }
   });
 
-  // Skip saving and go to billing
+
+  // Don't Save or Cancel
   document.addEventListener('click', function (event) {
-    if (event.target && event.target.id === 'skip-save') {
+    if (
+      event.target &&
+      (event.target.id === 'skip-save' || event.target.textContent.trim() === 'Cancel')
+    ) {
+      skipProfileSave = true;
+      continueBtn.dataset.allowRedirect = "true";
+      continueBtn.disabled = false;
+
+      const modalElement = document.getElementById('saveModal');
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      modalInstance.hide();
+    }
+  });
+
+  // Continue button logic
+  continueBtn.addEventListener('click', function () {
+    if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
+      window.location.href = '/checkout/billing/';
+      return;
+    }
+
+    if (formHasChanges()) {
+      continueBtn.disabled = true;
+      saveModal.show();
+    } else {
       window.location.href = '/checkout/billing/';
     }
   });
 
-  // Authenticated user
+  // Authenticated user form
   if (isAuthenticated) {
     formWrapper.innerHTML = `
       <div class="card p-4 shadow-sm">
         <h5 class="mb-3">Welcome back!</h5>
         <form id="checkout-profile-form">
-          <input type="hidden" name="csrfmiddlewaretoken" 
+          <input type="hidden" name="csrfmiddlewaretoken"
           value="${document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''}">
 
           <div class="mb-3">
@@ -109,17 +130,9 @@ document.addEventListener('DOMContentLoaded', function () {
     formWrapper.style.display = 'block';
     continueBtn.disabled = false;
     captureInitialFormValues();
-
-    continueBtn.addEventListener('click', function () {
-      if (formHasChanges()) {
-        saveModal.show();
-      } else {
-        window.location.href = '/checkout/billing/';
-      }
-    });
   }
 
-  // Guest logic
+  // Login / Guest buttons
   const loginBtn = document.getElementById('btn-login');
   const guestBtn = document.getElementById('btn-guest');
 
@@ -143,14 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
           formWrapper.style.display = 'block';
           continueBtn.disabled = false;
           captureInitialFormValues();
-
-          continueBtn.addEventListener('click', function () {
-            if (formHasChanges()) {
-              saveModal.show();
-            } else {
-              window.location.href = '/checkout/billing/';
-            }
-          });
         })
         .catch(error => {
           console.error("Guest form load failed:", error);

@@ -1,10 +1,11 @@
 from django.conf import settings
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
 from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.models import User
 from user_profiles.models import UserProfile
 from user_profiles.forms import UserProfileForm
 from products.models import Product
@@ -16,6 +17,12 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def checkout(request):
+    """
+    Render the main checkout page.
+
+    **Template:**
+    :template:`checkout/checkout.html`
+    """
     return render(request, 'checkout/checkout.html')
 
 
@@ -34,20 +41,31 @@ def load_guest_form(request):
 
 
 def checkout_success(request):
-    # clear session cart
+    """
+    Clear the cart session and render the success page.
+
+    **Template:**
+    :template:`checkout/checkout_success.html`
+    """
     request.session['bag'] = {}
     return render(request, 'checkout/checkout_success.html')
 
 
 @csrf_exempt
 def create_checkout_session(request):
+    """
+    Create a Stripe Checkout session based on cart items.
+
+    Converts session bag to Stripe line items and redirects
+    the user to the Stripe-hosted checkout page.
+    """
     bag = request.session.get('bag', {})
     line_items = []
 
     for item in bag.values():
         product = Product.objects.get(id=item['product_id'])
         quantity = item['quantity']
-        price = int(float(product.price) * 100)  # cents
+        price = int(float(product.price) * 100)  # convert to cents
 
         line_items.append({
             'price_data': {
@@ -67,56 +85,77 @@ def create_checkout_session(request):
         success_url=request.build_absolute_uri('/checkout/success/'),
         cancel_url=request.build_absolute_uri('/bag/'),
     )
+
     return redirect(session.url, code=303)
 
 
 @require_POST
 @csrf_exempt
 def save_profile_from_checkout(request):
+    """
+    Save user or guest profile from checkout form.
+
+    Handles both authenticated users and guests, and ensures a
+    :model:`user_profiles.UserProfile` exists or is created.
+    """
     first_name = request.POST.get("first_name", "").strip()
     last_name = request.POST.get("last_name", "").strip()
     email = request.POST.get("email", "").strip()
 
+    # Validate required fields
     if not all([first_name, last_name, email]):
         return JsonResponse({'error': 'Missing required fields'}, status=400)
 
     try:
         if request.user.is_authenticated:
-            # Update existing user
+            # update existing authenticated user
             user = request.user
             user.first_name = first_name
             user.last_name = last_name
             user.email = email
             user.save()
 
-            # Update or create UserProfile
+            # get or create related user profile
             profile, _ = UserProfile.objects.get_or_create(user=user)
 
-            # Validate profile form only if profile fields are submitted
+            # check if profile-specific fields were submitted
             profile_fields = [
                 'default_phone_number', 'default_country', 'default_postcode',
                 'default_town_or_city', 'default_street_address1',
                 'default_street_address2', 'default_county'
             ]
-            has_profile_data = any(request.POST.get(field) for field in profile_fields)
+            has_profile_data = any(
+                request.POST.get(field)
+                for field in profile_fields
+            )
 
+            # validate and save profile form if applicable
             if has_profile_data:
                 form = UserProfileForm(request.POST, instance=profile)
                 if form.is_valid():
                     form.save()
                 else:
-                    return JsonResponse({'error': 'Invalid profile data.'}, status=400)
+                    return JsonResponse(
+                        {'error': 'Invalid profile data.'},
+                        status=400
+                    )
 
         else:
-            # Guest flow — create a new user
+            # guest flow: create new user with unique username
             username_base = email.split('@')[0]
             username = username_base
             counter = 1
+
             while User.objects.filter(username=username).exists():
                 username = f"{username_base}{counter}"
                 counter += 1
 
-            password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+            # generate a random password
+            password = ''.join(
+                random.choices(string.ascii_letters + string.digits, k=12)
+            )
+
+            # create guest user and profile
             user = User.objects.create_user(
                 username=username,
                 email=email,
@@ -126,9 +165,8 @@ def save_profile_from_checkout(request):
             )
             UserProfile.objects.create(user=user)
 
-            # Optional: auto-login guest
-            # from django.contrib.auth import login
-            # login(request, user)
+            # auto-login guest user
+            login(request, user)
 
         return JsonResponse({'success': True})
 
