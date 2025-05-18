@@ -1,48 +1,69 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // Select form container and continue button
   const formWrapper = document.getElementById('checkout-form-wrapper');
   const continueBtn = document.getElementById('continue-btn');
-
-  // Check if the user is authenticated
   const isAuthenticated = document.body.dataset.authenticated === "true";
 
-  // Modal HTML for confirming profile save
-  const modalHtml = `
-    <div class="modal fade" id="saveModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Save Changes?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-              aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            ${isAuthenticated
-              ? `<p>Do you want to save the changes to your profile?</p>`
-              : `<p>Would you like to save your information for future purchases?
-              <br>
-              <small>You can delete your account at any time.</small></p>`}
-            <div id="modal-alert" class="alert alert-danger d-none" role="alert">
-              An error occurred while saving your profile. Please try again.
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button id="save-profile" class="btn btn-success">Save</button>
-            <button id="skip-save" class="btn btn-danger">Don't Save</button>
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>`;
-
-  // Inject modal HTML into the document
-  document.body.insertAdjacentHTML("beforeend", modalHtml);
-
-  // Initialize Bootstrap modal and alert
-  const saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
   const modalAlert = document.getElementById('modal-alert');
+  const saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
 
-  // If user is authenticated, show form with prefilled data
+  let formInitialData = {};
+
+  function captureInitialFormValues() {
+    const form = document.getElementById('checkout-profile-form');
+    if (!form) return;
+    formInitialData = {};
+    new FormData(form).forEach((value, key) => {
+      formInitialData[key] = value;
+    });
+  }
+
+  function formHasChanges() {
+    const form = document.getElementById('checkout-profile-form');
+    if (!form) return false;
+    const currentData = {};
+    new FormData(form).forEach((value, key) => {
+      currentData[key] = value;
+    });
+    return Object.keys(formInitialData).some(
+      key => currentData[key] !== formInitialData[key]
+    );
+  }
+
+  // Attach Save button handler globally
+  document.addEventListener('click', function (event) {
+    if (event.target && event.target.id === 'save-profile') {
+      const form = document.getElementById('checkout-profile-form');
+      const formData = new FormData(form);
+
+      fetch('/checkout/save-profile-from-checkout/', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: formData
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          window.location.href = '/checkout/billing/';
+        })
+        .catch(error => {
+          console.error('Error saving profile:', error);
+          modalAlert.classList.remove('d-none');
+          modalAlert.textContent = "Unable to save your profile. Please try again.";
+        });
+    }
+  });
+
+  // Skip saving and go to billing
+  document.addEventListener('click', function (event) {
+    if (event.target && event.target.id === 'skip-save') {
+      window.location.href = '/checkout/billing/';
+    }
+  });
+
+  // Authenticated user
   if (isAuthenticated) {
     formWrapper.innerHTML = `
       <div class="card p-4 shadow-sm">
@@ -67,60 +88,31 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
     `;
 
-    // Enable the Continue button once the form is rendered
+    formWrapper.style.display = 'block';
     continueBtn.disabled = false;
+    captureInitialFormValues();
 
-    // Show modal when Continue is clicked
     continueBtn.addEventListener('click', function () {
-      saveModal.show();
-    });
-
-    // Save profile and redirect to billing
-    document.getElementById('save-profile').addEventListener('click', function () {
-      const form = document.getElementById('checkout-profile-form');
-      const formData = new FormData(form);
-
-      fetch('/user_profiles/save-profile-from-checkout/', {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        body: formData
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          window.location.href = '/checkout/billing/';
-        })
-        .catch(error => {
-          console.error('Error saving profile:', error);
-          modalAlert.classList.remove('d-none');
-          modalAlert.textContent =
-            "Unable to save your profile. Please try again.";
-        });
-    });
-
-    // Skip saving and continue to billing
-    document.getElementById('skip-save').addEventListener('click', function () {
-      window.location.href = '/checkout/billing/';
+      if (formHasChanges()) {
+        saveModal.show();
+      } else {
+        window.location.href = '/checkout/billing/';
+      }
     });
   }
 
-  // Handle unauthenticated options: login or guest checkout
+  // Guest logic
   const loginBtn = document.getElementById('btn-login');
   const guestBtn = document.getElementById('btn-guest');
 
   if (loginBtn) {
     loginBtn.addEventListener('click', function () {
-      // Redirect to login page, then back to checkout after login
       window.location.href = '/accounts/login/?next=/checkout/';
     });
   }
 
   if (guestBtn) {
     guestBtn.addEventListener('click', function () {
-      // Fetch and display the guest form include
       fetch('/checkout/load-guest-form/')
         .then(response => {
           if (!response.ok) {
@@ -129,26 +121,22 @@ document.addEventListener('DOMContentLoaded', function () {
           return response.text();
         })
         .then(html => {
-          // Inject form HTML into wrapper
           formWrapper.innerHTML = html;
           formWrapper.style.display = 'block';
-  
-          // Enable the Continue button
           continueBtn.disabled = false;
-  
-          // Attach modal event for guest as well
+          captureInitialFormValues();
+
           continueBtn.addEventListener('click', function () {
-            saveModal.show();
-          });
-  
-          // For guests, just skip saving and redirect to billing
-          document.getElementById('skip-save').addEventListener('click', function () {
-            window.location.href = '/checkout/billing/';
+            if (formHasChanges()) {
+              saveModal.show();
+            } else {
+              window.location.href = '/checkout/billing/';
+            }
           });
         })
         .catch(error => {
           console.error("Guest form load failed:", error);
         });
     });
-  }  
+  }
 });
