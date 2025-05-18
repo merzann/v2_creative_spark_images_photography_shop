@@ -30,6 +30,17 @@ document.addEventListener('DOMContentLoaded', function () {
     );
   }
 
+  function validateGuestFormFields() {
+    const form = document.getElementById('checkout-profile-form');
+    if (!form) return false;
+
+    const firstName = form.querySelector('#first_name')?.value.trim();
+    const lastName = form.querySelector('#last_name')?.value.trim();
+    const email = form.querySelector('#email')?.value.trim();
+
+    return firstName && lastName && email;
+  }
+
   // Save button inside modal
   document.addEventListener('click', function (event) {
     if (event.target && event.target.id === 'save-profile') {
@@ -44,29 +55,28 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         body: formData,
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.success) {
-          const modalElement = document.getElementById('saveModal');
-          const modalInstance = bootstrap.Modal.getInstance(modalElement);
-          modalInstance.hide();
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.success) {
+            const modalElement = document.getElementById('saveModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
 
-          continueBtn.dataset.allowRedirect = "true";
+            continueBtn.dataset.allowRedirect = "true";
+            continueBtn.disabled = false;
+            modalAlert.classList.add('d-none');
+          } else {
+            throw new Error('Unexpected response from server');
+          }
+        })
+        .catch(error => {
+          console.error('Error saving profile:', error);
+          modalAlert.classList.remove('d-none');
+          modalAlert.textContent = "Unable to save your profile. Please try again.";
           continueBtn.disabled = false;
-          modalAlert.classList.add('d-none');
-        } else {
-          throw new Error('Unexpected response from server');
-        }
-      })
-      .catch(error => {
-        console.error('Error saving profile:', error);
-        modalAlert.classList.remove('d-none');
-        modalAlert.textContent = "Unable to save your profile. Please try again.";
-        continueBtn.disabled = false;
-      });
+        });
     }
   });
-
 
   // Don't Save or Cancel
   document.addEventListener('click', function (event) {
@@ -93,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (formHasChanges()) {
       continueBtn.disabled = true;
+      modalAlert.classList.add('d-none');
       saveModal.show();
     } else {
       window.location.href = '/checkout/billing/';
@@ -154,8 +165,20 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(html => {
           formWrapper.innerHTML = html;
           formWrapper.style.display = 'block';
-          continueBtn.disabled = false;
           captureInitialFormValues();
+
+          // Disable continue by default
+          continueBtn.disabled = !validateGuestFormFields();
+
+          // Enable only when all required fields are filled
+          ['first_name', 'last_name', 'email'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+              input.addEventListener('input', () => {
+                continueBtn.disabled = !validateGuestFormFields();
+              });
+            }
+          });
         })
         .catch(error => {
           console.error("Guest form load failed:", error);

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import login
+from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -102,46 +103,51 @@ def save_profile_from_checkout(request):
     last_name = request.POST.get("last_name", "").strip()
     email = request.POST.get("email", "").strip()
 
+    print("\n=== DEBUG: Checkout Profile Save Request ===")
+    print("Authenticated:", request.user.is_authenticated)
+    print("POST Data:", request.POST)
+    print(f"First Name: {first_name}, Last Name: {last_name}, Email: {email}")
+    print("===========================================\n")
+
     # Validate required fields
     if not all([first_name, last_name, email]):
+        print("❌ Missing required fields")
         return JsonResponse({'error': 'Missing required fields'}, status=400)
 
     try:
         if request.user.is_authenticated:
-            # update existing authenticated user
+            print("🧾 Handling authenticated user profile save...")
             user = request.user
             user.first_name = first_name
             user.last_name = last_name
             user.email = email
             user.save()
 
-            # get or create related user profile
             profile, _ = UserProfile.objects.get_or_create(user=user)
 
-            # check if profile-specific fields were submitted
             profile_fields = [
                 'default_phone_number', 'default_country', 'default_postcode',
                 'default_town_or_city', 'default_street_address1',
                 'default_street_address2', 'default_county'
             ]
-            has_profile_data = any(
-                request.POST.get(field)
-                for field in profile_fields
-            )
+            has_profile_data = any(request.POST.get(field) for field in profile_fields)
 
-            # validate and save profile form if applicable
             if has_profile_data:
                 form = UserProfileForm(request.POST, instance=profile)
                 if form.is_valid():
                     form.save()
+                    print("✅ Authenticated user profile form saved")
                 else:
-                    return JsonResponse(
-                        {'error': 'Invalid profile data.'},
-                        status=400
-                    )
+                    print("❌ Invalid form data:", form.errors)
+                    return JsonResponse({'error': 'Invalid profile data.'}, status=400)
 
         else:
-            # guest flow: create new user with unique username
+            print("🧾 Handling guest user profile save...")
+
+            # Safeguard against empty email
+            if '@' not in email:
+                raise ValueError("Invalid email address format")
+
             username_base = email.split('@')[0]
             username = username_base
             counter = 1
@@ -150,12 +156,8 @@ def save_profile_from_checkout(request):
                 username = f"{username_base}{counter}"
                 counter += 1
 
-            # generate a random password
-            password = ''.join(
-                random.choices(string.ascii_letters + string.digits, k=12)
-            )
+            password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
-            # create guest user and profile
             user = User.objects.create_user(
                 username=username,
                 email=email,
@@ -163,12 +165,19 @@ def save_profile_from_checkout(request):
                 last_name=last_name,
                 password=password,
             )
-            UserProfile.objects.create(user=user)
+            print(f"✅ Guest user created: {user.username}")
 
-            # auto-login guest user
-            login(request, user)
+            UserProfile.objects.get_or_create(user=user)
+            print("✅ Guest UserProfile created or already existed")
 
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            print("✅ Guest user logged in successfully")
+
+        print("✅ Returning success response\n")
         return JsonResponse({'success': True})
 
     except Exception as e:
+        import traceback
+        print("❌ Exception occurred during profile save:")
+        traceback.print_exc()
         return JsonResponse({'error': str(e)}, status=500)
