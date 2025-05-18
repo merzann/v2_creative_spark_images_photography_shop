@@ -34,25 +34,40 @@ document.addEventListener('DOMContentLoaded', function () {
     if (event.target && event.target.id === 'save-profile') {
       const form = document.getElementById('checkout-profile-form');
       const formData = new FormData(form);
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
       fetch('/checkout/save-profile-from-checkout/', {
         method: 'POST',
         headers: {
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+          'X-CSRFToken': csrfToken,
         },
-        body: formData
+        body: formData,
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
+      .then(response => {
+        // First handle non-200 errors with JSON body
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.error || 'Unknown error');
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          const modalElement = document.getElementById('saveModal');
+          const modalInstance = bootstrap.Modal.getInstance(modalElement);
+          modalInstance.hide();  // ✅ close modal
           window.location.href = '/checkout/billing/';
-        })
-        .catch(error => {
-          console.error('Error saving profile:', error);
-          modalAlert.classList.remove('d-none');
-          modalAlert.textContent = "Unable to save your profile. Please try again.";
-        });
+        } else {
+          throw new Error('Unexpected response from server');
+        }
+      })
+      .catch(error => {
+        console.error('Error saving profile:', error);
+        modalAlert.classList.remove('d-none');
+        modalAlert.textContent =
+          "Unable to save your profile. Please try again.";
+      });
     }
   });
 
@@ -69,6 +84,9 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="card p-4 shadow-sm">
         <h5 class="mb-3">Welcome back!</h5>
         <form id="checkout-profile-form">
+          <input type="hidden" name="csrfmiddlewaretoken" 
+          value="${document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''}">
+
           <div class="mb-3">
             <label for="first_name" class="form-label">First Name</label>
             <input type="text" class="form-control" name="first_name" id="first_name"
