@@ -292,15 +292,56 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 
 ![User Profile Card](README_Media/user_profile_card.png)
 ![Create Account](README_Media/user_create_account.png) ![Sign up error](README_Media/user_sign_up_error.png)
-![Order History Card](README_Media/order_history_card.png) 
+![Order History Card](README_Media/order_history_card.png)
+
+---
+---
+
+### Secure Checkout Flow
+
+**UX Highlights**
+  - Intuitive Progress Tracker: Clearly indicates the current step and overall progress.
+  - Auto-Fill & Change Detection: Ensures returning users see their stored details while also tracking unsaved edits.
+  - Modal Dialog: Reduces accidental overwrites by confirming save actions.
+  - Graceful Fallback: Users can cancel edits and revert to original data without reloading the page.
+  - Responsive & Accessible: Form labels, ARIA attributes, and input feedback ensure accessibility compliance.
+
+#### Step 1: Contact details
+
+**Dual Entry Paths:**
+  - Authenticated Users: See a pre-filled contact form with their saved profile data.
+  - Guest Users: Choose to proceed with a simplified contact form to check out without logging in.
+
+**Profile Management:**
+  - Authenticated users can update their first name, last name, and email directly from the checkout form.
+  - Guest users can enter their information and optionally create a temporary account with auto-login for convenience.
+
+**Modal Confirmation:**
+  - Users are prompted with a modal asking whether to save changes before proceeding.
+  - Options: Save, Don't Save, or Cancel, giving users full control over profile updates.
+
+**Dynamic Form Behavior:**
+ - For guests, the Continue button is disabled until all form fields are valid (including correct email format).
+ - For returning users, changes are tracked and compared to original data to detect modifications.
+
+![Checkout Step 1 User](README_Media/co_step1_user.png) ![Checkout Step 1 Guest](README_Media/co_step1_guest.png)
 
 
-### Checkout Flow
+**Security & UX Defenses**
 
-- Stripe Checkout Session with dynamically populated line items
-- Success page clears cart and saves order
-- Orders are saved with full metadata (user, total price, status)
-- Secure webhook for Stripe confirmations
+| Type                          | Feature                                                                 |
+|-------------------------------|-------------------------------------------------------------------------|
+| CSRF Protection               | All form submissions include CSRF tokens and are verified server-side. |
+| Secure Guest Accounts         | Guest users are auto-created with random usernames and passwords.       |
+| Backend Validation            | All submitted data is sanitized and validated before saving.            |
+| Frontend Validation           | Email field uses regex and required attributes for early validation.    |
+| Session Management            | Guest users are securely authenticated via Django’s `login()` function. |
+| Modal Confirmation            | Users must confirm intent before profile data is changed.               |
+| Revert Unsaved Edits          | Canceling/discarding changes reverts fields to their original values.   |
+| Disabled Buttons              | "Continue" is only enabled when inputs are valid and complete.          |
+| Progressive Disclosure        | Guest form is hidden by default until selected to minimize noise.       |
+| ARIA & Label Compliance       | All fields include ARIA attributes for better accessibility.            |
+
 
 ---
 ---
