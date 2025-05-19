@@ -37,6 +37,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Revert form values back to the original state
+  function resetFormToInitialValues() {
+    const form = document.getElementById('checkout-profile-form');
+    if (!form) return;
+    Object.entries(formInitialData).forEach(([key, value]) => {
+      const field = form.querySelector(`[name="${key}"]`);
+      if (field) {
+        field.value = value;
+      }
+    });
+  }
+
   // Check if any form values have changed from the initial state
   function formHasChanges() {
     const form = document.getElementById('checkout-profile-form');
@@ -84,6 +96,9 @@ document.addEventListener('DOMContentLoaded', function () {
             continueBtn.dataset.allowRedirect = "true";
             continueBtn.disabled = false;
             modalAlert.classList.add('d-none');
+
+            // Update initial values so further changes are tracked correctly
+            captureInitialFormValues();
           } else {
             throw new Error('Unexpected response from server');
           }
@@ -106,6 +121,11 @@ document.addEventListener('DOMContentLoaded', function () {
       skipProfileSave = true;
       continueBtn.dataset.allowRedirect = "true";
       continueBtn.disabled = false;
+
+      // Reset form only for authenticated users
+      if (isAuthenticated) {
+        resetFormToInitialValues();
+      }
 
       const modalElement = document.getElementById('saveModal');
       const modalInstance = bootstrap.Modal.getInstance(modalElement);
@@ -185,6 +205,17 @@ document.addEventListener('DOMContentLoaded', function () {
     formWrapper.style.display = 'block';
     continueBtn.disabled = false;
     captureInitialFormValues();
+
+    // Revoke redirect permission if user changes form again
+    ['first_name', 'last_name', 'email'].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.addEventListener('input', () => {
+          continueBtn.dataset.allowRedirect = "false";
+          skipProfileSave = false;
+        });
+      }
+    });
   }
 
   // Setup login and guest checkout options
@@ -221,6 +252,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (input) {
               input.addEventListener('input', () => {
                 continueBtn.disabled = !validateGuestFormFields();
+
+                // Revoke redirect permission if guest changes data again
+                continueBtn.dataset.allowRedirect = "false";
+                skipProfileSave = false;
               });
             }
           });
