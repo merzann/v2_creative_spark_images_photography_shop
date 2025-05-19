@@ -1,20 +1,36 @@
-<div class="modal fade" id="saveModal" tabindex="-1">
+<div
+  class="modal fade"
+  id="saveModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="saveModalLabel"
+  aria-modal="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Save Changes?</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        <h5 id="saveModalLabel" class="modal-title">Save Changes?</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
         {% if user.is_authenticated %}
           <p>Do you want to save the changes to your profile?</p>
         {% else %}
-          <p>Would you like to save your information for future purchases?<br>
+          <p>
+            Would you like to save your information for future purchases?<br>
             <small>You can delete your account at any time.</small>
           </p>
         {% endif %}
-        <div id="modal-alert" class="alert alert-danger d-none" role="alert">
+        <div
+          id="modal-alert"
+          class="alert alert-danger d-none"
+          role="alert"
+        >
           An error occurred while saving your profile. Please try again.
         </div>
       </div>

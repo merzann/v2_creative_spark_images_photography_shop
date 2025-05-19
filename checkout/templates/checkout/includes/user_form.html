@@ -1,22 +1,47 @@
 <div class="card p-4 shadow-sm">
-    <h5 class="mb-3">{{ user.is_authenticated|yesno:"Welcome back!,Guest Checkout" }}</h5>
+  <h5 class="mb-3">
+    {{ user.is_authenticated|yesno:"Welcome back!,Guest Checkout" }}
+  </h5>
   <form id="checkout-profile-form" method="post">
     {% csrf_token %}
+    
     <div class="mb-3">
       <label for="first_name" class="form-label">First Name</label>
-      <input type="text" class="form-control" name="first_name" id="first_name"
-            value="{{ user.first_name|default:'' }}" required>
+      <input
+        type="text"
+        class="form-control"
+        name="first_name"
+        id="first_name"
+        value="{{ user.first_name|default:'' }}"
+        required
+        aria-label="First Name"
+      >
     </div>
+
     <div class="mb-3">
       <label for="last_name" class="form-label">Last Name</label>
-      <input type="text" class="form-control" name="last_name" id="last_name"
-            value="{{ user.last_name|default:'' }}" required>
+      <input
+        type="text"
+        class="form-control"
+        name="last_name"
+        id="last_name"
+        value="{{ user.last_name|default:'' }}"
+        required
+        aria-label="Last Name"
+      >
     </div>
+
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" name="email" id="email"
-            value="{{ user.email|default:'' }}" required>
+      <input
+        type="email"
+        class="form-control"
+        name="email"
+        id="email"
+        value="{{ user.email|default:'' }}"
+        required
+        aria-label="Email address"
+      >
     </div>
   </form>
 </div>
-  

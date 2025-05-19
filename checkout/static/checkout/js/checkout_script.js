@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return firstName && lastName && email;
   }
 
-  // Save button inside modal
   document.addEventListener('click', function (event) {
     if (event.target && event.target.id === 'save-profile') {
       const form = document.getElementById('checkout-profile-form');
@@ -78,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Don't Save or Cancel
   document.addEventListener('click', function (event) {
     if (
       event.target &&
@@ -94,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Continue button logic
   continueBtn.addEventListener('click', function () {
     if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
       window.location.href = '/checkout/billing/';
@@ -110,29 +107,51 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Authenticated user form
   if (isAuthenticated) {
     formWrapper.innerHTML = `
       <div class="card p-4 shadow-sm">
         <h5 class="mb-3">Welcome back!</h5>
         <form id="checkout-profile-form">
           <input type="hidden" name="csrfmiddlewaretoken"
-          value="${document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''}">
+            value="${document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''}">
 
           <div class="mb-3">
             <label for="first_name" class="form-label">First Name</label>
-            <input type="text" class="form-control" name="first_name" id="first_name"
-              value="${document.body.dataset.firstName || ''}" required>
+            <input
+              type="text"
+              class="form-control"
+              name="first_name"
+              id="first_name"
+              aria-label="First Name"
+              value="${document.body.dataset.firstName || ''}"
+              required
+            >
           </div>
+
           <div class="mb-3">
             <label for="last_name" class="form-label">Last Name</label>
-            <input type="text" class="form-control" name="last_name" id="last_name"
-              value="${document.body.dataset.lastName || ''}" required>
+            <input
+              type="text"
+              class="form-control"
+              name="last_name"
+              id="last_name"
+              aria-label="Last Name"
+              value="${document.body.dataset.lastName || ''}"
+              required
+            >
           </div>
+
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" id="email"
-              value="${document.body.dataset.email || ''}" required>
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              id="email"
+              aria-label="Email address"
+              value="${document.body.dataset.email || ''}"
+              required
+            >
           </div>
         </form>
       </div>
@@ -143,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function () {
     captureInitialFormValues();
   }
 
-  // Login / Guest buttons
   const loginBtn = document.getElementById('btn-login');
   const guestBtn = document.getElementById('btn-guest');
 
@@ -167,10 +185,8 @@ document.addEventListener('DOMContentLoaded', function () {
           formWrapper.style.display = 'block';
           captureInitialFormValues();
 
-          // Disable continue by default
           continueBtn.disabled = !validateGuestFormFields();
 
-          // Enable only when all required fields are filled
           ['first_name', 'last_name', 'email'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {

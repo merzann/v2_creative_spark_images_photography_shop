@@ -57,8 +57,8 @@ def create_checkout_session(request):
     """
     Create a Stripe Checkout session based on cart items.
 
-    Converts session bag to Stripe line items and redirects
-    the user to the Stripe-hosted checkout page.
+    Converts session bag items to Stripe line items and redirects
+    the user to Stripe's hosted checkout page.
     """
     bag = request.session.get('bag', {})
     line_items = []
@@ -66,7 +66,7 @@ def create_checkout_session(request):
     for item in bag.values():
         product = Product.objects.get(id=item['product_id'])
         quantity = item['quantity']
-        price = int(float(product.price) * 100)  # convert to cents
+        price = int(float(product.price) * 100)  # Convert to cents
 
         line_items.append({
             'price_data': {
@@ -116,6 +116,7 @@ def save_profile_from_checkout(request):
 
     try:
         if request.user.is_authenticated:
+            # Update existing authenticated user
             print("🧾 Handling authenticated user profile save...")
             user = request.user
             user.first_name = first_name
@@ -123,15 +124,20 @@ def save_profile_from_checkout(request):
             user.email = email
             user.save()
 
+            # Ensure a related UserProfile exists
             profile, _ = UserProfile.objects.get_or_create(user=user)
 
+            # Check if form includes address/profile data
             profile_fields = [
                 'default_phone_number', 'default_country', 'default_postcode',
                 'default_town_or_city', 'default_street_address1',
                 'default_street_address2', 'default_county'
             ]
-            has_profile_data = any(request.POST.get(field) for field in profile_fields)
+            has_profile_data = any(
+                request.POST.get(field) for field in profile_fields
+            )
 
+            # If profile data was submitted, validate and save it
             if has_profile_data:
                 form = UserProfileForm(request.POST, instance=profile)
                 if form.is_valid():
@@ -139,12 +145,14 @@ def save_profile_from_checkout(request):
                     print("✅ Authenticated user profile form saved")
                 else:
                     print("❌ Invalid form data:", form.errors)
-                    return JsonResponse({'error': 'Invalid profile data.'}, status=400)
+                    return JsonResponse(
+                        {'error': 'Invalid profile data.'}, status=400
+                    )
 
         else:
+            # Handle guest user registration and login
             print("🧾 Handling guest user profile save...")
 
-            # Safeguard against empty email
             if '@' not in email:
                 raise ValueError("Invalid email address format")
 
@@ -152,12 +160,17 @@ def save_profile_from_checkout(request):
             username = username_base
             counter = 1
 
+            # Ensure unique username
             while User.objects.filter(username=username).exists():
                 username = f"{username_base}{counter}"
                 counter += 1
 
-            password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+            # Generate a random secure password
+            password = ''.join(
+                random.choices(string.ascii_letters + string.digits, k=12)
+            )
 
+            # Create the guest user
             user = User.objects.create_user(
                 username=username,
                 email=email,
@@ -167,10 +180,17 @@ def save_profile_from_checkout(request):
             )
             print(f"✅ Guest user created: {user.username}")
 
+            # Ensure a UserProfile exists for the guest user
             UserProfile.objects.get_or_create(user=user)
             print("✅ Guest UserProfile created or already existed")
 
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            # Log the guest user in using the default auth backend
+            login(
+                request,
+                user,
+                backend='django.contrib.auth.backends.ModelBackend'
+            )
+
             print("✅ Guest user logged in successfully")
 
         print("✅ Returning success response\n")
