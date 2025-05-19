@@ -6,19 +6,19 @@
 {% endblock %}
 
 {% block content %}
-<section class="container-fluid checkout-container">
+<section class="container-fluid checkout-container" role="region" aria-labelledby="checkout-heading">
 
   <!-- Progress Tracker -->
-  <div class="checkout-progress mb-5 text-center">
-    <h2 class="mb-4">Secure Checkout</h2>
-    <div class="progress-steps d-flex justify-content-between align-items-center mt-4">
-      <div class="step step-active">1</div>
-      <div class="step">2</div>
-      <div class="step">3</div>
-      <div class="step">4</div>
-      <div class="step">5</div>
+  <div class="checkout-progress mb-5 text-center" aria-labelledby="progress-heading">
+    <h2 id="checkout-heading" class="mb-4">Secure Checkout</h2>
+    <div class="progress-steps d-flex justify-content-between align-items-center mt-4" aria-label="Checkout progress steps">
+      <div class="step step-active" aria-label="Step 1: Contact Details">1</div>
+      <div class="step" aria-label="Step 2: Billing Information">2</div>
+      <div class="step" aria-label="Step 3: Order Summary">3</div>
+      <div class="step" aria-label="Step 4: Payment">4</div>
+      <div class="step" aria-label="Step 5: Confirmation">5</div>
     </div>
-    <div class="progress-labels d-flex justify-content-between mt-2 small text-muted">
+    <div class="progress-labels d-flex justify-content-between mt-2 small text-muted" aria-hidden="true">
       <div>Contact<br>Details</div>
       <div>Billing<br>Information</div>
       <div>Order<br>Summary</div>
@@ -28,26 +28,38 @@
   </div>
 
   <!-- Checkout Start Options -->
-  <div class="checkout-choice text-center">
-    <p class="lead mb-4">How would you like to proceed?</p>
-    <button id="btn-login" class="btn btn-custom me-3">Log in & Continue</button>
-    <button id="btn-guest" class="btn btn-outline-secondary mt-3 me-3">Check Out as Guest</button>
+  <div class="checkout-choice text-center" aria-labelledby="checkout-choice-heading">
+    <p id="checkout-choice-heading" class="lead mb-4">How would you like to proceed?</p>
+    <button id="btn-login" class="btn btn-custom me-3" aria-label="Log in and continue to checkout">
+      Log in & Continue
+    </button>
+    <button id="btn-guest" class="btn btn-outline-secondary mt-3 me-3" aria-label="Check out as guest">
+      Check Out as Guest
+    </button>
   </div>
 
   <!-- Dynamic Checkout Form Container -->
-  <div id="checkout-form-wrapper"
-  class="mt-5"
-  {% if user.is_authenticated %}style="display: block;"{% else %}style="display: none;"{% endif %}>
-  {% if user.is_authenticated %}
-  {% include "checkout/includes/user_form.html" %}
-  {% endif %}
+  <div
+    id="checkout-form-wrapper"
+    class="mt-5"
+    role="region"
+    aria-labelledby="user-details-heading"
+    {% if user.is_authenticated %}style="display: block;"{% else %}style="display: none;"{% endif %}
+  >
+    {% if user.is_authenticated %}
+      <h3 id="user-details-heading" class="visually-hidden">User Details Form</h3>
+      {% include "checkout/includes/user_form.html" %}
+    {% endif %}
   </div>
 
-
   <!-- Pagination -->
-  <div class="d-flex justify-content-between align-items-center mt-5">
-    <a href="{% url 'view_bag' %}" class="btn btn-secondary mt-3 px-3 py-2">⬅ Go back</a>
-    <button id="continue-btn" class="btn btn-secondary btn-custom" disabled>Continue ➡</button>
+  <div class="d-flex justify-content-between align-items-center mt-5" role="navigation" aria-label="Checkout navigation">
+    <a href="{% url 'view_bag' %}" class="btn btn-secondary mt-3 px-3 py-2" aria-label="Go back to shopping bag">
+      ⬅ Go back
+    </a>
+    <button id="continue-btn" class="btn btn-secondary btn-custom" disabled aria-label="Continue to next step">
+      Continue ➡
+    </button>
   </div>
 
 </section>
@@ -59,4 +71,3 @@
 {% block extra_js %}
 <script src="{% static 'checkout/js/checkout_script.js' %}"></script>
 {% endblock %}
-
