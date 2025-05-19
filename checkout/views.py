@@ -103,21 +103,13 @@ def save_profile_from_checkout(request):
     last_name = request.POST.get("last_name", "").strip()
     email = request.POST.get("email", "").strip()
 
-    print("\n=== DEBUG: Checkout Profile Save Request ===")
-    print("Authenticated:", request.user.is_authenticated)
-    print("POST Data:", request.POST)
-    print(f"First Name: {first_name}, Last Name: {last_name}, Email: {email}")
-    print("===========================================\n")
-
     # Validate required fields
     if not all([first_name, last_name, email]):
-        print("❌ Missing required fields")
         return JsonResponse({'error': 'Missing required fields'}, status=400)
 
     try:
         if request.user.is_authenticated:
             # Update existing authenticated user
-            print("🧾 Handling authenticated user profile save...")
             user = request.user
             user.first_name = first_name
             user.last_name = last_name
@@ -142,17 +134,13 @@ def save_profile_from_checkout(request):
                 form = UserProfileForm(request.POST, instance=profile)
                 if form.is_valid():
                     form.save()
-                    print("✅ Authenticated user profile form saved")
                 else:
-                    print("❌ Invalid form data:", form.errors)
                     return JsonResponse(
                         {'error': 'Invalid profile data.'}, status=400
                     )
 
         else:
             # Handle guest user registration and login
-            print("🧾 Handling guest user profile save...")
-
             if '@' not in email:
                 raise ValueError("Invalid email address format")
 
@@ -178,11 +166,9 @@ def save_profile_from_checkout(request):
                 last_name=last_name,
                 password=password,
             )
-            print(f"✅ Guest user created: {user.username}")
 
             # Ensure a UserProfile exists for the guest user
             UserProfile.objects.get_or_create(user=user)
-            print("✅ Guest UserProfile created or already existed")
 
             # Log the guest user in using the default auth backend
             login(
@@ -190,14 +176,9 @@ def save_profile_from_checkout(request):
                 user,
                 backend='django.contrib.auth.backends.ModelBackend'
             )
-
-            print("✅ Guest user logged in successfully")
-
-        print("✅ Returning success response\n")
         return JsonResponse({'success': True})
 
     except Exception as e:
         import traceback
-        print("❌ Exception occurred during profile save:")
         traceback.print_exc()
         return JsonResponse({'error': str(e)}, status=500)
