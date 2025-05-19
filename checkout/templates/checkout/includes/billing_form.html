@@ -1,0 +1,46 @@
+<!-- checkout/includes/billing_form.html -->
+<div class="card p-4 shadow-sm">
+  <h5 class="mb-3">Billing Information</h5>
+  <form id="billing-form" method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="billing_street1" class="form-label">Street Address 1</label>
+      <input type="text" class="form-control" name="billing_street1" id="billing_street1" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="billing_street2" class="form-label">Street Address 2</label>
+      <input type="text" class="form-control" name="billing_street2" id="billing_street2">
+    </div>
+
+    <div class="mb-3">
+      <label for="billing_city" class="form-label">Town / City</label>
+      <input type="text" class="form-control" name="billing_city" id="billing_city" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="billing_county" class="form-label">County</label>
+      <input type="text" class="form-control" name="billing_county" id="billing_county">
+    </div>
+
+    <div class="mb-3">
+      <label for="billing_postcode" class="form-label">Postcode</label>
+      <input type="text" class="form-control" name="billing_postcode" id="billing_postcode" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="billing_country" class="form-label">Country</label>
+      <select name="billing_country" id="billing_country" class="form-select" required>
+        <option value="">Select a country</option>
+        <option value="IE">Ireland</option>
+        <!-- Add more as needed -->
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="billing_phone" class="form-label">Phone Number</label>
+      <input type="text" class="form-control" name="billing_phone" id="billing_phone">
+    </div>
+  </form>
+</div>
