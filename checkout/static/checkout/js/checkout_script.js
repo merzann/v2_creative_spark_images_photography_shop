@@ -15,6 +15,46 @@ document.addEventListener('DOMContentLoaded', function () {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
+  // Validate required billing fields and country-specific postcode format
+  function validateBillingFormFields() {
+    const form = document.getElementById('billing-form');
+    if (!form) return false;
+
+    const requiredFields = [
+      'billing_street1',
+      'billing_city',
+      'billing_postcode',
+      'billing_country',
+      'billing_phone',
+    ];
+
+    for (let id of requiredFields) {
+      const input = form.querySelector(`#${id}`);
+      if (!input || input.value.trim() === '') return false;
+    }
+
+    const country = form.querySelector('#billing_country')?.value;
+    const postcode = form.querySelector('#billing_postcode')?.value.trim();
+
+    return validatePostalCode(postcode, country);
+  }
+
+  // Country-specific postal code validation rules
+  function validatePostalCode(postcode, country) {
+    if (!postcode || !country) return false;
+
+    const rules = {
+      IE: /^[A-Z]{1}[0-9]{2}\s?[A-Z0-9]{4}$/i,    // Ireland (e.g. D04, T12ABC1)
+      DE: /^\d{5}$/,                              // Germany (e.g. 10115)
+      AT: /^\d{4}$/,                              // Austria (e.g. 1010)
+      US: /^\d{5}(-\d{4})?$/,                     // USA (e.g. 12345 or 12345-6789)
+      GB: /^[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}$/i // UK (e.g. SW1A 1AA)
+    };
+
+    const regex = rules[country] || /^[A-Z0-9\s\-]{3,10}$/; // Default fallback
+    return regex.test(postcode);
+  }
+
   // Validate required guest fields and email format
   function validateGuestFormFields() {
     const form = document.getElementById('checkout-profile-form');
@@ -87,11 +127,18 @@ document.addEventListener('DOMContentLoaded', function () {
           const input = document.getElementById(id);
           if (input) {
             input.addEventListener('input', () => {
+              // Disable Continue unless billing form is valid
+              const isValid = validateBillingFormFields();
+              continueBtn.disabled = !isValid;
+
               continueBtn.dataset.allowRedirect = "false";
               skipProfileSave = false;
             });
           }
         });
+
+        // Trigger validation after rendering
+        continueBtn.disabled = !validateBillingFormFields();
 
         // Replace Continue button click logic for billing step
         continueBtn.onclick = function () {

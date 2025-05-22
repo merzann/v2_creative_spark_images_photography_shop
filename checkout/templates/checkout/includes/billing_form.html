@@ -6,41 +6,47 @@
 
     <div class="mb-3">
       <label for="billing_street1" class="form-label">Street Address 1</label>
-      <input type="text" class="form-control" name="billing_street1" id="billing_street1" required>
+      <input type="text" class="form-control" name="billing_street1" id="billing_street1"
+             value="{{ initial.billing_street1|default:'' }}" required>
     </div>
 
     <div class="mb-3">
       <label for="billing_street2" class="form-label">Street Address 2</label>
-      <input type="text" class="form-control" name="billing_street2" id="billing_street2">
+      <input type="text" class="form-control" name="billing_street2" id="billing_street2"
+             value="{{ initial.billing_street2|default:'' }}">
     </div>
 
     <div class="mb-3">
       <label for="billing_city" class="form-label">Town / City</label>
-      <input type="text" class="form-control" name="billing_city" id="billing_city" required>
+      <input type="text" class="form-control" name="billing_city" id="billing_city"
+             value="{{ initial.billing_city|default:'' }}" required>
     </div>
 
     <div class="mb-3">
       <label for="billing_county" class="form-label">County</label>
-      <input type="text" class="form-control" name="billing_county" id="billing_county">
+      <input type="text" class="form-control" name="billing_county" id="billing_county"
+             value="{{ initial.billing_county|default:'' }}">
     </div>
 
     <div class="mb-3">
       <label for="billing_postcode" class="form-label">Postcode</label>
-      <input type="text" class="form-control" name="billing_postcode" id="billing_postcode" required>
+      <input type="text" class="form-control" name="billing_postcode" id="billing_postcode"
+             value="{{ initial.billing_postcode|default:'' }}" required>
     </div>
 
     <div class="mb-3">
       <label for="billing_country" class="form-label">Country</label>
       <select name="billing_country" id="billing_country" class="form-select" required>
         <option value="">Select a country</option>
-        <option value="IE">Ireland</option>
-        <!-- Add more as needed -->
+        <option value="IE" {% if initial.billing_country == "IE" %}selected{% endif %}>Ireland</option>
+        <!-- Add more countries as needed -->
       </select>
     </div>
 
     <div class="mb-3">
       <label for="billing_phone" class="form-label">Phone Number</label>
-      <input type="text" class="form-control" name="billing_phone" id="billing_phone">
+      <input type="text" class="form-control" name="billing_phone" id="billing_phone"
+             value="{{ initial.billing_phone|default:'' }}">
     </div>
   </form>
 </div>
