@@ -1,52 +1,57 @@
 <!-- checkout/includes/billing_form.html -->
 <div class="card p-4 shadow-sm">
-  <h5 class="mb-3">Billing Information</h5>
-  <form id="billing-form" method="post">
+  <h5 id="billing-info-heading" class="mb-3">Billing Information</h5>
+  <form id="billing-form" method="post" novalidate aria-labelledby="billing-info-heading">
     {% csrf_token %}
 
     <div class="mb-3">
-      <label for="billing_street1" class="form-label">Street Address 1</label>
+      <label for="billing_street1" class="form-label" id="label-street1">Street Address 1</label>
       <input type="text" class="form-control" name="billing_street1" id="billing_street1"
-             value="{{ initial.billing_street1|default:'' }}" required>
+             value="{{ initial.billing_street1|default:'' }}" required aria-labelledby="label-street1">
+      <div class="invalid-feedback">Street address is required.</div>
     </div>
 
     <div class="mb-3">
-      <label for="billing_street2" class="form-label">Street Address 2</label>
+      <label for="billing_street2" class="form-label" id="label-street2">Street Address 2</label>
       <input type="text" class="form-control" name="billing_street2" id="billing_street2"
-             value="{{ initial.billing_street2|default:'' }}">
+             value="{{ initial.billing_street2|default:'' }}" aria-labelledby="label-street2">
     </div>
 
     <div class="mb-3">
-      <label for="billing_city" class="form-label">Town / City</label>
+      <label for="billing_city" class="form-label" id="label-city">Town / City</label>
       <input type="text" class="form-control" name="billing_city" id="billing_city"
-             value="{{ initial.billing_city|default:'' }}" required>
+             value="{{ initial.billing_city|default:'' }}" required aria-labelledby="label-city">
+      <div class="invalid-feedback">City is required.</div>
     </div>
 
     <div class="mb-3">
-      <label for="billing_county" class="form-label">County</label>
+      <label for="billing_county" class="form-label" id="label-county">County</label>
       <input type="text" class="form-control" name="billing_county" id="billing_county"
-             value="{{ initial.billing_county|default:'' }}">
+             value="{{ initial.billing_county|default:'' }}" aria-labelledby="label-county">
     </div>
 
     <div class="mb-3">
-      <label for="billing_postcode" class="form-label">Postcode</label>
+      <label for="billing_postcode" class="form-label" id="label-postcode">Postcode</label>
       <input type="text" class="form-control" name="billing_postcode" id="billing_postcode"
-             value="{{ initial.billing_postcode|default:'' }}" required>
+             value="{{ initial.billing_postcode|default:'' }}" required aria-labelledby="label-postcode">
+      <div class="invalid-feedback">Please enter a valid postcode.</div>
     </div>
 
     <div class="mb-3">
-      <label for="billing_country" class="form-label">Country</label>
-      <select name="billing_country" id="billing_country" class="form-select" required>
+      <label for="billing_country" class="form-label" id="label-country">Country</label>
+      <select name="billing_country" id="billing_country" class="form-select" required aria-labelledby="label-country">
         <option value="">Select a country</option>
         <option value="IE" {% if initial.billing_country == "IE" %}selected{% endif %}>Ireland</option>
         <!-- Add more countries as needed -->
       </select>
+      <div class="invalid-feedback">Country is required.</div>
     </div>
 
     <div class="mb-3">
-      <label for="billing_phone" class="form-label">Phone Number</label>
+      <label for="billing_phone" class="form-label" id="label-phone">Phone Number</label>
       <input type="text" class="form-control" name="billing_phone" id="billing_phone"
-             value="{{ initial.billing_phone|default:'' }}">
+             value="{{ initial.billing_phone|default:'' }}" required aria-labelledby="label-phone">
+      <div class="invalid-feedback">Phone number is required.</div>
     </div>
   </form>
 </div>

@@ -15,28 +15,55 @@ document.addEventListener('DOMContentLoaded', function () {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
+  // Show visual feedback using Bootstrap validation styles
+  function showValidationFeedback(input, isValid, message = '') {
+    if (!input) return;
+
+    const feedback = input.nextElementSibling;
+    if (isValid) {
+      input.classList.add('is-valid');
+      input.classList.remove('is-invalid');
+      if (feedback) feedback.textContent = '';
+    } else {
+      input.classList.add('is-invalid');
+      input.classList.remove('is-valid');
+      if (feedback) feedback.textContent = message || 'Invalid input';
+    }
+  }
+
   // Validate required billing fields and country-specific postcode format
   function validateBillingFormFields() {
     const form = document.getElementById('billing-form');
     if (!form) return false;
 
-    const requiredFields = [
-      'billing_street1',
-      'billing_city',
-      'billing_postcode',
-      'billing_country',
-      'billing_phone',
-    ];
+    // Map of required field IDs to error messages
+    const requiredFields = {
+      billing_street1: 'Street address is required.',
+      billing_city: 'City is required.',
+      billing_postcode: 'Postcode is required and must be valid.',
+      billing_country: 'Country is required.',
+      billing_phone: 'Phone number is required.',
+    };
 
-    for (let id of requiredFields) {
+    let allValid = true;
+
+    // Loop through required fields and show validation messages
+    Object.entries(requiredFields).forEach(([id, message]) => {
       const input = form.querySelector(`#${id}`);
-      if (!input || input.value.trim() === '') return false;
-    }
+      const value = input?.value.trim();
+      let isValid = value !== '';
 
-    const country = form.querySelector('#billing_country')?.value;
-    const postcode = form.querySelector('#billing_postcode')?.value.trim();
+      // Use custom validation logic for postcode
+      if (id === 'billing_postcode') {
+        const country = form.querySelector('#billing_country')?.value;
+        isValid = validatePostalCode(value, country);
+      }
 
-    return validatePostalCode(postcode, country);
+      showValidationFeedback(input, isValid, message);
+      if (!isValid) allValid = false;
+    });
+
+    return allValid;
   }
 
   // Country-specific postal code validation rules
@@ -123,16 +150,20 @@ document.addEventListener('DOMContentLoaded', function () {
         captureInitialFormValues();
 
         // Set up modal logic for billing changes
-        ['billing_street1', 'billing_postcode', 'billing_city', 'billing_country'].forEach(id => {
+        ['billing_street1', 'billing_postcode', 'billing_city', 'billing_country', 'billing_phone'].forEach(id => {
           const input = document.getElementById(id);
           if (input) {
+            // Validate on input
             input.addEventListener('input', () => {
-              // Disable Continue unless billing form is valid
               const isValid = validateBillingFormFields();
               continueBtn.disabled = !isValid;
-
               continueBtn.dataset.allowRedirect = "false";
               skipProfileSave = false;
+            });
+
+            // Validate on blur (leaving the field)
+            input.addEventListener('blur', () => {
+              validateBillingFormFields();
             });
           }
         });
