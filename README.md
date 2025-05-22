@@ -331,10 +331,11 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 
 | Type                          | Feature                                                                 |
 |-------------------------------|-------------------------------------------------------------------------|
-| CSRF Protection               | All form submissions include CSRF tokens and are verified server-side. |
+| CSRF Protection               | All form submissions include CSRF tokens and are verified server-side.  |
 | Secure Guest Accounts         | Guest users are auto-created with random usernames and passwords.       |
 | Backend Validation            | All submitted data is sanitized and validated before saving.            |
 | Frontend Validation           | Email field uses regex and required attributes for early validation.    |
+| Live Feedback	                | Real-time visual validation with Bootstrap classes (is-valid/is-invalid).|
 | Session Management            | Guest users are securely authenticated via Django’s `login()` function. |
 | Modal Confirmation            | Users must confirm intent before profile data is changed.               |
 | Revert Unsaved Edits          | Canceling/discarding changes reverts fields to their original values.   |
@@ -342,6 +343,38 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 | Progressive Disclosure        | Guest form is hidden by default until selected to minimize noise.       |
 | ARIA & Label Compliance       | All fields include ARIA attributes for better accessibility.            |
 
+
+#### Step 2: Billing Information
+
+**Form Behavior:**
+
+  - Fields are auto-filled for authenticated users using their saved profile data.
+  - Guest users must enter billing details manually.
+  - Form is loaded dynamically via AJAX to reflect real-time profile updates.
+
+
+**Live Validation:**
+
+  - All required fields are validated in real time as the user types.
+  - Country-specific postcode formats are validated using regex.
+  - The Continue button remains disabled until all fields are valid.
+  - Security & UX Defenses
+
+
+**Security & UX Defenses**
+
+| Type                    | Feature                                                                       |
+|-------------------------|-------------------------------------------------------------------------------|
+| CSRF Protection	        | All billing form submissions include CSRF tokens.                             |
+| Backend Validation	    | Billing fields are validated and sanitized before saving.                     | 
+| Frontend Validation	    | Includes field-specific error messages and visual validation feedback.        |
+| Regex Postcode          | Validation	Validates postcode based on selected country (e.g., IE, GB, DE    |
+|                         | etc.).                                                                        |
+| Disabled Buttons	      | Continue button only activates if all fields are valid.                       |
+| Dynamic Rendering	      | Billing form is only injected at the billing step via AJAX.                   |
+| Modal Confirmation	    | Save/discard prompt shown if user attempts to proceed after changes.          |
+| Revert Unsaved Edits	  | Users can cancel and restore original field values.                           |
+| ARIA & Label Compliance |	Each input has aria-labelledby for screen reader accessibility.               |
 
 ---
 ---
@@ -699,6 +732,12 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
   | Email validation missing | Guest form accepted invalid email addresses | Added regex-based email validation before enabling "Continue" button |
   | Continue enabled too early | Guest users could click "Continue" before completing the form | Added dynamic validation to monitor input fields and disable button if any are invalid |
   | Profile changes not reverted | Authenticated users clicking "Don't Save" saw their edits remain in the form | Reset form fields to original values by re-inserting captured initial data |
+  | Pre-filled data not displayed | Billing form did not display saved profile data for authenticated users  | Used `initial.billing_*` context properly in the template                 |
+  | Email field accepted `.c`     | Regex allowed incomplete top-level domain in guest form                  | Updated email regex to require TLD with 2+ characters                     |
+  | No field-level error feedback | Form didn’t provide immediate input feedback                             | Added `invalid-feedback` elements and real-time input validation          |
+  | Continue enabled on invalid input | Button could activate before form was valid                          | Bound validation logic to real-time listeners and checked on render       |
+  | Country select didn’t persist | Selected country not marked as `selected` in dropdown                    | Used `{% if initial.billing_country == 'IE' %}selected{% endif %}`        |
+
 
 
 ---
