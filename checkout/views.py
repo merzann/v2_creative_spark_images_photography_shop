@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET
 from django.template.loader import render_to_string
 from django.http import HttpResponse, JsonResponse
 from user_profiles.models import UserProfile
@@ -182,3 +183,32 @@ def save_profile_from_checkout(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_GET
+def billing_info(request):
+    """
+    Returns the billing form include HTML, pre-filled for authenticated users.
+    Used as part of the AJAX-driven checkout flow.
+    """
+    initial_data = {}
+
+    if request.user.is_authenticated:
+        profile = getattr(request.user, 'userprofile', None)
+        if profile:
+            initial_data = {
+                'billing_street1': profile.default_street_address1,
+                'billing_street2': profile.default_street_address2,
+                'billing_city': profile.default_town_or_city,
+                'billing_county': profile.default_county,
+                'billing_postcode': profile.default_postcode,
+                'billing_country': profile.default_country,
+                'billing_phone': profile.default_phone_number,
+            }
+
+    html = render_to_string(
+        'checkout/includes/billing_form.html',
+        initial_data,
+        request=request
+    )
+    return HttpResponse(html)

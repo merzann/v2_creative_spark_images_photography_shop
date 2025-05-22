@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Capture initial form values to detect changes later
   function captureInitialFormValues() {
-    const form = document.getElementById('checkout-profile-form');
+    const form = document.querySelector('form');
     if (!form) return;
     formInitialData = {};
     new FormData(form).forEach((value, key) => {
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Revert form values back to the original state
   function resetFormToInitialValues() {
-    const form = document.getElementById('checkout-profile-form');
+    const form = document.querySelector('form');
     if (!form) return;
     Object.entries(formInitialData).forEach(([key, value]) => {
       const field = form.querySelector(`[name="${key}"]`);
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Check if any form values have changed from the initial state
   function formHasChanges() {
-    const form = document.getElementById('checkout-profile-form');
+    const form = document.querySelector('form');
     if (!form) return false;
     const currentData = {};
     new FormData(form).forEach((value, key) => {
@@ -62,33 +62,86 @@ document.addEventListener('DOMContentLoaded', function () {
     );
   }
 
+  // Load and display billing form (Step 2)
+  function loadBillingForm() {
+    fetch('/checkout/load-billing-form/')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to load billing form");
+        }
+        return response.text();
+      })
+      .then(html => {
+        formWrapper.innerHTML = html;
+        formWrapper.style.display = 'block';
+
+        // Reset redirect flag
+        continueBtn.disabled = false;
+        continueBtn.dataset.allowRedirect = "false";
+
+        // Capture original values for change tracking
+        captureInitialFormValues();
+
+        // Set up modal logic for billing changes
+        ['billing_street1', 'billing_postcode', 'billing_city', 'billing_country'].forEach(id => {
+          const input = document.getElementById(id);
+          if (input) {
+            input.addEventListener('input', () => {
+              continueBtn.dataset.allowRedirect = "false";
+              skipProfileSave = false;
+            });
+          }
+        });
+
+        // Replace Continue button click logic for billing step
+        continueBtn.onclick = function () {
+          if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave) {
+            window.location.href = '/checkout/summary/';
+            return;
+          }
+
+          if (formHasChanges()) {
+            continueBtn.disabled = true;
+            modalAlert.classList.add('d-none');
+            saveModal.show();
+          } else {
+            window.location.href = '/checkout/summary/';
+          }
+        };
+      })
+      .catch(error => {
+        console.error("Billing form load failed:", error);
+      });
+  }
+
   // Handle "Save" button in the modal
   document.addEventListener('click', function (event) {
     if (event.target && event.target.id === 'save-profile') {
-      const form = document.getElementById('checkout-profile-form');
+      const form = document.querySelector('form');
       const formData = new FormData(form);
       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-      const email = form.querySelector('input[name="email"]')?.value.trim();
 
-      // Basic email format validation
-      if (!isValidEmail(email)) {
+      const email = form.querySelector('input[name="email"]')?.value.trim();
+      const url = form.id === 'billing-form'
+        ? '/checkout/save-billing-from-checkout/'
+        : '/checkout/save-profile-from-checkout/';
+
+      // Basic email validation for profile form
+      if (form.id === 'checkout-profile-form' && !isValidEmail(email)) {
         modalAlert.classList.remove('d-none');
         modalAlert.textContent = "Please enter a valid email address.";
         return;
       }
 
-      // Submit the profile form via AJAX
-      fetch('/checkout/save-profile-from-checkout/', {
+      // Submit form data via AJAX
+      fetch(url, {
         method: 'POST',
-        headers: {
-          'X-CSRFToken': csrfToken,
-        },
+        headers: { 'X-CSRFToken': csrfToken },
         body: formData,
       })
         .then(response => response.json())
         .then(data => {
           if (data && data.success) {
-            // Hide modal and allow redirect
             const modalElement = document.getElementById('saveModal');
             const modalInstance = bootstrap.Modal.getInstance(modalElement);
             modalInstance.hide();
@@ -97,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
             continueBtn.disabled = false;
             modalAlert.classList.add('d-none');
 
-            // Update initial values so further changes are tracked correctly
+            // Refresh saved values
             captureInitialFormValues();
           } else {
             throw new Error('Unexpected response from server');
@@ -122,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function () {
       continueBtn.dataset.allowRedirect = "true";
       continueBtn.disabled = false;
 
-      // Reset form only for authenticated users
       if (isAuthenticated) {
         resetFormToInitialValues();
       }
@@ -135,23 +187,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Handle click on "Continue" button
   continueBtn.addEventListener('click', function () {
-    // Allow redirect if profile save is skipped or already approved
     if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
-      window.location.href = '/checkout/billing/';
+      // Proceed to billing if profile is saved or skipped
+      loadBillingForm();
       return;
     }
 
-    // Prompt save modal if form was changed
+    // Prompt save modal if form has been edited
     if (formHasChanges()) {
       continueBtn.disabled = true;
       modalAlert.classList.add('d-none');
       saveModal.show();
     } else {
-      window.location.href = '/checkout/billing/';
+      loadBillingForm();
     }
   });
 
-  // Auto-inject form for authenticated users
+  // Auto-fill form for logged-in users
   if (isAuthenticated) {
     formWrapper.innerHTML = `
       <div class="card p-4 shadow-sm">
@@ -162,41 +214,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
           <div class="mb-3">
             <label for="first_name" class="form-label">First Name</label>
-            <input
-              type="text"
-              class="form-control"
-              name="first_name"
-              id="first_name"
-              aria-label="First Name"
-              value="${document.body.dataset.firstName || ''}"
-              required
-            >
+            <input type="text" class="form-control" name="first_name" id="first_name"
+              aria-label="First Name" value="${document.body.dataset.firstName || ''}" required>
           </div>
 
           <div class="mb-3">
             <label for="last_name" class="form-label">Last Name</label>
-            <input
-              type="text"
-              class="form-control"
-              name="last_name"
-              id="last_name"
-              aria-label="Last Name"
-              value="${document.body.dataset.lastName || ''}"
-              required
-            >
+            <input type="text" class="form-control" name="last_name" id="last_name"
+              aria-label="Last Name" value="${document.body.dataset.lastName || ''}" required>
           </div>
 
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              name="email"
-              id="email"
-              aria-label="Email address"
-              value="${document.body.dataset.email || ''}"
-              required
-            >
+            <input type="email" class="form-control" name="email" id="email"
+              aria-label="Email address" value="${document.body.dataset.email || ''}" required>
           </div>
         </form>
       </div>
@@ -206,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
     continueBtn.disabled = false;
     captureInitialFormValues();
 
-    // Revoke redirect permission if user changes form again
+    // Track changes in form
     ['first_name', 'last_name', 'email'].forEach(id => {
       const input = document.getElementById(id);
       if (input) {
@@ -218,19 +249,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Setup login and guest checkout options
+  // Handle login and guest actions
   const loginBtn = document.getElementById('btn-login');
   const guestBtn = document.getElementById('btn-guest');
 
   if (loginBtn) {
     loginBtn.addEventListener('click', function () {
+      // Redirect to login with next to checkout
       window.location.href = '/accounts/login/?next=/checkout/';
     });
   }
 
   if (guestBtn) {
     guestBtn.addEventListener('click', function () {
-      // Load guest form asynchronously
+      // Fetch and show guest profile form
       fetch('/checkout/load-guest-form/')
         .then(response => {
           if (!response.ok) {
@@ -246,14 +278,12 @@ document.addEventListener('DOMContentLoaded', function () {
           // Disable continue initially
           continueBtn.disabled = !validateGuestFormFields();
 
-          // Enable continue when valid input is detected
+          // Enable on valid input
           ['first_name', 'last_name', 'email'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {
               input.addEventListener('input', () => {
                 continueBtn.disabled = !validateGuestFormFields();
-
-                // Revoke redirect permission if guest changes data again
                 continueBtn.dataset.allowRedirect = "false";
                 skipProfileSave = false;
               });

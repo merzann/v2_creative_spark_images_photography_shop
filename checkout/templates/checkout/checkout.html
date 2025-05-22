@@ -46,10 +46,19 @@
     aria-labelledby="user-details-heading"
     {% if user.is_authenticated %}style="display: block;"{% else %}style="display: none;"{% endif %}
   >
-    {% if user.is_authenticated %}
-      <h3 id="user-details-heading" class="visually-hidden">User Details Form</h3>
-      {% include "checkout/includes/user_form.html" %}
-    {% endif %}
+    <!-- Step 1: Contact Details -->
+    <section id="step-contact" class="checkout-step">
+      {% if user.is_authenticated %}
+        <h3 id="user-details-heading" class="visually-hidden">User Details Form</h3>
+        {% include "checkout/includes/user_form.html" %}
+      {% endif %}
+    </section>
+
+    <!-- Step 2: Billing Information -->
+    <section id="step-billing" class="checkout-step" style="display: none;">
+      <h3 class="visually-hidden">Billing Information</h3>
+      {% include "checkout/includes/billing_form.html" %}
+    </section>
   </div>
 
   <!-- Pagination -->
