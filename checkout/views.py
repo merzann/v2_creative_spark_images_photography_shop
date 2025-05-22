@@ -212,3 +212,64 @@ def billing_info(request):
         request=request
     )
     return HttpResponse(html)
+
+
+@require_GET
+def load_billing_form(request):
+    """
+    Return the billing form HTML with prefilled data for authenticated users.
+    Used in Step 2 of the checkout flow.
+    """
+    initial_data = {}
+
+    if request.user.is_authenticated:
+        profile = getattr(request.user, 'userprofile', None)
+        if profile:
+            initial_data = {
+                'billing_street1': profile.default_street_address1,
+                'billing_street2': profile.default_street_address2,
+                'billing_city': profile.default_town_or_city,
+                'billing_county': profile.default_county,
+                'billing_postcode': profile.default_postcode,
+                'billing_country': profile.default_country,
+                'billing_phone': profile.default_phone_number,
+            }
+
+    html = render_to_string(
+        'checkout/includes/billing_form.html',
+        {'initial': initial_data},
+        request=request
+    )
+    return HttpResponse(html)
+
+
+@require_POST
+@csrf_exempt
+def save_billing_from_checkout(request):
+    """
+    Save billing information to the user's UserProfile.
+    Only available to authenticated users during checkout.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required.'}, status=403)
+
+    try:
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+        # Map form fields to UserProfile model fields
+        profile.default_street_address1 = request.POST.get("billing_street1", "").strip()
+        profile.default_street_address2 = request.POST.get("billing_street2", "").strip()
+        profile.default_town_or_city = request.POST.get("billing_city", "").strip()
+        profile.default_county = request.POST.get("billing_county", "").strip()
+        profile.default_postcode = request.POST.get("billing_postcode", "").strip()
+        profile.default_country = request.POST.get("billing_country", "").strip()
+        profile.default_phone_number = request.POST.get("billing_phone", "").strip()
+
+        profile.save()
+
+        return JsonResponse({'success': True})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({'error': str(e)}, status=500)

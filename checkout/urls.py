@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import save_profile_from_checkout
+from .views import (
+    save_profile_from_checkout,
+    load_billing_form,
+    save_billing_from_checkout,
+)
 from . import views
 
 urlpatterns = [
@@ -10,5 +14,11 @@ urlpatterns = [
         'save-profile-from-checkout/',
         save_profile_from_checkout,
         name='save_profile_from_checkout',
+    ),
+    path('load-billing-form/', load_billing_form, name='load_billing_form'),
+    path(
+        'save-billing-from-checkout/',
+        save_billing_from_checkout,
+        name='save_billing_from_checkout',
     ),
 ]
