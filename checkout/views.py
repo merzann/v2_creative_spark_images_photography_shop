@@ -4,8 +4,7 @@ from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST, require_GET
 from django.template.loader import render_to_string
 from django.http import HttpResponse, JsonResponse
 from user_profiles.models import UserProfile
@@ -36,8 +35,8 @@ def load_guest_form(request):
     :template:`checkout/includes/user_form.html`
     """
     html = render_to_string(
-        "checkout/includes/user_form.html",
-        {"user": request.user}
+        'checkout/includes/user_form.html',
+        {'user': request.user}
     )
     return HttpResponse(html)
 
@@ -60,6 +59,10 @@ def create_checkout_session(request):
 
     Converts session bag items to Stripe line items and redirects
     the user to Stripe's hosted checkout page.
+
+    **Redirects:**
+    - On success: :url:`/checkout/success/`
+    - On cancel: :url:`/bag/`
     """
     bag = request.session.get('bag', {})
     line_items = []
@@ -97,30 +100,29 @@ def save_profile_from_checkout(request):
     """
     Save user or guest profile from checkout form.
 
-    Handles both authenticated users and guests, and ensures a
-    :model:`user_profiles.UserProfile` exists or is created.
-    """
-    first_name = request.POST.get("first_name", "").strip()
-    last_name = request.POST.get("last_name", "").strip()
-    email = request.POST.get("email", "").strip()
+    Handles both authenticated users and guests.
+    Ensures a :model:`user_profiles.UserProfile` exists or is created.
 
-    # Validate required fields
+    **Returns:**
+    - JSON success or error message
+    """
+    first_name = request.POST.get('first_name', '').strip()
+    last_name = request.POST.get('last_name', '').strip()
+    email = request.POST.get('email', '').strip()
+
     if not all([first_name, last_name, email]):
         return JsonResponse({'error': 'Missing required fields'}, status=400)
 
     try:
         if request.user.is_authenticated:
-            # Update existing authenticated user
             user = request.user
             user.first_name = first_name
             user.last_name = last_name
             user.email = email
             user.save()
 
-            # Ensure a related UserProfile exists
             profile, _ = UserProfile.objects.get_or_create(user=user)
 
-            # Check if form includes address/profile data
             profile_fields = [
                 'default_phone_number', 'default_country', 'default_postcode',
                 'default_town_or_city', 'default_street_address1',
@@ -130,7 +132,6 @@ def save_profile_from_checkout(request):
                 request.POST.get(field) for field in profile_fields
             )
 
-            # If profile data was submitted, validate and save it
             if has_profile_data:
                 form = UserProfileForm(request.POST, instance=profile)
                 if form.is_valid():
@@ -139,27 +140,22 @@ def save_profile_from_checkout(request):
                     return JsonResponse(
                         {'error': 'Invalid profile data.'}, status=400
                     )
-
         else:
-            # Handle guest user registration and login
             if '@' not in email:
-                raise ValueError("Invalid email address format")
+                raise ValueError('Invalid email address format')
 
             username_base = email.split('@')[0]
             username = username_base
             counter = 1
 
-            # Ensure unique username
             while User.objects.filter(username=username).exists():
                 username = f"{username_base}{counter}"
                 counter += 1
 
-            # Generate a random secure password
             password = ''.join(
                 random.choices(string.ascii_letters + string.digits, k=12)
             )
 
-            # Create the guest user
             user = User.objects.create_user(
                 username=username,
                 email=email,
@@ -168,15 +164,14 @@ def save_profile_from_checkout(request):
                 password=password,
             )
 
-            # Ensure a UserProfile exists for the guest user
             UserProfile.objects.get_or_create(user=user)
 
-            # Log the guest user in using the default auth backend
             login(
                 request,
                 user,
                 backend='django.contrib.auth.backends.ModelBackend'
             )
+
         return JsonResponse({'success': True})
 
     except Exception as e:
@@ -188,8 +183,12 @@ def save_profile_from_checkout(request):
 @require_GET
 def billing_info(request):
     """
-    Returns the billing form include HTML, pre-filled for authenticated users.
-    Used as part of the AJAX-driven checkout flow.
+    Return billing form HTML with pre-filled fields for authenticated users.
+
+    Used during the AJAX-driven checkout flow.
+
+    **Template:**
+    :template:`checkout/includes/billing_form.html`
     """
     initial_data = {}
 
@@ -217,8 +216,12 @@ def billing_info(request):
 @require_GET
 def load_billing_form(request):
     """
-    Return the billing form HTML with prefilled data for authenticated users.
-    Used in Step 2 of the checkout flow.
+    Return billing form HTML with prefilled data for authenticated users.
+
+    Triggered during checkout Step 2 (Billing Info).
+
+    **Template:**
+    :template:`checkout/includes/billing_form.html`
     """
     initial_data = {}
 
@@ -247,8 +250,13 @@ def load_billing_form(request):
 @csrf_exempt
 def save_billing_from_checkout(request):
     """
-    Save billing information to the user's UserProfile.
-    Only available to authenticated users during checkout.
+    Save billing information to the user's profile during checkout.
+
+    Requires authentication. Maps billing fields to
+    :model:`user_profiles.UserProfile`.
+
+    **Returns:**
+    - JSON success message or error message
     """
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'Authentication required.'}, status=403)
@@ -256,14 +264,27 @@ def save_billing_from_checkout(request):
     try:
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
-        # Map form fields to UserProfile model fields
-        profile.default_street_address1 = request.POST.get("billing_street1", "").strip()
-        profile.default_street_address2 = request.POST.get("billing_street2", "").strip()
-        profile.default_town_or_city = request.POST.get("billing_city", "").strip()
-        profile.default_county = request.POST.get("billing_county", "").strip()
-        profile.default_postcode = request.POST.get("billing_postcode", "").strip()
-        profile.default_country = request.POST.get("billing_country", "").strip()
-        profile.default_phone_number = request.POST.get("billing_phone", "").strip()
+        profile.default_street_address1 = request.POST.get(
+            'billing_street1', ''
+        ).strip()
+        profile.default_street_address2 = request.POST.get(
+            'billing_street2', ''
+        ).strip()
+        profile.default_town_or_city = request.POST.get(
+            'billing_city', ''
+        ).strip()
+        profile.default_county = request.POST.get(
+            'billing_county', ''
+        ).strip()
+        profile.default_postcode = request.POST.get(
+            'billing_postcode', ''
+        ).strip()
+        profile.default_country = request.POST.get(
+            'billing_country', ''
+        ).strip()
+        profile.default_phone_number = request.POST.get(
+            'billing_phone', ''
+        ).strip()
 
         profile.save()
 
