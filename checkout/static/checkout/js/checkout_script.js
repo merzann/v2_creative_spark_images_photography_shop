@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Validate email format (simple regex)
   function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/i.test(email);
   }
 
   // Show visual feedback using Bootstrap validation styles
@@ -31,6 +31,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Validate authenticated user's profile form fields (Step 1)
+  function validateProfileFormFields() {
+    const form = document.getElementById('checkout-profile-form');
+    if (!form) return false;
+
+    const firstNameInput = form.querySelector('#first_name');
+    const lastNameInput = form.querySelector('#last_name');
+    const emailInput = form.querySelector('#email');
+
+    const firstName = firstNameInput?.value.trim();
+    const lastName = lastNameInput?.value.trim();
+    const email = emailInput?.value.trim();
+
+    const firstValid = !!firstName;
+    const lastValid = !!lastName;
+    const emailValid = isValidEmail(email);
+
+    showValidationFeedback(firstNameInput, firstValid, 'First name is required.');
+    showValidationFeedback(lastNameInput, lastValid, 'Last name is required.');
+    showValidationFeedback(emailInput, emailValid, 'Please enter a valid email address.');
+
+    return firstValid && lastValid && emailValid;
+  }
+
   // Validate required billing fields and country-specific postcode format
   function validateBillingFormFields() {
     const form = document.getElementById('billing-form');
@@ -47,13 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let allValid = true;
 
-    // Loop through required fields and show validation messages
     Object.entries(requiredFields).forEach(([id, message]) => {
       const input = form.querySelector(`#${id}`);
       const value = input?.value.trim();
       let isValid = value !== '';
 
-      // Use custom validation logic for postcode
       if (id === 'billing_postcode') {
         const country = form.querySelector('#billing_country')?.value;
         isValid = validatePostalCode(value, country);
@@ -153,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ['billing_street1', 'billing_postcode', 'billing_city', 'billing_country', 'billing_phone'].forEach(id => {
           const input = document.getElementById(id);
           if (input) {
-            // Validate on input
             input.addEventListener('input', () => {
               const isValid = validateBillingFormFields();
               continueBtn.disabled = !isValid;
@@ -161,17 +182,14 @@ document.addEventListener('DOMContentLoaded', function () {
               skipProfileSave = false;
             });
 
-            // Validate on blur (leaving the field)
             input.addEventListener('blur', () => {
               validateBillingFormFields();
             });
           }
         });
 
-        // Trigger validation after rendering
         continueBtn.disabled = !validateBillingFormFields();
 
-        // Replace Continue button click logic for billing step
         continueBtn.onclick = function () {
           if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave) {
             window.location.href = '/checkout/summary/';
@@ -204,14 +222,12 @@ document.addEventListener('DOMContentLoaded', function () {
         ? '/checkout/save-billing-from-checkout/'
         : '/checkout/save-profile-from-checkout/';
 
-      // Basic email validation for profile form
       if (form.id === 'checkout-profile-form' && !isValidEmail(email)) {
         modalAlert.classList.remove('d-none');
         modalAlert.textContent = "Please enter a valid email address.";
         return;
       }
 
-      // Submit form data via AJAX
       fetch(url, {
         method: 'POST',
         headers: { 'X-CSRFToken': csrfToken },
@@ -228,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function () {
             continueBtn.disabled = false;
             modalAlert.classList.add('d-none');
 
-            // Refresh saved values
             captureInitialFormValues();
           } else {
             throw new Error('Unexpected response from server');
@@ -266,12 +281,10 @@ document.addEventListener('DOMContentLoaded', function () {
   // Handle click on "Continue" button
   continueBtn.addEventListener('click', function () {
     if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
-      // Proceed to billing if profile is saved or skipped
       loadBillingForm();
       return;
     }
 
-    // Prompt save modal if form has been edited
     if (formHasChanges()) {
       continueBtn.disabled = true;
       modalAlert.classList.add('d-none');
@@ -286,45 +299,55 @@ document.addEventListener('DOMContentLoaded', function () {
     formWrapper.innerHTML = `
       <div class="card p-4 shadow-sm">
         <h5 class="mb-3">Welcome back!</h5>
-        <form id="checkout-profile-form">
+        <form id="checkout-profile-form" novalidate>
           <input type="hidden" name="csrfmiddlewaretoken"
             value="${document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''}">
 
           <div class="mb-3">
-            <label for="first_name" class="form-label">First Name</label>
+            <label for="first_name" class="form-label" id="label-first-name">First Name</label>
             <input type="text" class="form-control" name="first_name" id="first_name"
-              aria-label="First Name" value="${document.body.dataset.firstName || ''}" required>
+              aria-label="First Name" aria-labelledby="label-first-name" value="${document.body.dataset.firstName || ''}" required>
+            <div class="invalid-feedback">First name is required.</div>
           </div>
 
           <div class="mb-3">
-            <label for="last_name" class="form-label">Last Name</label>
+            <label for="last_name" class="form-label" id="label-last-name">Last Name</label>
             <input type="text" class="form-control" name="last_name" id="last_name"
-              aria-label="Last Name" value="${document.body.dataset.lastName || ''}" required>
+              aria-label="Last Name" aria-labelledby="label-last-name" value="${document.body.dataset.lastName || ''}" required>
+            <div class="invalid-feedback">Last name is required.</div>
           </div>
 
           <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
+            <label for="email" class="form-label" id="label-email">Email</label>
             <input type="email" class="form-control" name="email" id="email"
-              aria-label="Email address" value="${document.body.dataset.email || ''}" required>
+              aria-label="Email address" aria-labelledby="label-email" value="${document.body.dataset.email || ''}" required>
+            <div class="invalid-feedback">Please enter a valid email address.</div>
           </div>
         </form>
       </div>
     `;
 
     formWrapper.style.display = 'block';
-    continueBtn.disabled = false;
-    captureInitialFormValues();
 
-    // Track changes in form
+    // Real-time validation listeners for profile form
     ['first_name', 'last_name', 'email'].forEach(id => {
       const input = document.getElementById(id);
       if (input) {
         input.addEventListener('input', () => {
+          validateProfileFormFields();
+          continueBtn.disabled = !validateProfileFormFields();
           continueBtn.dataset.allowRedirect = "false";
           skipProfileSave = false;
         });
+
+        input.addEventListener('blur', () => {
+          validateProfileFormFields();
+        });
       }
     });
+
+    continueBtn.disabled = !validateProfileFormFields();
+    captureInitialFormValues();
   }
 
   // Handle login and guest actions
@@ -333,14 +356,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (loginBtn) {
     loginBtn.addEventListener('click', function () {
-      // Redirect to login with next to checkout
       window.location.href = '/accounts/login/?next=/checkout/';
     });
   }
 
   if (guestBtn) {
     guestBtn.addEventListener('click', function () {
-      // Fetch and show guest profile form
       fetch('/checkout/load-guest-form/')
         .then(response => {
           if (!response.ok) {
@@ -353,10 +374,8 @@ document.addEventListener('DOMContentLoaded', function () {
           formWrapper.style.display = 'block';
           captureInitialFormValues();
 
-          // Disable continue initially
           continueBtn.disabled = !validateGuestFormFields();
 
-          // Enable on valid input
           ['first_name', 'last_name', 'email'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {
