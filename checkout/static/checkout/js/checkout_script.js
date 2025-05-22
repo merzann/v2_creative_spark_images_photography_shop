@@ -10,6 +10,21 @@ document.addEventListener('DOMContentLoaded', function () {
   let formInitialData = {};
   let skipProfileSave = false;
 
+    /**
+   * Updates the visual progress tracker to highlight the active step.
+   * @param {number} stepNumber - The step to activate (1–5)
+   */
+  function setActiveProgressStep(stepNumber) {
+    const steps = document.querySelectorAll('.progress-steps .step');
+    steps.forEach((stepEl, index) => {
+      if (index === stepNumber - 1) {
+        stepEl.classList.add('step-active');
+      } else {
+        stepEl.classList.remove('step-active');
+      }
+    });
+  }
+
   // Validate email format (simple regex)
   function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/i.test(email);
@@ -163,6 +178,9 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(html => {
         formWrapper.innerHTML = html;
         formWrapper.style.display = 'block';
+
+        // Set progress bar to Step 2
+        setActiveProgressStep(2);
 
         // Reset redirect flag
         continueBtn.disabled = false;
