@@ -323,6 +323,7 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 **Dynamic Form Behavior:**
  - For guests, the Continue button is disabled until all form fields are valid (including correct email format).
  - For returning users, changes are tracked and compared to original data to detect modifications.
+ - Real-time visual feedback allows user to easily identify errors in data provided
 
 ![Checkout Step 1 User](README_Media/co_step1_user.png) ![Checkout Step 1 Guest](README_Media/co_step1_guest.png)
 

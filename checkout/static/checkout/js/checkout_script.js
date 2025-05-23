@@ -119,17 +119,30 @@ document.addEventListener('DOMContentLoaded', function () {
     return regex.test(postcode);
   }
 
-  // Validate required guest fields and email format
+  // Validate required guest fields and email format during step 1
   function validateGuestFormFields() {
     const form = document.getElementById('checkout-profile-form');
     if (!form) return false;
 
-    const firstName = form.querySelector('#first_name')?.value.trim();
-    const lastName = form.querySelector('#last_name')?.value.trim();
-    const email = form.querySelector('#email')?.value.trim();
+    const firstNameInput = form.querySelector('#first_name');
+    const lastNameInput = form.querySelector('#last_name');
+    const emailInput = form.querySelector('#email');
 
-    return firstName && lastName && isValidEmail(email);
+    const firstName = firstNameInput?.value.trim();
+    const lastName = lastNameInput?.value.trim();
+    const email = emailInput?.value.trim();
+
+    const firstValid = !!firstName;
+    const lastValid = !!lastName;
+    const emailValid = isValidEmail(email);
+
+    showValidationFeedback(firstNameInput, firstValid, 'First name is required.');
+    showValidationFeedback(lastNameInput, lastValid, 'Last name is required.');
+    showValidationFeedback(emailInput, emailValid, 'Please enter a valid email address.');
+
+    return firstValid && lastValid && emailValid;
   }
+
 
   // Capture initial form values to detect changes later
   function captureInitialFormValues() {
@@ -394,13 +407,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
           continueBtn.disabled = !validateGuestFormFields();
 
+          // Real-time validation listeners for user_form when guest
           ['first_name', 'last_name', 'email'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {
               input.addEventListener('input', () => {
+                validateGuestFormFields();
                 continueBtn.disabled = !validateGuestFormFields();
                 continueBtn.dataset.allowRedirect = "false";
                 skipProfileSave = false;
+              });
+
+              input.addEventListener('blur', () => {
+                validateGuestFormFields();
               });
             }
           });
