@@ -9,34 +9,10 @@
 <section class="container-fluid checkout-container" role="region" aria-labelledby="checkout-heading">
 
   <!-- Progress Tracker -->
-  <div class="checkout-progress mb-5 text-center" aria-labelledby="progress-heading">
-    <h2 id="checkout-heading" class="mb-4">Secure Checkout</h2>
-    <div class="progress-steps d-flex justify-content-between align-items-center mt-4" aria-label="Checkout progress steps">
-      <div id="progress-step-1" class="step step-active" aria-label="Step 1: Contact Details">1</div>
-      <div id="progress-step-2" class="step" aria-label="Step 2: Billing Information">2</div>
-      <div id="progress-step-3" class="step" aria-label="Step 3: Order Summary">3</div>
-      <div id="progress-step-4" class="step" aria-label="Step 4: Payment">4</div>
-      <div id="progress-step-5" class="step" aria-label="Step 5: Confirmation">5</div>
-    </div>
-    <div class="progress-labels d-flex justify-content-between mt-2 small text-muted" aria-hidden="true">
-      <div>Contact<br>Details</div>
-      <div>Billing<br>Information</div>
-      <div>Order<br>Summary</div>
-      <div>Payment</div>
-      <div>Confirmation</div>
-    </div>
-  </div>
+  {% include "checkout/includes/progress.html" with step="1" %}
 
   <!-- Checkout Start Options -->
-  <div class="checkout-choice text-center" aria-labelledby="checkout-choice-heading">
-    <p id="checkout-choice-heading" class="lead mb-4">How would you like to proceed?</p>
-    <button id="btn-login" class="btn btn-custom me-3" aria-label="Log in and continue to checkout">
-      Log in & Continue
-    </button>
-    <button id="btn-guest" class="btn btn-outline-secondary mt-3 me-3" aria-label="Check out as guest">
-      Check Out as Guest
-    </button>
-  </div>
+  {% include "checkout/includes/checkout_choice.html" %}
 
   <!-- Dynamic Checkout Form Container -->
   <div
@@ -61,7 +37,7 @@
     </section>
 
     <!-- Step 3: Billing Information -->
-    <section id="step-billing" class="checkout-step" style="display: none;">
+    <section id="step-summary" class="checkout-step" style="display: none;">
       <h3 class="visually-hidden">Billing Information</h3>
       {% include "checkout/includes/checkout_summary.html" %}
     </section>
