@@ -323,10 +323,7 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 **Dynamic Form Behavior:**
  - For guests, the Continue button is disabled until all form fields are valid (including correct email format).
  - For returning users, changes are tracked and compared to original data to detect modifications.
- - Real-time visual feedback allows user to easily identify errors in data provided
-
-![Checkout Step 1 User](README_Media/co_step1_user.png) ![Checkout Step 1 Guest](README_Media/co_step1_guest.png)
-
+ - Real-time visual feedback allows user to easily identify errors in data provided 
 
 **Security & UX Defenses**
 
@@ -343,6 +340,9 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 | Disabled Buttons              | "Continue" is only enabled when inputs are valid and complete.          |
 | Progressive Disclosure        | Guest form is hidden by default until selected to minimize noise.       |
 | ARIA & Label Compliance       | All fields include ARIA attributes for better accessibility.            |
+
+![Checkout Step 1 User](README_Media/co_step1_user.png) ![Checkout Step 1 Guest](README_Media/co_step1_guest.png)
+![Checkout User Validation](README_Media/user_form_validation.png) ![Checkout Guest Validation](README_Media/guest_form_validation.png)
 
 
 #### Step 2: Billing Information
@@ -376,6 +376,8 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 | Modal Confirmation	    | Save/discard prompt shown if user attempts to proceed after changes.          |
 | Revert Unsaved Edits	  | Users can cancel and restore original field values.                           |
 | ARIA & Label Compliance |	Each input has aria-labelledby for screen reader accessibility.               |
+
+![Checkout Billing Form checked](README_Media/billing_form_checked.png) ![Checkout Billing Form empty](README_Media/billing_form_empty.png)
 
 ---
 ---
