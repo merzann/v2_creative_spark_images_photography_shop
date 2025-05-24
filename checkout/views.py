@@ -2,14 +2,17 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
-from django.template.loader import render_to_string
+from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
 from user_profiles.models import UserProfile
 from user_profiles.forms import UserProfileForm
+from home.models import SpecialOffer
 from products.models import Product
+from decimal import Decimal
 import stripe
 import string
 import random
@@ -39,17 +42,6 @@ def load_guest_form(request):
         {'user': request.user}
     )
     return HttpResponse(html)
-
-
-def checkout_success(request):
-    """
-    Clear the cart session and render the success page.
-
-    **Template:**
-    :template:`checkout/checkout_success.html`
-    """
-    request.session['bag'] = {}
-    return render(request, 'checkout/checkout_success.html')
 
 
 @csrf_exempt
@@ -294,3 +286,90 @@ def save_billing_from_checkout(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_GET
+def checkout_summary(request):
+    """
+    Display the checkout summary view.
+
+    Shows contact info, billing info, shopping cart summary, discounts,
+    and a pricing breakdown (net, tax, shipping, total).
+
+    **Context:**
+    - bag_items: List of product line items with prices and quantities
+    - bag_total: Total cost before tax and shipping
+    - vat: Tax amount
+    - vat_rate_display: Tax rate as a percentage (int)
+    - shipping_total: Shipping total for all items
+    - grand_total: Total including tax and shipping
+    - contact_info: Dict of user name/email from session or user
+    - billing_info: Dict of billing form fields from session or profile
+    - special_offer: Active offer if any
+
+    **Template:**
+    :template:`checkout/checkout_summary.html`
+    """
+    bag = request.session.get("bag", {})
+    bag_items = []
+    bag_total = request.session.get("bag_total", 0)
+    vat = request.session.get("vat", 0)
+    vat_rate_display = request.session.get("vat_rate", 21)
+    shipping_total = request.session.get("shipping_total", 0)
+    grand_total = request.session.get("grand_total", 0)
+
+    for key, item in bag.items():
+        product = get_object_or_404(Product, pk=item["product_id"])
+        bag_items.append({
+            "key": key,
+            "product": product,
+            "quantity": item["quantity"],
+            "format": item.get("format"),
+            "license": item.get("license"),
+            "print_type": item.get("print_type"),
+        })
+
+    contact_info = {
+        "first_name": request.user.first_name if request.user.is_authenticated else "",
+        "last_name": request.user.last_name if request.user.is_authenticated else "",
+        "email": request.user.email if request.user.is_authenticated else ""
+    }
+
+    profile = getattr(request.user, "userprofile", None) if request.user.is_authenticated else None
+
+    billing_info = {
+        "billing_street1": profile.default_street_address1 if profile else "",
+        "billing_street2": profile.default_street_address2 if profile else "",
+        "billing_city": profile.default_town_or_city if profile else "",
+        "billing_county": profile.default_county if profile else "",
+        "billing_postcode": profile.default_postcode if profile else "",
+        "billing_country": profile.default_country if profile else "",
+        "billing_phone": profile.default_phone_number if profile else "",
+    }
+
+    special_offer = SpecialOffer.objects.filter(expiry_date__gt=timezone.now()).order_by('-expiry_date').first()
+
+    context = {
+        "bag_items": bag_items,
+        "bag_total": bag_total,
+        "vat": vat,
+        "vat_rate_display": vat_rate_display,
+        "shipping_total": shipping_total,
+        "grand_total": grand_total,
+        "contact_info": contact_info,
+        "billing_info": billing_info,
+        "special_offer": special_offer,
+    }
+
+    return render(request, "checkout/checkout_summary.html", context)
+
+
+def checkout_success(request):
+    """
+    Clear the cart session and render the success page.
+
+    **Template:**
+    :template:`checkout/checkout_success.html`
+    """
+    request.session['bag'] = {}
+    return render(request, 'checkout/checkout_success.html')

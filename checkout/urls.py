@@ -21,4 +21,5 @@ urlpatterns = [
         save_billing_from_checkout,
         name='save_billing_from_checkout',
     ),
+    path('summary/', views.checkout_summary, name='checkout_summary'),
 ]
