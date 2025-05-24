@@ -306,7 +306,7 @@ The UserProfile model includes a get_order_history() method to fetch related ord
   - Graceful Fallback: Users can cancel edits and revert to original data without reloading the page.
   - Responsive & Accessible: Form labels, ARIA attributes, and input feedback ensure accessibility compliance.
 
-#### Step 1: Contact details
+### Step 1: Contact details
 
 **Dual Entry Paths:**
   - Authenticated Users: See a pre-filled contact form with their saved profile data.
@@ -345,7 +345,7 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 ![Checkout User Validation](README_Media/user_form_validation.png) ![Checkout Guest Validation](README_Media/guest_form_validation.png)
 
 
-#### Step 2: Billing Information
+### Step 2: Billing Information
 
 **Form Behavior:**
 
@@ -378,6 +378,54 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 | ARIA & Label Compliance |	Each input has aria-labelledby for screen reader accessibility.               |
 
 ![Checkout Billing Form checked](README_Media/billing_form_checked.png) ![Checkout Billing Form empty](README_Media/billing_form_empty.png)
+
+
+### Step 3: Order Summary
+
+**Form Behavior:**
+
+Structured Summary View:
+  - Displays entered Contact Details and Billing Information, each with a Change button that redirects back to Step 1 for real-time editing.
+  - Dynamically pulls contact and billing info from session data or authenticated user's profile (UserProfile model).
+
+Bag Contents lists all cart items from the session-stored bag with:
+  - Product image (on the left)
+  - Product title, format (digital/printed), license, print type, and quantity (on the right)
+  - Responsive layout with image next to content from min-width: 400px+
+
+Special Offer Display:
+  - Dynamically fetches and displays the most recent active special offer (if one exists) from the SpecialOffer model.
+  - Highlighted in a green alert box.
+
+Price Breakdown:
+  - Shows a clear breakdown of:
+  - Subtotal (excl. VAT)
+  - VAT (based on user’s billing country)
+  - Shipping (based on printed product type and location)
+
+Total (calculated and rounded consistently)
+  - Responsive UI
+  - Product image and text adapt across breakpoints.
+  - Responsive margin utilities like me-md-3 ensure clean layouts on larger screens.
+
+Navigation:
+  - ⬅ Go back button redirects to shopping bag.
+  - Proceed to Secure Payment ➡ leads to Step 4: Payment.
+
+### Security & UX Defenses
+
+| Type                    | Feature                                                                       |
+|-------------------------|-------------------------------------------------------------------------------|
+| CSRF Protection         | CSRF tokens included in all forms via `RequestContext` and `{% csrf_token %}` |
+| Session Handling        | Contact, billing, and cart data stored in session or pulled from authenticated user |
+| Progress Indicator      | Visual progress bar guides user through multi-step process                    |
+| Change Buttons          | Allow users to return and edit previous steps without losing form state       |
+| Responsive Layout       | Bootstrap grid ensures mobile-friendly alignment of images and form fields   |
+| Validation (Client)     | JavaScript validation for email, phone number, and country-specific postcodes |
+| Validation (Server)     | Django form and model validation for contact, billing, and bag data integrity |
+| Fallback Mechanisms     | VAT and shipping defaults applied if no user country or matching rate found   |
+| Error Handling          | AJAX and form errors surfaced clearly with `alert` messages or modals        |
+| Number Formatting       | Prices consistently formatted with 2 decimal places for clarity and trust     |
 
 ---
 ---
@@ -740,8 +788,11 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
   | No field-level error feedback | Form didn’t provide immediate input feedback                             | Added `invalid-feedback` elements and real-time input validation          |
   | Continue enabled on invalid input | Button could activate before form was valid                          | Bound validation logic to real-time listeners and checked on render       |
   | Country select didn’t persist | Selected country not marked as `selected` in dropdown                    | Used `{% if initial.billing_country == 'IE' %}selected{% endif %}`        |
-
-
+  | Missing Template Filter | Template filter `get_item` caused `TemplateSyntaxError` in `checkout_summary.html`.            | Removed or replaced `get_item` usage with direct dictionary access or correct filter logic. |
+  | No Timestamp on Request | AttributeError: `'WSGIRequest' object has no attribute 'timestamp'` during offer lookup.       | Replaced `request.timestamp` with `timezone.now()` from Django utilities.                   |
+  | Favicon 404             | Browser auto-requested `/checkout/favicon.ico`, resulting in a 404 error.                      | Added a `favicon.ico` in the static directory and linked it via `<link rel="icon">`.        |
+  | CSRF Token Warning      | Warning about missing `{% csrf_token %}` context in guest form template load.                  | Ensured `RequestContext` is used in AJAX template rendering via `render_to_string`.         |
+  | Price Format Inconsistency | Some totals were displayed as `€0` instead of `€0.00`.                                         | Applied `floatformat:2` in the Django template to ensure all monetary values show two decimals. |
 
 ---
 ---
