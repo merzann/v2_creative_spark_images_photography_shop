@@ -39,7 +39,8 @@ def load_guest_form(request):
     """
     html = render_to_string(
         'checkout/includes/user_form.html',
-        {'user': request.user}
+        {'user': request.user},
+        request=request
     )
     return HttpResponse(html)
 
@@ -120,18 +121,14 @@ def save_profile_from_checkout(request):
                 'default_town_or_city', 'default_street_address1',
                 'default_street_address2', 'default_county'
             ]
-            has_profile_data = any(
-                request.POST.get(field) for field in profile_fields
-            )
+            has_profile_data = any(request.POST.get(field) for field in profile_fields)
 
             if has_profile_data:
                 form = UserProfileForm(request.POST, instance=profile)
                 if form.is_valid():
                     form.save()
                 else:
-                    return JsonResponse(
-                        {'error': 'Invalid profile data.'}, status=400
-                    )
+                    return JsonResponse({'error': 'Invalid profile data.'}, status=400)
         else:
             if '@' not in email:
                 raise ValueError('Invalid email address format')
@@ -144,9 +141,7 @@ def save_profile_from_checkout(request):
                 username = f"{username_base}{counter}"
                 counter += 1
 
-            password = ''.join(
-                random.choices(string.ascii_letters + string.digits, k=12)
-            )
+            password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
             user = User.objects.create_user(
                 username=username,
@@ -158,11 +153,7 @@ def save_profile_from_checkout(request):
 
             UserProfile.objects.get_or_create(user=user)
 
-            login(
-                request,
-                user,
-                backend='django.contrib.auth.backends.ModelBackend'
-            )
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
         return JsonResponse({'success': True})
 
@@ -256,27 +247,13 @@ def save_billing_from_checkout(request):
     try:
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
-        profile.default_street_address1 = request.POST.get(
-            'billing_street1', ''
-        ).strip()
-        profile.default_street_address2 = request.POST.get(
-            'billing_street2', ''
-        ).strip()
-        profile.default_town_or_city = request.POST.get(
-            'billing_city', ''
-        ).strip()
-        profile.default_county = request.POST.get(
-            'billing_county', ''
-        ).strip()
-        profile.default_postcode = request.POST.get(
-            'billing_postcode', ''
-        ).strip()
-        profile.default_country = request.POST.get(
-            'billing_country', ''
-        ).strip()
-        profile.default_phone_number = request.POST.get(
-            'billing_phone', ''
-        ).strip()
+        profile.default_street_address1 = request.POST.get('billing_street1', '').strip()
+        profile.default_street_address2 = request.POST.get('billing_street2', '').strip()
+        profile.default_town_or_city = request.POST.get('billing_city', '').strip()
+        profile.default_county = request.POST.get('billing_county', '').strip()
+        profile.default_postcode = request.POST.get('billing_postcode', '').strip()
+        profile.default_country = request.POST.get('billing_country', '').strip()
+        profile.default_phone_number = request.POST.get('billing_phone', '').strip()
 
         profile.save()
 
@@ -308,7 +285,7 @@ def checkout_summary(request):
     - special_offer: Active offer if any
 
     **Template:**
-    :template:`checkout/checkout_summary.html`
+    :template:`checkout/includes/checkout_summary.html`
     """
     bag = request.session.get("bag", {})
     bag_items = []
@@ -347,7 +324,9 @@ def checkout_summary(request):
         "billing_phone": profile.default_phone_number if profile else "",
     }
 
-    special_offer = SpecialOffer.objects.filter(expiry_date__gt=timezone.now()).order_by('-expiry_date').first()
+    special_offer = SpecialOffer.objects.filter(
+        expiry_date__gt=timezone.now()
+    ).order_by('-expiry_date').first()
 
     context = {
         "bag_items": bag_items,
@@ -361,7 +340,7 @@ def checkout_summary(request):
         "special_offer": special_offer,
     }
 
-    return render(request, "checkout/checkout_summary.html", context)
+    return render(request, "checkout/includes/checkout_summary.html", context)
 
 
 def checkout_success(request):

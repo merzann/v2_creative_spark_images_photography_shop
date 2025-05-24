@@ -59,6 +59,12 @@
       <h3 class="visually-hidden">Billing Information</h3>
       {% include "checkout/includes/billing_form.html" %}
     </section>
+
+    <!-- Step 3: Billing Information -->
+    <section id="step-billing" class="checkout-step" style="display: none;">
+      <h3 class="visually-hidden">Billing Information</h3>
+      {% include "checkout/includes/checkout_summary.html" %}
+    </section>
   </div>
 
   <!-- Pagination -->
