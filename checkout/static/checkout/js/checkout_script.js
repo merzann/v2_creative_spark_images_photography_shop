@@ -173,7 +173,11 @@ document.addEventListener('DOMContentLoaded', function () {
         formWrapper.innerHTML = html;
         formWrapper.style.display = 'block';
         setActiveProgressStep(3);
-        continueBtn.blur();
+
+        // Update button to Secure Payment state
+        continueBtn.innerHTML = '<i class="fa fa-lock me-1"></i>Secure Payment';
+        continueBtn.disabled = false;
+        continueBtn.classList.add('btn-custom');
       })
       .catch(error => console.error('Error loading summary:', error));
   }
