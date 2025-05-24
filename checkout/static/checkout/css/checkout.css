@@ -72,11 +72,20 @@
     color: #222;
   }
 
+/* Media Queries */
 @media (min-width: 400px) {
   .checkout-container {
     max-width: 27rem;
     margin-top: 10rem;
-    }
+  }
+  
+  .flex-sm-custom-row {
+    flex-direction: row !important;
+  }
+
+  .me-sm-custom-3 {
+    margin-right: 1rem !important;
+  }
 }
 
 @media (min-width: 768px) {
