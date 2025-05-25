@@ -2,8 +2,8 @@
 
 .checkout-container {
   min-height: 100vh;
-  max-width: 23rem;
   margin-top: 7.5rem;
+  max-width: 85%;
   }
 
   /* Wrap progress steps on small screens */
@@ -73,7 +73,6 @@
 /* Media Queries */
 @media (min-width: 400px) {
   .checkout-container {
-    max-width: 27rem;
     margin-top: 10rem;
   }
   
@@ -86,12 +85,64 @@
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 576px) {
   .checkout-container {
-    max-width: 40rem;
+    max-width: 80%;
     }
 
   .progress-labels > div {
     font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .checkout-container {
+    max-width: 70%;
+  }
+
+  .progress-labels > div {
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .progress-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 60%;
+  }
+
+  .summary-col {
+    max-width: 80%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .checkout-container {
+    max-width: 60%;
+  }
+
+  .checkout-summary-card .row {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .checkout-summary-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .checkout-main-col {
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+
+  .summary-col {
+    flex: 0 0 35%;
+    max-width: 35%;
   }
 }

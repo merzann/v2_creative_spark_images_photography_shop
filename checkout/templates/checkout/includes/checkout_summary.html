@@ -1,88 +1,88 @@
-<!-- summary form -->
-{% block content %}
-<h2 class="mb-5 text-center">Review Your Order</h2>
+<div class="card p-4 shadow-md checkout-summary-card">
+  <div class="checkout-summary-inner">
+    
+    <!-- Left Column -->
+    <div class="checkout-main-col">
+      <!-- Contact Details -->
+      <div class="my-4">
+        <h3>Contact Details</h3>
+        <div class="d-flex justify-content-between align-items-center">
+          <p>{{ contact_info.first_name }} {{ contact_info.last_name }}<br>{{ contact_info.email }}</p>
+          <a href="/checkout/" class="btn btn-link">Change</a>
+        </div>
+      </div>
+      <hr>
 
-<div class="card p-4 shadow-sm">
+      <!-- Billing Info -->
+      <div class="my-4">
+        <h3>Billing Information</h3>
+        <div class="d-flex justify-content-between align-items-center">
+          <p>
+            {{ billing_info.billing_street1 }}<br>
+            {% if billing_info.billing_street2 %}{{ billing_info.billing_street2 }}<br>{% endif %}
+            {{ billing_info.billing_city }}, {{ billing_info.billing_county }}<br>
+            {{ billing_info.billing_postcode }} {{ billing_info.billing_country }}
+          </p>
+          <a href="/checkout/" class="btn btn-link">Change</a>
+        </div>
+      </div>
+      <hr>
 
-  <!-- Contact Details -->
-  <div class="my-4">
-    <h4>Contact Details</h4>
-    <div class="d-flex justify-content-between align-items-center">
-      <p>{{ contact_info.first_name }} {{ contact_info.last_name }}<br>{{ contact_info.email }}</p>
-      <a href="/checkout/" class="btn btn-link">Change</a>
+      <!-- Order Items -->
+      <div class="my-4">
+        <h4>Your Order</h4>
+        <ul class="list-group">
+          {% for item in bag_items %}
+            <li class="list-group-item">
+              <div class="d-flex flex-column flex-sm-row align-items-start">
+                <img 
+                  src="{{ item.product.image_preview.url }}" 
+                  alt="{{ item.product.title }}" 
+                  class="img-fluid me-sm-3 mb-3 mb-sm-0" 
+                  style="max-width: 120px; height: auto;"
+                >
+                <div class="my-4">
+                  <strong>{{ item.product.title }}</strong><br>
+                  {{ item.format|title }}{% if item.license %} ({{ item.license }}){% endif %}{% if item.print_type %} - {{ item.print_type }}{% endif %}
+                  <br>
+                  Quantity: {{ item.quantity }}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
-  <hr>
 
-  <!-- Billing Info -->
-  <div class="my-4">
-    <h4>Billing Information</h4>
-    <div class="d-flex justify-content-between align-items-center">
-      <p>
-      {{ billing_info.billing_street1 }}<br>
-      {% if billing_info.billing_street2 %}{{ billing_info.billing_street2 }}<br>{% endif %}
-      {{ billing_info.billing_city }}, {{ billing_info.billing_county }}<br>
-      {{ billing_info.billing_postcode }} {{ billing_info.billing_country }}
-      </p>
-      <a href="/checkout/" class="btn btn-link">Change</a>
+    <!-- Right Column -->
+    <div class="summary-col">
+      {% if special_offer %}
+        <div class="alert alert-success my-4">
+          <strong>Discount Applied:</strong> {{ special_offer.text }}
+        </div>
+      {% endif %}
+
+      <div class="my-4">
+        <h4>Order Summary</h4>
+        <ul class="list-group mt-2">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Subtotal</span>
+            <strong>€{{ bag_total|floatformat:2 }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>VAT ({{ vat_rate_display }}%)</span>
+            <strong>€{{ vat|floatformat:2 }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Shipping</span>
+            <strong>€{{ shipping_total|floatformat:2 }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total</span>
+            <strong>€{{ grand_total|floatformat:2 }}</strong>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <hr>
-
-  <!-- Order Items -->
-  <div class="my-4">
-    <h4>Your Order</h4>
-    <ul class="list-group">
-      {% for item in bag_items %}
-        <li class="list-group-item">
-          <div class="d-flex flex-column flex-sm-custom-row align-items-start">
-            <img 
-              src="{{ item.product.image_preview.url }}" 
-              alt="{{ item.product.title }}" 
-              class="img-fluid me-sm-custom-3 mb-3 mb-sm-0" 
-              style="max-width: 120px; height: auto;"
-            >
-            <div class="my-4">
-              <strong>{{ item.product.title }}</strong><br>
-              {{ item.format|title }}{% if item.license %} ({{ item.license }}){% endif %}{% if item.print_type %} - {{ item.print_type }}{% endif %}
-              <br>
-              Quantity: {{ item.quantity }}
-            </div>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-  <hr>
-
-  <!-- Special Offer -->
-  {% if special_offer %}
-    <div class="alert alert-success my-4">
-      <strong>Discount Applied:</strong> {{ special_offer.text }}
-    </div>
-  {% endif %}
-
-  <!-- Order Total -->
-  <div class="my-4">
-    <h4>Order Summary</h4>
-    <ul class="list-group mt-2">
-      <li class="list-group-item d-flex justify-content-between">
-        <span>Subtotal</span>
-        <strong>€{{ bag_total|floatformat:2 }}</strong>
-      </li>
-      <li class="list-group-item d-flex justify-content-between">
-        <span>VAT ({{ vat_rate_display }}%)</span>
-        <strong>€{{ vat|floatformat:2 }}</strong>
-      </li>
-      <li class="list-group-item d-flex justify-content-between">
-        <span>Shipping</span>
-        <strong>€{{ shipping_total|floatformat:2 }}</strong>
-      </li>
-      <li class="list-group-item d-flex justify-content-between">
-        <span>Total</span>
-        <strong>€{{ grand_total|floatformat:2 }}</strong>
-      </li>
-    </ul>
   </div>
 </div>
-{% endblock %}
