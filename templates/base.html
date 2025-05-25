@@ -62,6 +62,7 @@
     {% endblock %}
 
     {% block extra_js %}
+    <!-- Load Stripe.js if needed -->
     {% endblock %}
 
     <!-- Favicon -->
@@ -80,6 +81,7 @@
     data-last-name="{{ user.last_name }}"
     data-email="{{ user.email }}"
   {% endif %}
+  data-stripe-public-key="{{ STRIPE_PUBLIC_KEY }}"
 >
 
     <header>

@@ -9,7 +9,6 @@ from . import views
 urlpatterns = [
     path('', views.checkout, name='checkout'),
     path("load-guest-form/", views.load_guest_form, name="load_guest_form"),
-    path('success/', views.checkout_success, name='checkout_success'),
     path(
         'save-profile-from-checkout/',
         save_profile_from_checkout,
@@ -22,4 +21,10 @@ urlpatterns = [
         name='save_billing_from_checkout',
     ),
     path('summary/', views.checkout_summary, name='checkout_summary'),
+    path('success/', views.checkout_success, name='checkout_success'),
+    path(
+        'create-checkout-session/',
+        views.create_checkout_session,
+        name='create_checkout_session',
+    ),
 ]

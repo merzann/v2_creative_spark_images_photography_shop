@@ -177,21 +177,49 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error("Billing form load failed:", error));
   }
 
-  // Loads order summary and transitions UI to step 3
   function loadCheckoutSummary() {
     fetch('/checkout/summary/')
       .then(response => response.text())
       .then(html => {
         formWrapper.innerHTML = html;
         formWrapper.style.display = 'block';
+
+        // Step 3: Order Summary
         setActiveProgressStep(3);
 
+        // Update button label to Secure Payment
         continueBtn.innerHTML = '<i class="fa fa-lock me-1"></i>Secure Payment';
         continueBtn.disabled = false;
         continueBtn.classList.add('btn-custom');
+
+        // Attach Stripe Checkout handler to the button
+        continueBtn.onclick = function () {
+          // Step 4: Payment
+          setActiveProgressStep(4);
+
+          fetch('/checkout/create-checkout-session/', {
+            method: "POST",
+            headers: {
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value,
+              'Content-Type': 'application/json'
+            },
+          })
+          .then(res => res.json())
+          .then(session => {
+            const stripe = Stripe(document.body.dataset.stripePublicKey);
+            return stripe.redirectToCheckout({ sessionId: session.id });
+          })
+          .then(result => {
+            if (result.error) {
+              alert(result.error.message);
+            }
+          })
+          .catch(error => console.error("Error launching Stripe Checkout:", error));
+        };
       })
       .catch(error => console.error('Error loading summary:', error));
   }
+
 
   // Profile save logic attached to save button in modal
   document.addEventListener('click', function (event) {

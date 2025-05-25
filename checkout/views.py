@@ -70,7 +70,7 @@ def create_checkout_session(request):
     for item in bag.values():
         product = Product.objects.get(id=item['product_id'])
         quantity = item['quantity']
-        price = int(float(product.price) * 100)  # Convert to cents
+        price = int(float(product.price) * 100)  # cents
 
         line_items.append({
             'price_data': {
@@ -91,7 +91,8 @@ def create_checkout_session(request):
         cancel_url=request.build_absolute_uri('/bag/'),
     )
 
-    return redirect(session.url, code=303)
+    # Return session ID as JSON for JS redirect
+    return JsonResponse({'id': session.id})
 
 
 def apply_special_offer(bag_items, bag_total, shipping_total):

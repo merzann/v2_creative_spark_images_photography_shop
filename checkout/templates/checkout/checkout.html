@@ -62,5 +62,10 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'checkout/js/checkout_script.js' %}"></script>
+  <!-- Stripe.js SDK -->
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <!-- Your Checkout Script -->
+  <script src="{% static 'checkout/js/checkout_script.js' %}"></script>
 {% endblock %}
+
