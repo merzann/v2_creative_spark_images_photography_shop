@@ -473,30 +473,24 @@ def checkout_summary(request):
 
 @csrf_exempt
 def stripe_webhook(request):
-    """
-    Handle Stripe webhooks.
-
-    Validates event and performs logic on successful payment.
-    """
     payload = request.body
-    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
-    event = None
+    sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+    wh_secret = settings.STRIPE_WH_SECRET
 
     try:
         event = stripe.Webhook.construct_event(
-            payload, sig_header, settings.STRIPE_WH_SECRET
+            payload, sig_header, wh_secret
         )
-    except ValueError as e:
-        # Invalid payload
+    except ValueError:
         return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
+    except stripe.error.SignatureVerificationError:
         return HttpResponse(status=400)
 
-    # Handle successful payment
+    print(f"✅ Stripe webhook received: {event['type']}", flush=True)
+
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
-        print('✅ Payment received:', session)
+        print(f"✅ Payment received: {session}", flush=True)
 
     return HttpResponse(status=200)
 
