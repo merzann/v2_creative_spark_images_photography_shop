@@ -486,11 +486,8 @@ def stripe_webhook(request):
     except stripe.error.SignatureVerificationError:
         return HttpResponse(status=400)
 
-    print(f"✅ Stripe webhook received: {event['type']}", flush=True)
-
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
-        print(f"✅ Payment received: {session}", flush=True)
 
     return HttpResponse(status=200)
 
