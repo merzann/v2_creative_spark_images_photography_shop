@@ -87,6 +87,33 @@ def create_checkout_session(request):
     return redirect(session.url, code=303)
 
 
+def apply_special_offer(bag_items, bag_total, shipping_total):
+    active_offer = SpecialOffer.objects.filter(expiry_date__gte=datetime.now()).order_by('-expiry_date').first()
+    discount = Decimal("0.00")
+
+    if not active_offer:
+        return bag_total, shipping_total, discount, None
+
+    if active_offer.offer_type == 'free_shipping' and bag_total >= active_offer.min_amount:
+        shipping_total = Decimal("0.00")
+
+    elif active_offer.offer_type == 'percentage_discount' and active_offer.theme:
+        for item in bag_items:
+            if item.product.theme == active_offer.theme:
+                item_total = item.product.price * item.quantity
+                discount += item_total * (Decimal(active_offer.discount_percentage) / 100)
+
+    elif active_offer.offer_type == 'buy_x_get_y':
+        for item in bag_items:
+            if item.quantity >= active_offer.buy_quantity + active_offer.get_quantity:
+                # One unit is free per matched set
+                free_units = item.quantity // (active_offer.buy_quantity + active_offer.get_quantity)
+                discount += free_units * item.product.price
+
+    new_total = bag_total - discount
+    return new_total, shipping_total, discount, active_offer
+
+
 @require_POST
 @csrf_exempt
 def save_profile_from_checkout(request):
