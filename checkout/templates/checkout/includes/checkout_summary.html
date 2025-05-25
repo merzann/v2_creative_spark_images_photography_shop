@@ -34,18 +34,27 @@
         <ul class="list-group">
           {% for item in bag_items %}
             <li class="list-group-item">
-              <div class="d-flex flex-column flex-sm-row align-items-start">
-                <img 
-                  src="{{ item.product.image_preview.url }}" 
-                  alt="{{ item.product.title }}" 
-                  class="img-fluid me-sm-3 mb-3 mb-sm-0" 
-                  style="max-width: 120px; height: auto;"
-                >
-                <div class="my-4">
-                  <strong>{{ item.product.title }}</strong><br>
-                  {{ item.format|title }}{% if item.license %} ({{ item.license }}){% endif %}{% if item.print_type %} - {{ item.print_type }}{% endif %}
-                  <br>
-                  Quantity: {{ item.quantity }}
+              <div class="d-flex justify-content-between flex-wrap flex-sm-nowrap">
+                <!-- Left: Image & Description -->
+                <div class="d-flex flex-column flex-sm-row align-items-start">
+                  <img 
+                    src="{{ item.product.image_preview.url }}" 
+                    alt="{{ item.product.title }}" 
+                    class="img-fluid me-sm-3 mb-3 mb-sm-0" 
+                    style="max-width: 120px; height: auto;"
+                  >
+                  <div class="item-details">
+                    <strong>{{ item.product.title }}</strong><br>
+                    {{ item.format|title }}{% if item.license %} ({{ item.license }}){% endif %}{% if item.print_type %} - {{ item.print_type }}{% endif %}
+                    <br>
+                    Quantity: {{ item.quantity }}<br>
+                    <small class="text-muted">€{{ item.unit_price|floatformat:2 }} each</small>
+                  </div>
+                </div>
+
+                <!-- Right: Line Total -->
+                <div class="text-end ms-sm-auto item-details fw-bold">
+                  €{{ item.line_total|floatformat:2 }}
                 </div>
               </div>
             </li>
@@ -58,9 +67,14 @@
     <div class="summary-col">
       {% if special_offer %}
         <div class="alert alert-success my-4">
-          <strong>Discount Applied:</strong> {{ special_offer.text }}
+          {{ special_offer.text }}
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Discount applied:</span>
+              <strong>-€{{ discount|floatformat:2 }}</strong>
+            </li>
         </div>
       {% endif %}
+
 
       <div class="my-4">
         <h4>Order Summary</h4>

@@ -35,6 +35,13 @@
     font-size: 0.55rem;
   }
 
+  /* Checkout summary page */
+  .item-details {
+    margin: 0;      
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
   /* Buttons */
   .checkout-choice .btn-custom {
     background-color: #7c7575;

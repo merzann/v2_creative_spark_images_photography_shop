@@ -4,15 +4,15 @@ from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
+from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
-from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
+from decimal import Decimal
 from user_profiles.models import UserProfile
 from user_profiles.forms import UserProfileForm
 from home.models import SpecialOffer
 from products.models import Product
-from decimal import Decimal
 import stripe
 import string
 import random
@@ -88,29 +88,64 @@ def create_checkout_session(request):
 
 
 def apply_special_offer(bag_items, bag_total, shipping_total):
-    active_offer = SpecialOffer.objects.filter(expiry_date__gte=datetime.now()).order_by('-expiry_date').first()
+    """
+    Applies an active special offer to the bag.
+
+    - function checks for a valid SpecialOffer
+    based on the current datetime, and applies one of the following:
+    - Free shipping if a minimum spend threshold is met
+    - Percentage discount on items from a specific theme
+    - Buy X Get Y Free on eligible product quantities
+
+    Args:
+        bag_items: List of items in the shopping bag.
+        bag_total: Decimal representing the total cost of items.
+        shipping_total: Decimal representing the shipping cost.
+
+    Returns:
+        Tuple containing:
+        - Updated bag total after discount
+        - Updated shipping total
+        - Calculated discount
+        - The applied SpecialOffer object or None
+    """
+    active_offer = SpecialOffer.objects.filter(
+        expiry_date__gte=now()
+    ).order_by('-expiry_date').first()
+
     discount = Decimal("0.00")
 
     if not active_offer:
         return bag_total, shipping_total, discount, None
 
-    if active_offer.offer_type == 'free_shipping' and bag_total >= active_offer.min_amount:
+    if (active_offer.offer_type == 'free_shipping'
+            and bag_total >= active_offer.min_amount):
+        # Apply free shipping if minimum spend threshold is met
         shipping_total = Decimal("0.00")
 
-    elif active_offer.offer_type == 'percentage_discount' and active_offer.theme:
+    elif (active_offer.offer_type == 'percentage_discount'
+          and active_offer.theme):
+        # Apply percentage discount to themed products
         for item in bag_items:
-            if item.product.theme == active_offer.theme:
-                item_total = item.product.price * item.quantity
-                discount += item_total * (Decimal(active_offer.discount_percentage) / 100)
+            if item["product"].theme == active_offer.theme:
+                item_total = item["product"].price * item["quantity"]
+                discount += item_total * (
+                    Decimal(active_offer.discount_percentage) / 100
+                )
 
     elif active_offer.offer_type == 'buy_x_get_y':
+        # Apply Buy X Get Y logic
         for item in bag_items:
-            if item.quantity >= active_offer.buy_quantity + active_offer.get_quantity:
-                # One unit is free per matched set
-                free_units = item.quantity // (active_offer.buy_quantity + active_offer.get_quantity)
-                discount += free_units * item.product.price
+            if item["quantity"] >= (
+                active_offer.buy_quantity + active_offer.get_quantity
+            ):
+                free_units = item["quantity"] // (
+                    active_offer.buy_quantity + active_offer.get_quantity
+                )
+                discount += free_units * item["product"].price
 
     new_total = bag_total - discount
+
     return new_total, shipping_total, discount, active_offer
 
 
@@ -340,43 +375,42 @@ def checkout_summary(request):
     """
     bag = request.session.get("bag", {})
     bag_items = []
-    bag_total = request.session.get("bag_total", 0)
-    vat = request.session.get("vat", 0)
-    vat_rate_display = request.session.get("vat_rate", 21)
-    shipping_total = request.session.get("shipping_total", 0)
-    grand_total = request.session.get("grand_total", 0)
+    bag_total = Decimal("0.00")
+    shipping_total = Decimal("10.00")  # Example default
 
     for key, item in bag.items():
         product = get_object_or_404(Product, pk=item["product_id"])
+        quantity = item["quantity"]
+        unit_price = product.price
+        line_total = unit_price * quantity
+        bag_total += line_total
+
         bag_items.append({
             "key": key,
             "product": product,
-            "quantity": item["quantity"],
+            "quantity": quantity,
+            "unit_price": unit_price,
+            "line_total": line_total,
             "format": item.get("format"),
             "license": item.get("license"),
             "print_type": item.get("print_type"),
         })
 
+
+    new_total, shipping_total, discount, special_offer = apply_special_offer(bag_items, bag_total, shipping_total)
+
+    vat_rate_display = 21
+    vat_rate = Decimal(vat_rate_display) / 100
+    vat = (new_total * vat_rate).quantize(Decimal("0.01"))
+    grand_total = new_total + shipping_total + vat
+
     contact_info = {
-        "first_name": (
-            request.user.first_name
-            if request.user.is_authenticated else ""
-        ),
-        "last_name": (
-            request.user.last_name
-            if request.user.is_authenticated else ""
-        ),
-        "email": (
-            request.user.email
-            if request.user.is_authenticated else ""
-        ),
+        "first_name": request.user.first_name if request.user.is_authenticated else "",
+        "last_name": request.user.last_name if request.user.is_authenticated else "",
+        "email": request.user.email if request.user.is_authenticated else "",
     }
 
-    profile = (
-        getattr(request.user, "userprofile", None)
-        if request.user.is_authenticated else None
-    )
-
+    profile = getattr(request.user, "userprofile", None) if request.user.is_authenticated else None
     billing_info = {
         "billing_street1": profile.default_street_address1 if profile else "",
         "billing_street2": profile.default_street_address2 if profile else "",
@@ -387,13 +421,6 @@ def checkout_summary(request):
         "billing_phone": profile.default_phone_number if profile else "",
     }
 
-    special_offer = (
-        SpecialOffer.objects
-        .filter(expiry_date__gt=timezone.now())
-        .order_by('-expiry_date')
-        .first()
-    )
-
     context = {
         "bag_items": bag_items,
         "bag_total": bag_total,
@@ -403,6 +430,7 @@ def checkout_summary(request):
         "grand_total": grand_total,
         "contact_info": contact_info,
         "billing_info": billing_info,
+        "discount": discount,
         "special_offer": special_offer,
     }
 
@@ -410,11 +438,5 @@ def checkout_summary(request):
 
 
 def checkout_success(request):
-    """
-    Clear the cart session and render the success page.
-
-    **Template:**
-    :template:`checkout/checkout_success.html`
-    """
     request.session['bag'] = {}
     return render(request, 'checkout/checkout_success.html')
