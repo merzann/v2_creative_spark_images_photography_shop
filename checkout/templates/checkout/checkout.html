@@ -12,7 +12,9 @@
   {% include "checkout/includes/progress.html" with step="1" %}
 
   <!-- Checkout Start Options -->
-  {% include "checkout/includes/checkout_choice.html" %}
+  <div id="checkout-choice-wrapper">
+    {% include "checkout/includes/checkout_choice.html" %}
+  </div>
 
   <!-- Dynamic Checkout Form Container -->
   <div

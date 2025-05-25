@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let skipProfileSave = false;
   let currentStep = 1;
 
+  // Updates the progress UI to indicate the current step
   function setActiveProgressStep(stepNumber) {
     const steps = document.querySelectorAll('.progress-steps .step');
     steps.forEach((stepEl, index) => {
@@ -19,10 +20,12 @@ document.addEventListener('DOMContentLoaded', function () {
     currentStep = stepNumber;
   }
 
+  // Validates email format using a regular expression
   function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/i.test(email);
   }
 
+  // Applies visual feedback for input validation
   function showValidationFeedback(input, isValid, message = '') {
     if (!input) return;
     const feedback = input.nextElementSibling;
@@ -31,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (feedback && !isValid) feedback.textContent = message;
   }
 
+  // Validates profile form fields (name and email)
   function validateProfileFormFields() {
     const form = document.getElementById('checkout-profile-form');
     if (!form) return false;
@@ -49,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return firstValid && lastValid && emailValid;
   }
 
+  // Validates billing form input fields
   function validateBillingFormFields() {
     const form = document.getElementById('billing-form');
     if (!form) return false;
@@ -77,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return allValid;
   }
 
+  // Validates postcode by country format rules
   function validatePostalCode(postcode, country) {
     const rules = {
       IE: /^[A-Z]{1}[0-9]{2}\s?[A-Z0-9]{4}$/i,
@@ -89,10 +95,12 @@ document.addEventListener('DOMContentLoaded', function () {
     return regex.test(postcode);
   }
 
+  // Alias for validating profile during guest checkout
   function validateGuestFormFields() {
     return validateProfileFormFields();
   }
 
+  // Stores form data to compare later for unsaved changes
   function captureInitialFormValues() {
     const form = document.querySelector('form');
     if (!form) return;
@@ -102,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Resets form to last captured state
   function resetFormToInitialValues() {
     const form = document.querySelector('form');
     if (!form) return;
@@ -111,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Detects if form data has changed since last capture
   function formHasChanges() {
     const form = document.querySelector('form');
     if (!form) return false;
@@ -123,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     );
   }
 
+  // Loads billing form and attaches validation handlers
   function loadBillingForm() {
     fetch('/checkout/load-billing-form/')
       .then(response => response.text())
@@ -166,6 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error("Billing form load failed:", error));
   }
 
+  // Loads order summary and transitions UI to step 3
   function loadCheckoutSummary() {
     fetch('/checkout/summary/')
       .then(response => response.text())
@@ -174,7 +186,6 @@ document.addEventListener('DOMContentLoaded', function () {
         formWrapper.style.display = 'block';
         setActiveProgressStep(3);
 
-        // Update button to Secure Payment state
         continueBtn.innerHTML = '<i class="fa fa-lock me-1"></i>Secure Payment';
         continueBtn.disabled = false;
         continueBtn.classList.add('btn-custom');
@@ -182,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error('Error loading summary:', error));
   }
 
+  // Profile save logic attached to save button in modal
   document.addEventListener('click', function (event) {
     if (event.target && event.target.id === 'save-profile') {
       const form = document.querySelector('form');
@@ -223,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  // Skip save and proceed logic on Cancel or Skip buttons
   document.addEventListener('click', function (event) {
     if (['skip-save', 'Cancel'].includes(event.target?.id || event.target?.textContent.trim())) {
       skipProfileSave = true;
@@ -233,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  // Continue button event based on step number
   continueBtn.addEventListener('click', function () {
     if (currentStep === 1) {
       if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
@@ -252,19 +266,48 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  // Handles login button redirection with spinner feedback
   if (loginBtn) {
     loginBtn.addEventListener('click', () => {
-      window.location.href = '/accounts/login/?next=/checkout/';
+      const choiceWrapper = document.getElementById('checkout-choice-wrapper');
+      const formWrapper = document.getElementById('checkout-form-wrapper');
+
+      choiceWrapper?.classList.add('d-none');
+
+      formWrapper.innerHTML = `
+        <div class="text-center my-5">
+          <div class="spinner-border text-secondary" role="status" aria-label="Redirecting..."></div>
+          <p class="mt-3">Redirecting to login...</p>
+        </div>
+      `;
+      formWrapper.style.display = 'block';
+
+      setTimeout(() => {
+        window.location.href = '/accounts/login/?next=/checkout/';
+      }, 400);
     });
   }
 
+  // Guest checkout button logic
   if (guestBtn) {
     guestBtn.addEventListener('click', function () {
+      const choiceWrapper = document.getElementById('checkout-choice-wrapper');
+      const formWrapper = document.getElementById('checkout-form-wrapper');
+
+      choiceWrapper?.classList.add('d-none');
+
+      formWrapper.innerHTML = `
+        <div class="text-center my-5">
+          <div class="spinner-border text-secondary" role="status" aria-label="Redirecting..."></div>
+          <p class="mt-3">Redirecting to guest checkout...</p>
+        </div>
+      `;
+      formWrapper.style.display = 'block';
+
       fetch('/checkout/load-guest-form/')
         .then(res => res.text())
         .then(html => {
           formWrapper.innerHTML = html;
-          formWrapper.style.display = 'block';
           setActiveProgressStep(1);
           captureInitialFormValues();
           continueBtn.disabled = !validateGuestFormFields();
@@ -281,10 +324,16 @@ document.addEventListener('DOMContentLoaded', function () {
               input.addEventListener('blur', validateGuestFormFields);
             }
           });
+        })
+        .catch(err => {
+          console.error("Failed to load guest form", err);
+          formWrapper.innerHTML = '<p class="text-danger">Failed to load the form. Please try again.</p>';
+          choiceWrapper?.classList.remove('d-none');
         });
     });
   }
 
+  // Initialize step and validation for authenticated users
   if (isAuthenticated) {
     continueBtn.disabled = !validateProfileFormFields();
     captureInitialFormValues();

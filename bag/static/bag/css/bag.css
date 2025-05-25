@@ -2,7 +2,7 @@
 
 .shopping-bag-section {
     min-height: 100vh;
-    margin-top: 5.5rem;
+    margin-top: 7.5rem;
   }
 
   /* Title */
@@ -94,7 +94,8 @@
 
 @media (min-width: 768px) {
   .shopping-bag-section {
-    margin-top: 7rem;
+    margin-top: 9.5rem;
+    max-width: 80%;
   }
 
   .shopping-bag-section img {
