@@ -24,9 +24,6 @@ import random
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
-
 def checkout(request):
     """
     Render the main checkout page.
@@ -78,6 +75,9 @@ def create_checkout_session(request):
                 'unit_amount': price,
                 'product_data': {
                     'name': product.title,
+                    'images': [request.build_absolute_uri(
+                        product.image_preview.url
+                    )],
                 },
             },
             'quantity': quantity,
@@ -88,7 +88,7 @@ def create_checkout_session(request):
         line_items=line_items,
         mode='payment',
         success_url=request.build_absolute_uri('/checkout/success/'),
-        cancel_url=request.build_absolute_uri('/bag/'),
+        cancel_url=request.build_absolute_uri('/checkout/summary/'),
     )
 
     # Return session ID as JSON for JS redirect
@@ -471,6 +471,36 @@ def checkout_summary(request):
     )
 
 
+@csrf_exempt
+def stripe_webhook(request):
+    """
+    Handle Stripe webhooks.
+
+    Validates event and performs logic on successful payment.
+    """
+    payload = request.body
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WH_SECRET
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    # Handle successful payment
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        print('✅ Payment received:', session)
+
+    return HttpResponse(status=200)
+
+
 def checkout_success(request):
     """
     Clear the cart session and render the success page.
@@ -479,4 +509,4 @@ def checkout_success(request):
     :template:`checkout/checkout_success.html`
     """
     request.session['bag'] = {}
-    return render(request, 'checkout/checkout_success.html')
+    return render(request, 'checkout/includes/checkout_success.html')

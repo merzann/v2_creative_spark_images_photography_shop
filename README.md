@@ -306,6 +306,8 @@ The UserProfile model includes a get_order_history() method to fetch related ord
   - Graceful Fallback: Users can cancel edits and revert to original data without reloading the page.
   - Responsive & Accessible: Form labels, ARIA attributes, and input feedback ensure accessibility compliance.
 
+---
+
 ### Step 1: Contact details
 
 **Dual Entry Paths:**
@@ -344,6 +346,7 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 ![Checkout Step 1 User](README_Media/co_step1_user.png) ![Checkout Step 1 Guest](README_Media/co_step1_guest.png)
 ![Checkout User Validation](README_Media/user_form_validation.png) ![Checkout Guest Validation](README_Media/guest_form_validation.png)
 
+---
 
 ### Step 2: Billing Information
 
@@ -379,6 +382,7 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 
 ![Checkout Billing Form checked](README_Media/billing_form_checked.png) ![Checkout Billing Form empty](README_Media/billing_form_empty.png)
 
+---
 
 ### Step 3: Order Summary
 
@@ -455,6 +459,28 @@ Live Step Transition via AJAX:
 
 
 ![Checkout Order Summary](README_Media/order_summary.png)
+
+---
+
+### Step 4: Payemnt
+
+#### Stripe Customization
+
+**Branding Applied:**
+Stripe Checkout was styled to visually match the project using:
+  - Logo: Custom store logo added
+  - Colors: Brand primary and accent colors set to match the site palette
+  - Font: Montserrat (same as site typography)
+  - Shape: Rounded buttons for consistency with UI elements
+
+**⬅ Cancel Button Behavior :**
+  - Customized default Stripe “←” back links to redirect users to the Order Summary page for a seamless experience.
+
+![Stripe Pay-Portal](README_Media/stripe_pay-portal.png)
+
+---
+
+### Step 4: Payemnt
 
 ---
 ---

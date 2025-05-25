@@ -3,6 +3,7 @@ from .views import (
     save_profile_from_checkout,
     load_billing_form,
     save_billing_from_checkout,
+    stripe_webhook,
 )
 from . import views
 
@@ -20,6 +21,7 @@ urlpatterns = [
         save_billing_from_checkout,
         name='save_billing_from_checkout',
     ),
+    path("stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
     path('summary/', views.checkout_summary, name='checkout_summary'),
     path('success/', views.checkout_success, name='checkout_success'),
     path(
