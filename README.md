@@ -412,6 +412,27 @@ Navigation:
   - ⬅ Go back button redirects to shopping bag.
   - Proceed to Secure Payment ➡ leads to Step 4: Payment.
 
+Responsive Layout:
+  - The order summary is split into a left (form data) and right (summary) column inside a Bootstrap card. On smaller screens, it stacks vertically.
+
+Individual Line Totals and Per-Unit Price Indication:
+  - Each product row shows the per-unit-price as well as the line total ensures price transparency and make it easy for the customer to identify and check their order's eligibilty for a discount.
+
+Discount Block Styling:	
+  - Special offers are shown in banner-style including a row clearly stating the value saved.
+
+Responsive Layout with flex-wrap:
+  - The .flex-wrap class ensures that the summary adapts cleanly across screen sizes and prevents layout breakage.
+
+Subtotal, VAT, Shipping, and Total:
+  - Financial breakdown shown with precision (floatformat:2) and are visually separated for better readability.
+
+Floating "Secure Payment" Button:
+  - Final CTA button updates dynamically via JS, gets styling and icon to indicate secure checkout visually.
+
+Live Step Transition via AJAX: 
+  - All content (including summary) is loaded using asynchronous requests (fetch()), allowing faster interaction without full reloads.
+
 ### Security & UX Defenses
 
 | Type                    | Feature                                                                       |
@@ -420,12 +441,20 @@ Navigation:
 | Session Handling        | Contact, billing, and cart data stored in session or pulled from authenticated user |
 | Progress Indicator      | Visual progress bar guides user through multi-step process                    |
 | Change Buttons          | Allow users to return and edit previous steps without losing form state       |
-| Responsive Layout       | Bootstrap grid ensures mobile-friendly alignment of images and form fields   |
+| Responsive Layout       | Bootstrap grid ensures mobile-friendly alignment of images and form fields    |
 | Validation (Client)     | JavaScript validation for email, phone number, and country-specific postcodes |
 | Validation (Server)     | Django form and model validation for contact, billing, and bag data integrity |
 | Fallback Mechanisms     | VAT and shipping defaults applied if no user country or matching rate found   |
-| Error Handling          | AJAX and form errors surfaced clearly with `alert` messages or modals        |
+| Error Handling          | AJAX and form errors surfaced clearly with `alert` messages or modals         |
 | Number Formatting       | Prices consistently formatted with 2 decimal places for clarity and trust     |
+| DOM Sanitization        | All order summary content rendered server-side and loaded via AJAX for safety |
+| Live Step Transitions   | Prevents data duplication or stale state using dynamic step loading (AJAX)    |
+| Accessibility Support   | ARIA roles and labels improve usability for screen readers and keyboard users |
+| Discount Integrity      | Discount and total amounts are re-validated server-side at summary stage      |
+| Secure Payment Feedback | Final CTA labeled clearly and styled with lock icon to indicate HTTPS trust   |
+
+
+![Checkout Order Summary](README_Media/order_summary.png)
 
 ---
 ---
@@ -793,6 +822,17 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
   | Favicon 404             | Browser auto-requested `/checkout/favicon.ico`, resulting in a 404 error.                      | Added a `favicon.ico` in the static directory and linked it via `<link rel="icon">`.        |
   | CSRF Token Warning      | Warning about missing `{% csrf_token %}` context in guest form template load.                  | Ensured `RequestContext` is used in AJAX template rendering via `render_to_string`.         |
   | Price Format Inconsistency | Some totals were displayed as `€0` instead of `€0.00`.                                         | Applied `floatformat:2` in the Django template to ensure all monetary values show two decimals. |
+  | `get_item` filter error             | Template error due to undefined custom filter `get_item`                                    | Removed custom template logic and used native Django context rendering                       |
+  | `request.timestamp` not found       | Attempted to access non-existent attribute `request.timestamp`                              | Replaced with `timezone.now()` in views.py to fetch current timestamp reliably              |
+  | `{% csrf_token %}` warning          | Warning shown due to missing `RequestContext` when rendering guest form                     | Ensured all form views use `RequestContext` and context processors properly configured       |
+  | Favicon 404                         | Missing `favicon.ico` request caused 404 errors in dev logs                                 | Added a `favicon.ico` static file and linked it in base template                            |
+  | Missing card layout in summary      | Order Summary section lacked consistent visual card styling used in previous steps          | Wrapped entire summary content inside Bootstrap `.card` container with padding and shadow   |
+  | Buttons breaking layout             | Proceed/Back buttons appeared too large or shared borders on small screens                  | Updated with responsive width classes and spacing utilities (`w-auto`, `gap-2`, etc.)       |
+  | Progress bar hidden at Step 3       | Summary step loaded via AJAX but didn’t re-render the tracker                               | Extracted progress markup to a shared include and injected with context-aware highlighting   |
+  | Buttons not responsive              | Buttons didn’t resize proportionally or maintain readability on smaller screens             | Used flexbox (`d-flex`, `gap-2`, `w-auto`) and removed fixed sizing                         |
+  | AJAX missing on Step 3              | Step 3 (summary) was previously rendered via redirect, losing dynamic step state            | Implemented full AJAX loading of Step 3 with updated progress and button handling           |
+
+
 
 ---
 ---

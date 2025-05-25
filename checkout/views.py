@@ -2,20 +2,27 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import (
+    render, redirect, get_object_or_404
+)
 from django.template.loader import render_to_string
 from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from django.http import HttpResponse, JsonResponse
 from decimal import Decimal
+
 from user_profiles.models import UserProfile
 from user_profiles.forms import UserProfileForm
 from home.models import SpecialOffer
 from products.models import Product
+
 import stripe
 import string
 import random
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -396,8 +403,9 @@ def checkout_summary(request):
             "print_type": item.get("print_type"),
         })
 
-
-    new_total, shipping_total, discount, special_offer = apply_special_offer(bag_items, bag_total, shipping_total)
+    new_total, shipping_total, discount, special_offer = apply_special_offer(
+        bag_items, bag_total, shipping_total
+    )
 
     vat_rate_display = 21
     vat_rate = Decimal(vat_rate_display) / 100
@@ -405,20 +413,41 @@ def checkout_summary(request):
     grand_total = new_total + shipping_total + vat
 
     contact_info = {
-        "first_name": request.user.first_name if request.user.is_authenticated else "",
-        "last_name": request.user.last_name if request.user.is_authenticated else "",
-        "email": request.user.email if request.user.is_authenticated else "",
+        "first_name": request.user.first_name
+        if request.user.is_authenticated else "",
+        "last_name": request.user.last_name
+        if request.user.is_authenticated else "",
+        "email": request.user.email
+        if request.user.is_authenticated else "",
     }
 
-    profile = getattr(request.user, "userprofile", None) if request.user.is_authenticated else None
+    profile = (
+        getattr(request.user, "userprofile", None)
+        if request.user.is_authenticated else None
+    )
+
     billing_info = {
-        "billing_street1": profile.default_street_address1 if profile else "",
-        "billing_street2": profile.default_street_address2 if profile else "",
-        "billing_city": profile.default_town_or_city if profile else "",
-        "billing_county": profile.default_county if profile else "",
-        "billing_postcode": profile.default_postcode if profile else "",
-        "billing_country": profile.default_country if profile else "",
-        "billing_phone": profile.default_phone_number if profile else "",
+        "billing_street1": (
+            profile.default_street_address1 if profile else ""
+        ),
+        "billing_street2": (
+            profile.default_street_address2 if profile else ""
+        ),
+        "billing_city": (
+            profile.default_town_or_city if profile else ""
+        ),
+        "billing_county": (
+            profile.default_county if profile else ""
+        ),
+        "billing_postcode": (
+            profile.default_postcode if profile else ""
+        ),
+        "billing_country": (
+            profile.default_country if profile else ""
+        ),
+        "billing_phone": (
+            profile.default_phone_number if profile else ""
+        ),
     }
 
     context = {
@@ -434,9 +463,19 @@ def checkout_summary(request):
         "special_offer": special_offer,
     }
 
-    return render(request, "checkout/includes/checkout_summary.html", context)
+    return render(
+        request,
+        "checkout/includes/checkout_summary.html",
+        context
+    )
 
 
 def checkout_success(request):
+    """
+    Clear the cart session and render the success page.
+
+    **Template:**
+    :template:`checkout/checkout_success.html`
+    """
     request.session['bag'] = {}
     return render(request, 'checkout/checkout_success.html')
