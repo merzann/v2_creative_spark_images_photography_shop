@@ -464,9 +464,24 @@ Live Step Transition via AJAX:
 
 ### Step 4: Payemnt
 
-#### Stripe Customization
+**Features**
+- Integrated [Stripe Checkout](https://stripe.com/docs/checkout) to handle secure payments.
+- Product data (title, quantity, price, image) dynamically passed to Stripe session.
+- Stripe session created server-side and client is redirected to hosted payment page.
+- Payment confirmation handled via a secure webhook.
+- Checkout success clears cart and renders a thank-you page.
 
-**Branding Applied:**
+**Form Behaviour**
+- The “Continue” button becomes the **Secure Payment** button on the order summary step.
+- Stripe public key passed to JS using `<body data-stripe-public-key="{{ STRIPE_PUBLIC_KEY }}">`.
+- `checkout_script.js`:
+  - Initializes Stripe
+  - Handles the final payment step
+  - Redirects users on session creation
+  - Stripe session is initiated via AJAX (`fetch('/checkout/create-checkout-session/')`).
+  - Stripe success and cancel URLs are dynamically built and defined in the session.
+
+**Stripe Form Customisation**
 Stripe Checkout was styled to visually match the project using:
   - Logo: Custom store logo added
   - Colors: Brand primary and accent colors set to match the site palette
@@ -476,11 +491,26 @@ Stripe Checkout was styled to visually match the project using:
 **⬅ Cancel Button Behavior :**
   - Customized default Stripe “←” back links to redirect users to the Order Summary page for a seamless experience.
 
+---
+
+### Security & UX Defenses
+
+| Type                      | Feature                                                                                     |
+|---------------------------|---------------------------------------------------------------------------------------------|
+| Secret Management         | Stripe secret keys and webhook secrets stored securely in `env.py` and Heroku Config Vars. |
+| Webhook Verification      | Incoming webhooks validated with `stripe.Webhook.construct_event()` to prevent forgery.     |
+| Cancel Button UX          | Stripe cancel button redirects back to the Order Summary instead of default fallback page.  |
+| Local Webhook Testing     | Ngrok tunnel used for secure HTTPS testing with static authenticated domain.                |
+| Visual Consistency        | Stripe Checkout branded with same fonts, colors, rounded shapes, and logo as store UI.      |
+
+
 ![Stripe Pay-Portal](README_Media/stripe_pay-portal.png)
 
 ---
 
-### Step 4: Payemnt
+### Step 5: Confirmation
+
+
 
 ---
 ---
@@ -857,7 +887,9 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
   | Progress bar hidden at Step 3       | Summary step loaded via AJAX but didn’t re-render the tracker                               | Extracted progress markup to a shared include and injected with context-aware highlighting   |
   | Buttons not responsive              | Buttons didn’t resize proportionally or maintain readability on smaller screens             | Used flexbox (`d-flex`, `gap-2`, `w-auto`) and removed fixed sizing                         |
   | AJAX missing on Step 3              | Step 3 (summary) was previously rendered via redirect, losing dynamic step state            | Implemented full AJAX loading of Step 3 with updated progress and button handling           |
-
+  | Webhook failures          | 400/404 errors in Stripe dashboard when using dynamic Ngrok URLs           | Replaced with a static Ngrok domain and re-authenticated the tunnel       |
+  | Stripe session unverified | Webhook didn’t validate signature on localhost                             | Correct `STRIPE_WH_SECRET` used and token passed securely                 |
+  | Print statement silent    | `print('✅ Payment received:', session)` not visible in production logs     | Print removed, replaced with proper logging and DB order creation routine  |
 
 
 ---
