@@ -11,6 +11,7 @@ from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from django.http import HttpResponse, JsonResponse
+
 from decimal import Decimal
 
 from user_profiles.models import UserProfile
@@ -508,13 +509,12 @@ def stripe_webhook(request):
         # Identify user by email (guest or registered)
         user = User.objects.filter(email=customer_email).first()
 
-        # ✅ Guard clause: don't proceed if user not found
+        # Guard clause: don't proceed if user not found
         if not user:
-            print(f"⚠️ No user found with email {customer_email}. Skipping order creation.")
-            return HttpResponse(status=200)  # Gracefully ignore
+            return HttpResponse(status=200)
 
         # Get cart data from session (if accessible)
-        bag = request.session.get("bag", {})
+        bag = json.loads(session["metadata"].get("bag", "{}"))
 
         # Calculate order total from Stripe session
         order_total = Decimal(session.get("amount_total", 0)) / 100
@@ -552,22 +552,37 @@ def checkout_success(request):
         if user:
             order = OrderModel.objects.filter(user=user).latest("created_at")
         else:
-            return HttpResponse("User not authenticated. Cannot match order.", status=403)
+            return HttpResponse(
+                "User not authenticated. Cannot match order.", status=403
+            )
     except OrderModel.DoesNotExist:
         return HttpResponse("No recent order found.", status=404)
 
+    # Build download links for products with digital files
     download_links = []
     for product in order.products.all():
         if product.file:
-            url = product.file.build_url(expires=3600, type="attachment")
-            download_links.append({"title": product.title, "url": url})
+            # Generate a direct download URL
+            url = product.file.build_url(
+                expires=3600,
+                type="attachment"
+            )
+            download_links.append({
+                "title": product.title,
+                "url": url
+            })
 
+    # Clear cart after success
     request.session["bag"] = {}
 
-    return render(request, "checkout/includes/checkout_success.html", {
-        "order": order,
-        "download_links": download_links,
-    })
+    return render(
+        request,
+        "checkout/includes/checkout_success.html",
+        {
+            "order": order,
+            "download_links": download_links,
+        }
+    )
 
 
 def send_order_email(user, order):

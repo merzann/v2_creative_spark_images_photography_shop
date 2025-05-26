@@ -1,29 +1,36 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container text-center py-5 mb-3">
-    <h2>Payment Successful!</h2>
-    <p>Thank you for your purchase.</p>
-    <br>
-    <p>Your order <strong>{{ order.order_number }}</strong> has been received.</p>
+  <h2 class="mt-4">Payment Successful!</h2>
+  <p class="mb-5">Your order has been received.</p>
 
-    <h4 class="mt-4">Order Details</h4>
-    <ul>
-        {% for product in order.products.all %}
-        <li>{{ product.title }}</li>
-        {% endfor %}
-    </ul>
 
-    {% if download_links %}
-        <h4 class="mt-4">Your Digital Downloads</h4>
-        <ul>
-        {% for link in download_links %}
-            <li><a href="{{ link.url }}" download>{{ link.title }}</a></li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-</div>
+  <h4 class="mt-5 mb-2">Order Details</h4>
+  <p>Order number: <strong>{{ order.order_number }}</strong>.</p>
+  <ul>
+      {% for product in order.products.all %}
+      <li>{{ product.title }}</li>
+      {% endfor %}
+  </ul>
 
-<div>
-    <a href="{% url 'gallery_page' %}" class="btn btn-custom mt-3">Back to Gallery</a>
-</div>
+  {% if download_links %}
+      <h4 class="mt-4">Your Digital Downloads</h4>
+      <ul class="list-unstyled">
+          {% for link in download_links %}
+              <li class="mb-2">
+                  <a href="{{ link.url }}" class="btn btn-primary btn-custom" download>
+                      Download {{ link.title }}
+                  </a>
+              </li>
+          {% endfor %}
+      </ul>
+  {% endif %}
+
+  <p my-5 >Thank you for your purchase.<br>Annika Merz, Creative Spark Images</p>
 {% endblock %}
