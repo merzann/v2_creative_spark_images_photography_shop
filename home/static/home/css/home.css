@@ -112,6 +112,31 @@ video.background-video {
     display: none;
 }
 
+/* About Us section */
+.about-content {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    max-width: 900px;
+    margin: 4rem auto;
+    padding: 2rem;
+    flex-direction: column;
+    text-align: center;
+}
+
+.about-text h2 {
+    font-family: 'Poiret One', cursive;
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.about-text p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+}
+
 /* Cottage Animation */
 #cottage-animation {
     position: relative;
@@ -170,6 +195,10 @@ video.background-video {
     height: 150px;
     border-radius: 50%;
     margin-right: 20px;
+}
+
+.about.h2 {
+    margin-bottom: 10px;
 }
 
 .about-text {

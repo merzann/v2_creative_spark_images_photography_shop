@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import AboutPage, SpecialOffer
+from .models import AboutUs, SpecialOffer
 
 
 def shop(request):
@@ -23,10 +23,9 @@ def home(request):
 
     :template:`index.html`
     """
+    about = AboutUs.objects.first()
     special_offer = SpecialOffer.objects.order_by('-expiry_date').first()
-    return render(request, "home/index.html", {"special_offer": special_offer})
-
-
-def about_view(request):
-    about = AboutPage.objects.first()
-    return render(request, 'about.html', {'about': about})
+    return render(request, 'home/index.html', {
+        'special_offer': special_offer,
+        'about': about,
+    })

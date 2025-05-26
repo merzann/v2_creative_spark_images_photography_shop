@@ -98,10 +98,17 @@ class SpecialOffer(models.Model):
         return f"{self.text} (Type: {self.get_offer_type_display()})"
 
 
-class AboutPage(models.Model):
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    image = CloudinaryField(upload_to='about/', blank=True, null=True)
+class AboutUs(models.Model):
+    title = models.CharField(
+        max_length=100,
+        default="About Creative Spark Images"
+    )
+    content = models.TextField(help_text="This is the About Us section text.")
+    image = CloudinaryField('image', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "About Us Content"
+        verbose_name_plural = "About Us Content"
 
     def __str__(self):
         return self.title

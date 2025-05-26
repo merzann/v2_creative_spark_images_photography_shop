@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AboutPage, SpecialOffer
+from .models import AboutUs, SpecialOffer
 
 
 # Register the SpecialOffer model with custom admin configuration
@@ -18,4 +18,6 @@ class SpecialOfferAdmin(admin.ModelAdmin):
     search_fields = ('text',)
 
 
-admin.site.register(AboutPage)
+@admin.register(AboutUs)
+class AboutUsAdmin(admin.ModelAdmin):
+    list_display = ('title',)

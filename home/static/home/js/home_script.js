@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
      * Scrolls smoothly to the "About" section of the webpage.
      */
     aboutSign.addEventListener("click", function () {
+        console.log("About sign clicked!");
         window.scrollTo({
             top: document.getElementById("about-section").offsetTop,
             behavior: "smooth"
