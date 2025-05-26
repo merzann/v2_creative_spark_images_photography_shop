@@ -21,7 +21,7 @@ urlpatterns = [
         name='save_billing_from_checkout',
     ),
     path(
-        'checkout/stripe/webhook/',
+        'stripe/webhook/',
         views.stripe_webhook,
         name='stripe_webhook'
     ),

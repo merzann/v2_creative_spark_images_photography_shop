@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.shortcuts import (
     render, redirect, get_object_or_404
 )
@@ -16,7 +17,9 @@ from user_profiles.models import UserProfile
 from user_profiles.forms import UserProfileForm
 from home.models import SpecialOffer
 from products.models import Product
+from shop.models import OrderModel
 
+import json
 import stripe
 import string
 import random
@@ -87,8 +90,13 @@ def create_checkout_session(request):
         payment_method_types=['card'],
         line_items=line_items,
         mode='payment',
+        customer_email=request.user.email if request.user.is_authenticated else None,
         success_url=request.build_absolute_uri('/checkout/success/'),
         cancel_url=request.build_absolute_uri('/checkout/summary/'),
+        metadata={
+            "bag": json.dumps(request.session.get("bag", {})),
+            "user_email": request.user.email if request.user.is_authenticated else request.POST.get("email", "")
+        }
     )
 
     # Return session ID as JSON for JS redirect
@@ -473,21 +481,60 @@ def checkout_summary(request):
 
 @csrf_exempt
 def stripe_webhook(request):
+    """
+    Handle Stripe webhook events.
+
+    Specifically listens for 'checkout.session.completed' events
+    to create an order, associate products, and send confirmation email.
+    """
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
     wh_secret = settings.STRIPE_WH_SECRET
 
     try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, wh_secret
-        )
+        # Verify the webhook signature and construct event
+        event = stripe.Webhook.construct_event(payload, sig_header, wh_secret)
     except ValueError:
+        # Invalid payload
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError:
+        # Invalid signature
         return HttpResponse(status=400)
 
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        customer_email = session.get("customer_email")
+
+        # Identify user by email (guest or registered)
+        user = User.objects.filter(email=customer_email).first()
+
+        # ✅ Guard clause: don't proceed if user not found
+        if not user:
+            print(f"⚠️ No user found with email {customer_email}. Skipping order creation.")
+            return HttpResponse(status=200)  # Gracefully ignore
+
+        # Get cart data from session (if accessible)
+        bag = request.session.get("bag", {})
+
+        # Calculate order total from Stripe session
+        order_total = Decimal(session.get("amount_total", 0)) / 100
+
+        # Create order instance
+        order = OrderModel.objects.create(
+            user=user,
+            total_price=order_total,
+            status="completed",
+        )
+
+        # Add products from bag to the order
+        for item in bag.values():
+            product = Product.objects.get(id=item["product_id"])
+            order.products.add(product)
+
+        order.save()
+
+        # Send order confirmation email
+        send_order_email(user, order)
 
     return HttpResponse(status=200)
 
@@ -497,7 +544,53 @@ def checkout_success(request):
     Clear the cart session and render the success page.
 
     **Template:**
-    :template:`checkout/checkout_success.html`
+    :template:`checkout/includes/checkout_success.html`
     """
-    request.session['bag'] = {}
-    return render(request, 'checkout/includes/checkout_success.html')
+    user = request.user if request.user.is_authenticated else None
+
+    try:
+        if user:
+            order = OrderModel.objects.filter(user=user).latest("created_at")
+        else:
+            return HttpResponse("User not authenticated. Cannot match order.", status=403)
+    except OrderModel.DoesNotExist:
+        return HttpResponse("No recent order found.", status=404)
+
+    download_links = []
+    for product in order.products.all():
+        if product.file:
+            url = product.file.build_url(expires=3600, type="attachment")
+            download_links.append({"title": product.title, "url": url})
+
+    request.session["bag"] = {}
+
+    return render(request, "checkout/includes/checkout_success.html", {
+        "order": order,
+        "download_links": download_links,
+    })
+
+
+def send_order_email(user, order):
+    """Send confirmation email with digital links if applicable."""
+    products = order.products.all()
+
+    # Prepare download links if files exist
+    download_links = []
+    for product in products:
+        if product.file:
+            url = product.file.build_url(expires=3600, type="attachment")
+            download_links.append({"title": product.title, "url": url})
+
+    subject = f"Your Order {order.order_number} – Confirmation"
+    body = render_to_string("checkout/email/order_confirmation_email.txt", {
+        "user": user,
+        "order": order,
+        "download_links": download_links,
+    })
+
+    send_mail(
+        subject,
+        body,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+    )

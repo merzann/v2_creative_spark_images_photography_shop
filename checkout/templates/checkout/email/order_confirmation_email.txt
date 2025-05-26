@@ -1,0 +1,17 @@
+Hi {{ user.first_name }},
+
+Thank you for your order!
+
+Order Number: {{ order.order_number }}
+Total: €{{ order.total_price }}
+
+{% if download_links %}
+Your digital downloads:
+{% for link in download_links %}
+- {{ link.title }}: {{ link.url }}
+{% endfor %}
+{% endif %}
+
+If you have questions, reply to this email.
+
+– The Creative Spark Images Team

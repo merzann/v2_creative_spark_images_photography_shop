@@ -3,6 +3,27 @@
 <div class="container text-center py-5 mb-3">
     <h2>Payment Successful!</h2>
     <p>Thank you for your purchase.</p>
+    <br>
+    <p>Your order <strong>{{ order.order_number }}</strong> has been received.</p>
+
+    <h4 class="mt-4">Order Details</h4>
+    <ul>
+        {% for product in order.products.all %}
+        <li>{{ product.title }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if download_links %}
+        <h4 class="mt-4">Your Digital Downloads</h4>
+        <ul>
+        {% for link in download_links %}
+            <li><a href="{{ link.url }}" download>{{ link.title }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div>
     <a href="{% url 'gallery_page' %}" class="btn btn-custom mt-3">Back to Gallery</a>
 </div>
 {% endblock %}

@@ -32,6 +32,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     ".herokuapp.com",
+    "guppy-musical-giraffe.ngrok-free.app",
 ]
 
 # Application definition
