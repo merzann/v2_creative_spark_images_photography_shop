@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 from .models import AboutUs, SpecialOffer
 
 
@@ -18,6 +19,9 @@ class SpecialOfferAdmin(admin.ModelAdmin):
     search_fields = ('text',)
 
 
-@admin.register(AboutUs)
-class AboutUsAdmin(admin.ModelAdmin):
+class AboutUsAdmin(SummernoteModelAdmin):
+    summernote_fields = ('content',)
     list_display = ('title',)
+
+
+admin.site.register(AboutUs, AboutUsAdmin)

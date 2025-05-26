@@ -86,7 +86,7 @@
                 {% endif %}
                 <div class="about-text">
                     <h2>{{ about.title }}</h2>
-                    <p>{{ about.content|linebreaks }}</p>
+                    <div>{{ about.content|safe }}</div>
                 </div>
             {% else %}
                 <div class="about-text">
