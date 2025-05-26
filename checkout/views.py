@@ -393,7 +393,7 @@ def checkout_summary(request):
     bag = request.session.get("bag", {})
     bag_items = []
     bag_total = Decimal("0.00")
-    shipping_total = Decimal("10.00")  # Example default
+    shipping_total = Decimal("10.00")
 
     for key, item in bag.items():
         product = get_object_or_404(Product, pk=item["product_id"])
@@ -564,8 +564,9 @@ def checkout_success(request):
         if product.file:
             # Generate a direct download URL
             url = product.file.build_url(
-                expires=3600,
-                type="attachment"
+                resource_type='raw',
+                type='attachment',
+                expires=3600
             )
             download_links.append({
                 "title": product.title,
@@ -593,7 +594,11 @@ def send_order_email(user, order):
     download_links = []
     for product in products:
         if product.file:
-            url = product.file.build_url(expires=3600, type="attachment")
+            url = product.file.build_url(
+                resource_type='raw',
+                type='attachment',
+                expires=3600
+            )
             download_links.append({"title": product.title, "url": url})
 
     subject = f"Your Order {order.order_number} – Confirmation"
