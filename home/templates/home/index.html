@@ -10,90 +10,95 @@
 {% endblock %}
 
 {% block content %}
-    <div id="homepage">
-        <!-- First Section -->
-        <section id="intro" class="homepage-section">
-            <video autoplay loop muted class="background-video">
-                <source src="{% static 'home/videos/sunny_day_in_waterville.mp4' %}" type="video/mp4"
-                aria-label="background video showing ballinskelligs bay on a sunny day">
-                <span>Your browser does not support the video tag.</span>
-            </video>         
+<div id="homepage">
+    <!-- First Section -->
+    <section id="intro" class="homepage-section">
+        <video autoplay loop muted class="background-video">
+            <source src="{% static 'home/videos/sunny_day_in_waterville.mp4' %}" type="video/mp4"
+            aria-label="background video showing ballinskelligs bay on a sunny day">
+            <span>Your browser does not support the video tag.</span>
+        </video>         
 
-            <div class="overlay">
-                <h1 class="catch-phrase"><strong>Nature &amp; Wildlife Photography
-                    <br>
-                    Experimental Photography
-                    <br>
-                    Landmarks
-                    <br>
-                    Historical Sites
-                </strong></h1>
-                <div class="product-range">
-                    <span>Digital Downloads - Printed Products</span>
-                </div>
+        <div class="overlay">
+            <h1 class="catch-phrase"><strong>Nature &amp; Wildlife Photography
+                <br>
+                Experimental Photography
+                <br>
+                Landmarks
+                <br>
+                Historical Sites
+            </strong></h1>
+            <div class="product-range">
+                <span>Digital Downloads - Printed Products</span>
             </div>
+        </div>
 
-            <!-- Lower Content -->
-            <div class="container-fluid lower-content">
-                <div class="row">
-                  <div class="col-12">
-                    <article class="digital-sign" aria-label="Information board with special offer and timer">
-                      <div class="sign-content">
-                        <div class="sign-upper">
-                          <p>{{ special_offer.text|safe }}</p>
-                        </div>
-                        <div class="sign-lower">
-                          <p id="countdown-timer" data-expiry="{{ special_offer.expiry_date|date:'c' }}"></p>
-                        </div>
-                      </div>
+        <!-- Lower Content -->
+        <div class="container-fluid lower-content">
+            <div class="row">
+                <div class="col-12">
+                <article class="digital-sign" aria-label="Information board with special offer and timer">
+                    <div class="sign-content">
+                    <div class="sign-upper">
+                        <p>{{ special_offer.text|safe }}</p>
+                    </div>
+                    <div class="sign-lower">
+                        <p id="countdown-timer" data-expiry="{{ special_offer.expiry_date|date:'c' }}"></p>
+                    </div>
+                    </div>
+                </article>
+
+                <!-- Road Signs on Right -->
+                <div class="col-12 col-md-6 text-center">
+                    <article class="road-signs">
+                        <img id="gallery-sign" src="{% static 'home/images/gallery_sign.png' %}" alt="This way to the gallery">
+                        <img id="about-sign" src="{% static 'home/images/about_sign.png' %}" alt="About Us">
                     </article>
-
-                    <!-- Road Signs on Right -->
-                    <div class="col-12 col-md-6 text-center">
-                        <article class="road-signs">
-                            <img id="gallery-sign" src="{% static 'home/images/gallery_sign.png' %}" alt="This way to the gallery">
-                            <img id="about-sign" src="{% static 'home/images/about_sign.png' %}" alt="About Us">
-                        </article>
-                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Second Section (Hidden Initially) -->
-        <section id="cottage-animation" class="homepage-section hidden">
-            <video id="cottage-video" autoplay muted class="animation-video">
-                <source src="{% static 'home/videos/cottage-animation.mp4' %}" type="video/mp4"
-                aria-label="short animated video giving the impression of actually entering a gallery">
-                <span>Your browser does not support the video tag.</span>
-            </video>
-            <div id="video-overlay" class="overlay-text">&#9752; &#65039; Welcome to Creative Spark Images &#9752; &#65039;</div>
-            
-            <!-- Audio Toggle Button -->
-            <button id="toggle-audio" aria-label="Toggle walking sound" class="audio-toggle-button">
-                <i class="fa-solid fa-volume-xmark"></i>
-            </button>
-            <audio id="walking-sound" src="{% static 'home/audio/walking-on-gravel.mp3' %}" muted></audio>
-        </section>
+    <!-- Second Section (Hidden Initially) -->
+    <section id="cottage-animation" class="homepage-section hidden">
+        <video id="cottage-video" autoplay muted class="animation-video">
+            <source src="{% static 'home/videos/cottage-animation.mp4' %}" type="video/mp4"
+            aria-label="short animated video giving the impression of actually entering a gallery">
+            <span>Your browser does not support the video tag.</span>
+        </video>
+        <div id="video-overlay" class="overlay-text">&#9752; &#65039; Welcome to Creative Spark Images &#9752; &#65039;</div>
+        
+        <!-- Audio Toggle Button -->
+        <button id="toggle-audio" aria-label="Toggle walking sound" class="audio-toggle-button">
+            <i class="fa-solid fa-volume-xmark"></i>
+        </button>
+        <audio id="walking-sound" src="{% static 'home/audio/walking-on-gravel.mp3' %}" muted></audio>
+    </section>
 
-        <!-- About Section -->
-        <section id="about-section" class="homepage-section">
-            <div class="about-content container">
-                {% if about %}
-                    {% if about.image %}
-                        <img src="{{ about.image.url }}" alt="About Image" class="profile-pic mb-5">
-                    {% else %}
-                        <img src="{% static 'home/images/profile-pic.jpg' %}" alt="About Image" class="profile-pic">
-                    {% endif %}
-                    <div class="about-text">
-                        <h2>{{ about.title }}</h2>
-                        <p>{{ about.content|linebreaks }}</p>
-                    </div>
+    <!-- About Section -->
+    <section id="about-section" class="homepage-section">
+        <div class="about-content container">
+            {% if about %}
+                {% if about.image %}
+                    <img src="{{ about.image.url }}" alt="About Image" class="profile-pic mb-5">
                 {% else %}
-                    <div class="about-text">
-                        <p>About section content is not yet available. Please check back soon.</p>
-                    </div>
+                    <img src="{% static 'home/images/profile-pic.jpg' %}" alt="About Image" class="profile-pic">
                 {% endif %}
-            </div>
-        </section>
-    </div>
+                <div class="about-text">
+                    <h2>{{ about.title }}</h2>
+                    <p>{{ about.content|linebreaks }}</p>
+                </div>
+            {% else %}
+                <div class="about-text">
+                    <p>About section content is not yet available. Please check back soon.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-top-button center mx-auto" aria-label="Back to top">
+        ↑ Back to Top
+    </button>
+</div>
 {% endblock %}

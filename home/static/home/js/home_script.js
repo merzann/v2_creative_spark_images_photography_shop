@@ -63,6 +63,33 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    
+    // Show/hide Back-to-Top button on scroll
+    const backTopBtn = document.getElementById("back-to-top");
+
+    if (backTopBtn) {
+        // Show/hide on scroll
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 100) {
+                backTopBtn.style.opacity = "1";
+                backTopBtn.style.visibility = "visible";
+            } else {
+                backTopBtn.style.opacity = "0";
+                backTopBtn.style.visibility = "hidden";
+            }
+        });
+
+        // Scroll to intro on click
+        backTopBtn.addEventListener("click", function () {
+            introSection.style.display = "block";
+            window.scrollTo({
+                top: introSection.offsetTop,
+                behavior: "smooth"
+            });
+        });
+    }
+
+
     /**
      * Starts a countdown timer that updates the countdown display every second
      * until the specified expiration time.
