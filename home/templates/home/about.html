@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ about.title }}</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 50px;
+            gap: 50px;
+        }
+        .about-image {
+            flex: 1;
+            max-width: 50%;
+        }
+        .about-text {
+            flex: 1;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if about.image %}
+            <div class="about-image">
+                <img src="{{ about.image.url }}" alt="About Image">
+            </div>
+        {% endif %}
+        <div class="about-text">
+            <h1>{{ about.title }}</h1>
+            <p>{{ about.content|linebreaks }}</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 
 class SpecialOffer(models.Model):
@@ -95,3 +96,12 @@ class SpecialOffer(models.Model):
         String representation showing the offer text and human-readable type.
         """
         return f"{self.text} (Type: {self.get_offer_type_display()})"
+
+
+class AboutPage(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    image = CloudinaryField(upload_to='about/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title

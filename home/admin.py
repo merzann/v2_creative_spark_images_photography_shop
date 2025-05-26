@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SpecialOffer
+from .models import AboutPage, SpecialOffer
 
 
 # Register the SpecialOffer model with custom admin configuration
@@ -16,3 +16,6 @@ class SpecialOfferAdmin(admin.ModelAdmin):
 
     # Enable search by text field
     search_fields = ('text',)
+
+
+admin.site.register(AboutPage)
