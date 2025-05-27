@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container heading py-5">
+    {% if policy %}
+        <h1 class="my-5">{{ policy.get_title_display }}</h1>
+        <div>
+            {{ policy.content|safe }}
+        </div>
+    {% else %}
+        <h1 class="mb-4">Document Not Available</h1>
+        <p>We're sorry, but this policy document could not be loaded at this time. Please try again later or contact support if the issue persists.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

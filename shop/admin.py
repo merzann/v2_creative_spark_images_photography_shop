@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 from .models import ImageTheme, OrderModel, PolicyPage
 
 
@@ -35,6 +36,13 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 @admin.register(PolicyPage)
-class PolicyPageAdmin(admin.ModelAdmin):
+class PolicyPageAdmin(SummernoteModelAdmin):
+    """
+    Admin configuration for managing editable policy pages
+    ith Summernote integration.
+    Enables WYSIWYG editing of policy content
+    and customizes list display in the admin panel.
+    """
     list_display = ('title', 'last_updated')
     search_fields = ('title',)
+    summernote_fields = ('content',)

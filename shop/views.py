@@ -67,6 +67,19 @@ def images_by_theme(request, theme_slug):
 
 
 class PolicyPageView(TemplateView):
+    """
+    Display a single policy document
+    from :model:`shop.PolicyPage` based on the URL slug.
+
+    **Context:**
+
+    ``policy``
+        An instance of :model:`shop.PolicyPage` matching the given slug.
+
+    **Template:**
+
+    :template:`shop/policy_page.html`
+    """
     template_name = 'shop/policy_page.html'
 
     def get_context_data(self, **kwargs):

@@ -93,6 +93,10 @@ class OrderModel(models.Model):
 
 
 class PolicyPage(models.Model):
+    """
+    Stores website policy documents such as privacy policy,
+    cookie policy, and terms & conditions. Editable via the admin interface.
+    """
     POLICY_CHOICES = [
         ('privacy', 'Privacy Policy'),
         ('cookies', 'Cookie Policy'),
@@ -108,4 +112,7 @@ class PolicyPage(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        """
+        Returns the display name of the policy based on its title choice.
+        """
         return dict(self.POLICY_CHOICES).get(self.title, self.title)
