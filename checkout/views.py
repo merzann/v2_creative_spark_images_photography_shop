@@ -504,36 +504,53 @@ def stripe_webhook(request):
 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
-        customer_email = session.get("customer_email")
+        metadata = session.get("metadata", {})
 
-        # Identify user by email (guest or registered)
-        user = User.objects.filter(email=customer_email).first()
+        user_id = metadata.get("user_id")
+        user_email = metadata.get("user_email")
 
-        # Guard clause: don't proceed if user not found
+        # Try to fetch the user by ID first, fallback to email
+        user = None
+        if user_id:
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                pass
+
+        if not user and user_email:
+            user = User.objects.filter(email=user_email).first()
+
+        # If user is still not found, do not create order
         if not user:
-            return HttpResponse(status=200)
+            return HttpResponse(status=200)  # Return 200 so Stripe doesn't retry
 
-        # Get cart data from session (if accessible)
-        bag = json.loads(session["metadata"].get("bag", "{}"))
+        # Get bag (cart) data from metadata
+        try:
+            bag = json.loads(metadata.get("bag", "{}"))
+        except (TypeError, json.JSONDecodeError):
+            bag = {}
 
         # Calculate order total from Stripe session
         order_total = Decimal(session.get("amount_total", 0)) / 100
 
-        # Create order instance
+        # Create order
         order = OrderModel.objects.create(
             user=user,
             total_price=order_total,
             status="completed",
         )
 
-        # Add products from bag to the order
+        # Add each product from the bag
         for item in bag.values():
-            product = Product.objects.get(id=item["product_id"])
-            order.products.add(product)
+            try:
+                product = Product.objects.get(id=item["product_id"])
+                order.products.add(product)
+            except Product.DoesNotExist:
+                continue  # Skip invalid items silently
 
         order.save()
 
-        # Send order confirmation email
+        # Send confirmation email
         send_order_email(user, order)
 
     return HttpResponse(status=200)

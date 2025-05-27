@@ -228,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const formData = new FormData(form);
       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
       const email = form.querySelector('input[name="email"]')?.value.trim();
+
       const url = form.id === 'billing-form'
         ? '/checkout/save-billing-from-checkout/'
         : '/checkout/save-profile-from-checkout/';
@@ -243,25 +244,33 @@ document.addEventListener('DOMContentLoaded', function () {
         headers: { 'X-CSRFToken': csrfToken },
         body: formData,
       })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            bootstrap.Modal.getInstance(document.getElementById('saveModal')).hide();
-            continueBtn.dataset.allowRedirect = "true";
-            continueBtn.disabled = false;
-            modalAlert.classList.add('d-none');
-            captureInitialFormValues();
-          } else {
-            throw new Error('Unexpected response');
-          }
-        })
-        .catch(error => {
-          modalAlert.classList.remove('d-none');
-          modalAlert.textContent = "Unable to save your profile. Please try again.";
-          continueBtn.disabled = false;
-        });
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const modalInstance = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
+          modalInstance.hide();
+
+          // Wait for modal to finish hiding before progressing to next step
+          setTimeout(() => {
+            captureInitialFormValues();  // Optional: to reset form baseline
+            if (currentStep === 1) {
+              loadBillingForm();
+            } else if (currentStep === 2) {
+              loadCheckoutSummary();
+            }
+          }, 300);
+        } else {
+          throw new Error('Unexpected response');
+        }
+      })
+      .catch(error => {
+        modalAlert.classList.remove('d-none');
+        modalAlert.textContent = "Unable to save your profile. Please try again.";
+        continueBtn.disabled = false;
+      });
     }
   });
+
 
   // Skip save and proceed logic on Cancel or Skip buttons
   document.addEventListener('click', function (event) {
