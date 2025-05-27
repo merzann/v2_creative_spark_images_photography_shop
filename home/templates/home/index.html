@@ -12,7 +12,7 @@
 {% block content %}
 <div id="homepage">
     <!-- First Section -->
-    <section id="intro" class="homepage-section">
+    <section id="intro" class="homepage-section" aria-label="Introduction section with welcome video and special offers">
         <video autoplay loop muted class="background-video">
             <source src="{% static 'home/videos/sunny_day_in_waterville.mp4' %}" type="video/mp4"
             aria-label="background video showing ballinskelligs bay on a sunny day">
@@ -50,18 +50,19 @@
 
                 <!-- Road Signs on Right -->
                 <div class="col-12 col-md-6 text-center">
-                    <article class="road-signs">
-                        <img id="gallery-sign" src="{% static 'home/images/gallery_sign.png' %}" alt="This way to the gallery">
-                        <img id="about-sign" src="{% static 'home/images/about_sign.png' %}" alt="About Us">
+                    <article class="road-signs" aria-label="Navigation signs to gallery and about sections">
+                        <img id="gallery-sign" src="{% static 'home/images/gallery_sign.png' %}" alt="This way to the gallery" aria-label="Click to enter the gallery">
+                        <img id="about-sign" src="{% static 'home/images/about_sign.png' %}" alt="About Us" aria-label="Click to learn more about page owner">
                     </article>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Second Section (Hidden Initially) -->
-    <section id="cottage-animation" class="homepage-section hidden">
-        <video id="cottage-video" autoplay muted class="animation-video">
+    <!-- Second Section -->
+    <!-- Cottage animation (Hidden Initially)-->
+    <section id="cottage-animation" class="homepage-section hidden" aria-label="Gallery entrance animation">
+        <video id="cottage-video" autoplay muted class="animation-video" aria-label="Short animated video giving the impression of entering a gallery">
             <source src="{% static 'home/videos/cottage-animation.mp4' %}" type="video/mp4"
             aria-label="short animated video giving the impression of actually entering a gallery">
             <span>Your browser does not support the video tag.</span>
@@ -69,14 +70,14 @@
         <div id="video-overlay" class="overlay-text">&#9752; &#65039; Welcome to Creative Spark Images &#9752; &#65039;</div>
         
         <!-- Audio Toggle Button -->
-        <button id="toggle-audio" aria-label="Toggle walking sound" class="audio-toggle-button">
+        <button id="toggle-audio" aria-label="Toggle walking sound" class="audio-toggle-button" aria-label="Toggle walking sound">
             <i class="fa-solid fa-volume-xmark"></i>
         </button>
         <audio id="walking-sound" src="{% static 'home/audio/walking-on-gravel.mp3' %}" muted></audio>
     </section>
 
     <!-- About Section -->
-    <section id="about-section" class="homepage-section">
+    <section id="about-section" class="homepage-section" aria-labelledby="about-heading">
         <div class="about-content container">
             {% if about %}
                 {% if about.image %}

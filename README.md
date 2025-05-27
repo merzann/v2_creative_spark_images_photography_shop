@@ -113,6 +113,79 @@ This logo is not just a visual identity — it's a moment, a mood, and a mirror 
 
 ## The Homepage
 
+The homepage of Creative Spark Images acts as a narrative-driven landing page blending visual storytelling, interactive transitions, and practical navigation. It sets the tone for the brand’s aesthetics while guiding users towards the gallery, store, or About-Us-section with cinematic flair and UX clarity.
+
+
+### Features & Functionality
+
+#### Homepage part 1: Hero Section with Background Video
+- Full-screen looping background video (`sunny_day_in_waterville.mp4`) of Ballinskelligs Bay.
+- Overlay text highlights:
+  - `Nature & Wildlife Photography`
+  - `Experimental Photography`
+  - `Landmarks`
+  - `Historical Sites`
+
+**Special Offer Display**
+- A **wooden signboard** graphic shows the current `SpecialOffer`, conveying a feeling of actually being at a real location in Ireland.
+- Dynamically rendered using:
+  - **Offer Text** (`safe`-rendered HTML from admin input)
+  - **Countdown Timer** (`data-expiry` handled via JS)
+- Logic managed in `apply_special_offer()` from `checkout/views.py`:
+  - Free Shipping
+  - % General discounts
+  - % Discount on products of a specific theme
+  - Buy X Get Y Free
+
+**Road Signs Navigation**
+- The two interactive road signs further support the feeling of actually being at a real location.
+  - **Gallery**: triggers animation and redirect
+  - **About Us**: scrolls smoothly to the about section
+
+**Animated Gallery Entrance**
+  - Clicking “Gallery” fades out the intro section and plays `cottage-animation.mp4`.
+  - Overlay welcome message appears and fades.
+  - After ~6 seconds, user is redirected to `/shop/gallery/`.
+  - The animation can be skipped by selecting 'Gallery -> Images by Theme' from the Menu in the Navbar which takes the User directly to the gallery room
+
+**Audio Toggle**
+  - Walking sound plays during animation (`walking-on-gravel.mp3`).
+  - Easy accessible toggle button (🔇 / 🔊).
+
+---
+
+#### Navigation & UX Considerations
+
+| Element               | Destination / Functionality                                     |
+|-----------------------|-----------------------------------------------------------------|
+| **Gallery Sign**      | Triggers animation, redirects to `/shop/gallery/`               |
+| **About Us Sign**     | Scrolls smoothly to `#about-section`                            |
+| **Back to Top Button**| Scrolls to `#intro` section                                     |
+| **Navbar Links**      | Skip animation, direct access to views like "Gallery by Theme"  |
+| **Accessibility**     | Aria-label and aria-labledby attributes on all main sections and clickable elements ensure accessibilty requirements are met |
+
+---
+
+#### UX Design Principles
+
+- Cinematic animation enhances storytelling.
+- Scroll interactions guide users naturally through content.
+- Real-world visual metaphors for signs and boards.
+- All interactions remain accessible and responsive.
+
+---
+
+#### Backend Integration
+
+- Homepage content is fully dynamic:
+  - `AboutUs` content via Django Admin + Summernote.
+  - `SpecialOffer` logic includes:
+    - Expiry date filtering
+    - Conditional display
+    - Bag-level modifications during checkout
+
+- Countdown managed with JavaScript using `data-expiry` rendered server-side.
+
 ---
 
 ### About us section
@@ -121,33 +194,34 @@ The About section tells a heartfelt story of chasing golden light, capturing nat
 
 #### Features
 
-- Dynamically displays content from the Django Admin (`AboutUs` model).
-- Responsive card layout with image and rich text formatting.
-- Positioned directly below the intro section.
-- Clean separation of layout and behavior via HTML, CSS, and JS.
-- CSS handles animations and positioning.
-- JavaScript uses `DOMContentLoaded` to ensure timing and availability of DOM elements.
-- Fully responsive and mobile-compatible design.
+  - Dynamically displays content from the Django Admin (`AboutUs` model).
+  - Responsive card layout with image and rich text formatting.
+  - Positioned directly below the intro section.
+  - Clean separation of layout and behavior via HTML, CSS, and JS.
+  - CSS handles animations and positioning.
+  - JavaScript uses `DOMContentLoaded` to ensure timing and availability of DOM elements.
+  - Fully responsive and mobile-compatible design.
 
 **About Us Navigation (Road Sign)**
-- Clickable **“About Us” road sign** on the homepage scrolls the user smoothly to the About section.
-- Uses `scrollIntoView` for a polished UX.
-- Provides intuitive and quick access without reloading or navigating away.
+  - Clickable **“About Us” road sign** on the homepage scrolls the user smoothly to the About section.
+  - Uses `scrollIntoView` for a polished UX.
+  - Provides intuitive and quick access without reloading or navigating away.
 
 **Back to Top Button**
-- Smoothly scrolls the user back to the top of the page.
-- Fully accessible with `aria-label` and hover state.
+  - Smoothly scrolls the user back to the top of the page.
+  - Fully accessible with `aria-label` and hover state.
 
 **content Management**
-- profile image and content are managed from the Backend through the Admin Panel
+  - profile image and content are managed from the Backend through the Admin Panel
 
 ---
 
 **UX Considerations**
-- Consistent scrolling behavior for both the About and Back-to-Top buttons.
-- Intro section reappears on scroll-up if it was previously hidden (e.g., by gallery animation).
-- Elegant appearance matching the site's brand — including text shadow, elegant fonts, and card layout.
-- Fallback image used when no About image is provided.
+  - Consistent scrolling behavior for both the About and Back-to-Top buttons.
+  - Intro section reappears on scroll-up if it was previously hidden (e.g., by gallery animation).
+  - Elegant appearance matching the site's brand — including text shadow, elegant fonts, and card layout.
+  - Fallback image used when no About image is provided.
+  - The installation of summernote allows users to include rel-attributes into their content
 
 ![About us Homepage scetion](README_Media/about_us_section.png)
 
