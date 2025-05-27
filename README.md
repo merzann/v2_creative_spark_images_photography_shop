@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [About the Project](#about-the-project)
+- [Responsive Mock-up View](#responsive-mock-up-view)
 - [Features](#features)
   - [Existing Features](#existing-features)
   - [Features Left to Implement](#features-left-to-implement)
@@ -32,10 +33,14 @@ The entire site is crafted with intention — not just in functionality, but in 
 
 Creative Spark Images isn’t just a portfolio or a shop — it’s a visual love letter to the world we live in. Built for explorers, artists, and nature seekers alike, this project is where tech and creativity meet in quiet harmony.
 
->  The live site can be found here – [Insert your deployed link here]
+>  The live site can be found here – [https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/]
 
 ---
 ---
+
+## Responsive Mock-up View
+
+![Responsive Mock-up View](README_Media/responsive_mockup.png)
 
 ## Features
 
@@ -69,6 +74,7 @@ Creative Spark Images isn’t just a portfolio or a shop — it’s a visual lov
 - Admin control via Django backend
 
 ---
+---
 
 ## Color Palette:
 
@@ -84,6 +90,7 @@ These nature-inspired hues create a grounded, peaceful atmosphere — mirroring 
 Behind the scenes, the project is backed by a robust Django framework — dynamic shopping bag functionality, Stripe integration, Zapier automation for email confirmations, and a thoughtfully designed order system with metadata-rich order tracking. For photographers and creators like me, the Django Admin panel is a dream to work with — intuitive, powerful, and secure.
 
 ---
+---
 
 ## Fonts
 
@@ -93,6 +100,7 @@ Complementing this, Montserrat's modern, geometric structure offers exceptional 
 
 Together, Poiret One and Montserrat create a harmonious typographic duo that embodies the essence of Creative Spark Images—a platform where technology and creativity converge to celebrate the quiet magic of the natural world.​
 
+---
 ---
 
 ## The Logo
@@ -1131,7 +1139,7 @@ This project is hosted on Heroku
     Link GitHub repo
     Enable automatic deploys
 
-> The live link can be found here: 
+> The live link can be found here: https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/
 
 ---
 ---
