@@ -5,6 +5,14 @@
     overflow: hidden;
 }
 
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../images/sunny_day_at_ballinskelligsbay.webp') center center / cover no-repeat;
+    overflow: hidden;
+}
+
 video.background-video {
     position: absolute;
     width: 100%;

@@ -13,23 +13,25 @@
 <div id="homepage">
     <!-- First Section -->
     <section id="intro" class="homepage-section" aria-label="Introduction section with welcome video and special offers">
-        <video autoplay loop muted class="background-video">
-            <source src="{% static 'home/videos/sunny_day_in_waterville.mp4' %}" type="video/mp4"
-            aria-label="background video showing ballinskelligs bay on a sunny day">
-            <span>Your browser does not support the video tag.</span>
-        </video>         
-
-        <div class="overlay">
-            <h1 class="catch-phrase"><strong>Nature &amp; Wildlife Photography
-                <br>
-                Experimental Photography
-                <br>
-                Landmarks
-                <br>
-                Historical Sites
-            </strong></h1>
-            <div class="product-range">
-                <span>Digital Downloads - Printed Products</span>
+        <div class="video-container">
+            <video autoplay loop muted class="background-video">
+                <source src="{% static 'home/videos/sunny_day_in_waterville.mp4' %}" type="video/mp4"
+                aria-label="background video showing ballinskelligs bay on a sunny day">
+                <span>Your browser does not support the video tag.</span>
+            </video>
+        
+            <div class="overlay">
+                <h1 class="catch-phrase"><strong>Nature &amp; Wildlife Photography
+                    <br>
+                    Experimental Photography
+                    <br>
+                    Landmarks
+                    <br>
+                    Historical Sites
+                </strong></h1>
+                <div class="product-range">
+                    <span>Digital Downloads - Printed Products</span>
+                </div>
             </div>
         </div>
 

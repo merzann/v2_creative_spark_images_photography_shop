@@ -125,6 +125,7 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
   - `Experimental Photography`
   - `Landmarks`
   - `Historical Sites`
+- A fallback image is implemented via the .video-container's background style to ensure the overlay content remains visible even if the video fails to load.
 
 **Special Offer Display**
 - A **wooden signboard** graphic shows the current `SpecialOffer`, conveying a feeling of actually being at a real location in Ireland.
@@ -142,7 +143,7 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
   - **Gallery**: triggers animation and redirect
   - **About Us**: scrolls smoothly to the about section
 
-**Animated Gallery Entrance**
+**Homepage part 2: Animated Gallery Entrance (initially hidden)**
   - Clicking “Gallery” fades out the intro section and plays `cottage-animation.mp4`.
   - Overlay welcome message appears and fades.
   - After ~6 seconds, user is redirected to `/shop/gallery/`.
@@ -185,6 +186,8 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
     - Bag-level modifications during checkout
 
 - Countdown managed with JavaScript using `data-expiry` rendered server-side.
+
+![Upper Homepage part1](README_Media/homepage_upper_pt1.png) ![Upper Homepage part2](README_Media/homepage_upper_pt2.png)
 
 ---
 
