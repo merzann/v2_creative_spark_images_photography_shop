@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
-from .models import ImageTheme, Product
+from django.views.generic import TemplateView
+from .models import ImageTheme, Product, PolicyPage
 
 
 def gallery_page(request):
@@ -63,3 +64,13 @@ def images_by_theme(request, theme_slug):
         "shop/images_by_theme.html",
         {"theme": theme, "images": images},
     )
+
+
+class PolicyPageView(TemplateView):
+    template_name = 'shop/policy_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug')  # e.g., 'privacy'
+        context['policy'] = PolicyPage.objects.get(title=slug)
+        return context

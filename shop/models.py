@@ -90,3 +90,22 @@ class OrderModel(models.Model):
             f"Order {self.order_number} - {self.get_status_display()} "
             f"({self.user.username})"
         )
+
+
+class PolicyPage(models.Model):
+    POLICY_CHOICES = [
+        ('privacy', 'Privacy Policy'),
+        ('cookies', 'Cookie Policy'),
+        ('terms', 'Terms & Conditions'),
+    ]
+
+    title = models.CharField(
+        max_length=50,
+        choices=POLICY_CHOICES,
+        unique=True
+    )
+    content = models.TextField()
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return dict(self.POLICY_CHOICES).get(self.title, self.title)

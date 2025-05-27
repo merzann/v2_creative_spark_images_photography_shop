@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OrderModel, ImageTheme
+from .models import ImageTheme, OrderModel, PolicyPage
 
 
 @admin.register(ImageTheme)
@@ -32,3 +32,9 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ("order_number", "user", "status", "total_price")
     search_fields = ("order_number", "user__username")
     list_filter = ("status", "created_at")
+
+
+@admin.register(PolicyPage)
+class PolicyPageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'last_updated')
+    search_fields = ('title',)

@@ -108,7 +108,7 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="galleryDropdown">
                                     <li><a class="dropdown-item" href="{% url 'gallery_page' %}">Images by Theme</a></li>
-                                    <li><a class="dropdown-item" href="">Image Calendars</a></li>
+                                    <li><a class="dropdown-item" href="/shop/gallery/ireland-through-the-seasons-annual-image-calendar/">Image Calendars</a></li>
                                     <li><a class="dropdown-item" href="">Image Catalogue</a></li>
                                 </ul>
                             </li>
@@ -238,13 +238,7 @@
     
             <!-- Mobile View -->
             <div class="d-block d-md-none">
-                <p>
-                    <a href="#">Privacy Policy</a> | 
-                    <a href="#">Cookie Policy</a> | 
-                    <a href="#">Terms & Conditions</a>
-                    <a href="#">Modern Slavery Statement</a> | 
-                    <a href="#">Contact</a>
-                </p>
+                {% include 'includes/footer_links.html' %}
                 <p class="mt-2 mb-0"> 
                     <i class="fa-regular fa-copyright"></i> Creative Spark Images 2025
                 </p>
@@ -254,13 +248,7 @@
             <div class="d-none d-md-flex justify-content-between align-items-center">
                 
                 <!-- Left: Policies -->
-                <p class="mb-0">
-                    <a href="#">Privacy Policy</a> | 
-                    <a href="#">Cookie Policy</a> | 
-                    <a href="#">Terms & Conditions</a> | 
-                    <a href="#">Modern Slavery Statement</a> | 
-                    <a href="#">Contact</a>
-                </p>
+                {% include 'includes/footer_links.html' %}
     
                 <!-- Right: Copyright -->
                 <p class="mb-0"> 
@@ -269,7 +257,7 @@
             </div>
     
         </div>
-    </footer>    
+    </footer>
 </body>
 
 </html>
