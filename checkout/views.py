@@ -91,14 +91,15 @@ def create_checkout_session(request):
         payment_method_types=['card'],
         line_items=line_items,
         mode='payment',
-        customer_email=request.user.email if request.user.is_authenticated else None,
-        success_url=request.build_absolute_uri('/checkout/success/'),
+        customer_email=request.user.email if request.user.is_authenticated else request.POST.get("email", ""),
+        success_url=request.build_absolute_uri('/checkout/success/') + '?session_id={CHECKOUT_SESSION_ID}',
         cancel_url=request.build_absolute_uri('/checkout/summary/'),
         metadata={
             "bag": json.dumps(request.session.get("bag", {})),
             "user_email": request.user.email if request.user.is_authenticated else request.POST.get("email", "")
         }
     )
+
 
     # Return session ID as JSON for JS redirect
     return JsonResponse({'id': session.id})
@@ -558,28 +559,37 @@ def stripe_webhook(request):
 
 def checkout_success(request):
     """
-    Clear the cart session and render the success page.
+    Clear the cart session and render the success page for both guest and logged-in users.
+
+    Uses Stripe session ID passed via query string to fetch user and order.
 
     **Template:**
     :template:`checkout/includes/checkout_success.html`
     """
-    user = request.user if request.user.is_authenticated else None
+    session_id = request.GET.get('session_id')
+    if not session_id:
+        return HttpResponse("Missing session ID", status=400)
 
     try:
-        if user:
-            order = OrderModel.objects.filter(user=user).latest("created_at")
-        else:
-            return HttpResponse(
-                "User not authenticated. Cannot match order.", status=403
-            )
-    except OrderModel.DoesNotExist:
-        return HttpResponse("No recent order found.", status=404)
+        # Retrieve the session from Stripe
+        session = stripe.checkout.Session.retrieve(session_id)
+        customer_email = session.get("customer_email")
 
-    # Build download links for products with digital files
+        # Find the user by email
+        user = User.objects.filter(email=customer_email).first()
+        if not user:
+            return HttpResponse("User not found", status=404)
+
+        # Find the latest order for that user
+        order = OrderModel.objects.filter(user=user).latest("created_at")
+
+    except Exception as e:
+        return HttpResponse(f"Error fetching order: {str(e)}", status=500)
+
+    # Build download links for digital files
     download_links = []
     for product in order.products.all():
         if product.file:
-            # Generate a direct download URL
             url = product.file.build_url(
                 resource_type='raw',
                 type='attachment',
