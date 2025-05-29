@@ -1,5 +1,5 @@
 from django.urls import path
-from products.views import product_detail
+from products.views import image_licenses, product_detail
 from .views import ContactPage, gallery_page, images_by_theme, PolicyPageView
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     ),
     path('policy/<slug:slug>/', PolicyPageView.as_view(), name='policy_page'),
     path("<int:product_id>/", product_detail, name="product_detail"),
+    path('licenses/', image_licenses, name='license_info'),
 ]
