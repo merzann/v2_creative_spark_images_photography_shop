@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'shop/css/shop.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="contact-form-container">
+    <h1>Contact Us</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-custom d-flex w-25 mx-auto" style="padding: 8px 50px;">Send</button>
+    </form>
+</div>
+{% endblock %}

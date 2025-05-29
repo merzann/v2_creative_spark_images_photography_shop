@@ -1,8 +1,9 @@
 from django.urls import path
 from products.views import product_detail
-from .views import gallery_page, images_by_theme, PolicyPageView
+from .views import ContactPage, gallery_page, images_by_theme, PolicyPageView
 
 urlpatterns = [
+    path('contact/', ContactPage.as_view(), name='contact_page'),
     path("gallery/", gallery_page, name="gallery_page"),
     path(
         "gallery/<slug:theme_slug>/",

@@ -1,6 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
+from django.views.generic import FormView
 from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.core.mail import send_mail
+from .forms import ContactForm
 from .models import ImageTheme, Product, PolicyPage
 
 
@@ -87,3 +91,48 @@ class PolicyPageView(TemplateView):
         slug = self.kwargs.get('slug')  # e.g., 'privacy'
         context['policy'] = PolicyPage.objects.get(title=slug)
         return context
+
+
+class ContactPage(FormView):
+    """
+    Display the contact form page and handle contact form submissions.
+
+    Submissions are processed via POST
+    and validated using :form:`shop.ContactForm`.
+    Upon valid submission,
+    an email is sent to the administrator with the message details.
+
+    **Form:**
+
+    :form:`shop.ContactForm`
+
+    **Context:**
+
+    ``form``
+        The contact form instance.
+
+    **Template:**
+
+    :template:`shop/contact_form.html`
+    """
+    template_name = 'shop/contact_form.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('contact_page')
+
+    def form_valid(self, form):
+        """
+        Process a valid form submission.
+
+        Sends an email to the site administrator containing the sender's name,
+        email, and message.
+
+        :param form: Validated instance of :form:`shop.ContactForm`.
+        :return: Redirect to the success URL.
+        """
+        send_mail(
+            subject=f"Message from {form.cleaned_data['name']}",
+            message=form.cleaned_data['message'],
+            from_email=form.cleaned_data['email'],
+            recipient_list=['annisch78@gmail.com'],
+        )
+        return super().form_valid(form)

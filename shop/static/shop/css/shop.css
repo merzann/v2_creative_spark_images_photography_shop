@@ -155,6 +155,51 @@ h1.heading {
     font-size: 0.7rem;
 }
 
+/* Contact form styles */
+.contact-form-container {
+    height: 100vh;
+    max-width: 600px;
+    margin: 8.75rem auto;
+    padding: 2rem 1rem;
+}
+
+.contact-form-container h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.contact-form-container label {
+    font-weight: 500;
+    margin-top: 1rem;
+    display: block;
+}
+
+.contact-form-container input,
+.contact-form-container textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.contact-form-container textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+.contact-form-container.btn-custom {
+    padding: 0 50px !important;
+}
+
+.contact-form-container.btn-custom:hover {
+    background-color: #333;
+}
+
 /* Responsiveness Adjustement */
 @media (min-width: 1024px) {
 
