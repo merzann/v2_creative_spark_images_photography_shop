@@ -644,6 +644,76 @@ Stripe Checkout was styled to visually match the project using:
 ---
 ---
 
+### Footer
+
+The website footer is fully responsive, accessible, and legally comprehensive, built to reinforce trust, provide clear navigation, and comply with modern data protection and e-commerce standards.
+
+**Summary**
+- **Centralized social section** with accessible social media links (Facebook, Instagram, YouTube).
+- **Grouped legal/documentation links**:
+  - Privacy Policy
+  - Cookie Policy
+  - Licenses (digital use rights overview)
+  - Terms & Conditions
+  - Contact Page
+- **Dynamically rendered links** using Django's `{% url %}` template tag.
+- **Responsive structure** with split layout for mobile and desktop views.
+- **Clean and modern styling** using the global `Poiret One` (headings) and `Montserrat` (text) font stack.
+
+---
+
+### From the User’s Perspective
+
+The footer is elegant, functional, and consistent with the site's design language:
+
+- **Header ("Find us on social media")**: centered and styled with global heading font.
+- **Social Icons**:
+  - Font-Awesome-Icons for **Facebook**, **Instagram**, and **YouTube**
+  - Each opens in a new tab with `target="_blank"` and includes `aria-labels` for screen readers.
+- **Legal & Navigation Links**:
+  - Positioned side-by-side on desktop, stacked on mobile.
+  - Includes all necessary legal documents plus a Contact Page.
+  - All documents are managed via a `PolicyPage` model in the admin panel (except Contact and Licenses).
+- **Copyright**
+  - Automatically updates year (manual in current setup)
+  - Located on the bottom right of desktop view, centered on mobile
+
+---
+
+### Technical Structure & Functionalities
+
+- **Templates**:
+  - The footer is included via a shared template: ```django {% include 'includes/footer_links.html' %}
+  - Loaded into `base.html` under both mobile and desktop containers.
+- **Routing**:
+  - All links use `{% url %}` tags and rely on named views:
+    - `policy_page` for privacy, cookies, terms (uses `PolicyPage` model)
+    - `contact_page` for contact form
+    - `license_info` for license overview (`products.views.image_licenses`)
+- **Models Involved**:
+  - `PolicyPage` (shop)
+  - `LicenseType` (products)
+- **Dynamic content**:
+  - Policies and licenses are rendered from database-controlled models.
+  - Content is editable via Django admin interface.
+
+---
+
+### Security & UX Defenses
+
+| Type                          | Feature                                                                 |
+|-------------------------------|-------------------------------------------------------------------------|
+| Accessible Icons              | Social media icons have `aria-label` for screen reader support          |
+| Secure External Links         | All external links use `rel="noopener"` and `target="_blank"`           |
+| View Protection               | Licenses and policies pulled only if `is_active=True`                   |
+| URL Resolution Safety         | All internal links use named routes (`{% url %}`) to prevent breakage   |
+| Mobile UX                     | Uses `d-md-flex`/`d-md-none` for mobile/desktop layout separation       |
+| Consistent Typography         | Applies global fonts via base CSS and maintains visual identity         |
+| Error Prevention              | 404-safe: reverse routing avoids hardcoded URLs                         |
+
+---
+---
+
 ### Custom 404 Page
 
 The project includes two custom 404 pages:
