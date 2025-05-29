@@ -157,7 +157,7 @@ h1.heading {
 
 /* Contact form styles */
 .contact-form-container {
-    height: 100vh;
+    height: 80vh;
     max-width: 600px;
     margin: 8.75rem auto;
     padding: 2rem 1rem;
@@ -190,10 +190,6 @@ h1.heading {
 .contact-form-container textarea {
     min-height: 200px;
     resize: vertical;
-}
-
-.contact-form-container.btn-custom {
-    padding: 0 50px !important;
 }
 
 .contact-form-container.btn-custom:hover {

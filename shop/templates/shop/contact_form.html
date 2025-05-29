@@ -5,13 +5,41 @@
 <link rel="stylesheet" href="{% static 'shop/css/shop.css' %}">
 {% endblock extra_css %}
 
+{% block extra_js %}
+<script src="{% static 'shop/js/shop_script.js' %}" defer></script>
+{% endblock %}
+
 {% block content %}
 <div class="contact-form-container">
     <h1>Contact Us</h1>
-    <form method="post">
+    <form method="post" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-custom d-flex w-25 mx-auto" style="padding: 8px 50px;">Send</button>
+
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Name:</label>
+            {{ form.name }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_email" class="form-label">Email:</label>
+            {% if form.email.errors %}
+                <input type="email" name="email" id="id_email"
+                       value="{{ form.email.value }}"
+                       class="form-control is-invalid">
+                <div class="invalid-feedback">
+                    {{ form.email.errors.0 }}
+                </div>
+            {% else %}
+                {{ form.email }}
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_message" class="form-label">Message:</label>
+            {{ form.message }}
+        </div>
+
+        <button type="submit" class="btn-custom d-flex mx-auto px-5">Send</button>
     </form>
 </div>
 {% endblock %}

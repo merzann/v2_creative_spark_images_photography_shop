@@ -145,4 +145,22 @@ document.addEventListener("DOMContentLoaded", function () {
         flagImg.src = flag.src;
         flagImg.alt = flag.alt;
     }
+
+    // Check that customer added valid email in contact form
+    const emailField = document.getElementById('emailInput');
+
+    emailField.addEventListener('input', function () {
+        const email = emailField.value;
+        const isValid = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/i.test(email);
+
+        if (!email) {
+            emailField.classList.remove('is-valid', 'is-invalid');
+        } else if (isValid) {
+            emailField.classList.add('is-valid');
+            emailField.classList.remove('is-invalid');
+        } else {
+            emailField.classList.add('is-invalid');
+            emailField.classList.remove('is-valid');
+        }
+    });
 });

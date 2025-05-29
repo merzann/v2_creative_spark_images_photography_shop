@@ -1,11 +1,17 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.core.mail import send_mail, BadHeaderError
+from smtplib import SMTPException
 from django.db.models import Q
 from django.views.generic import FormView
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
-from django.core.mail import send_mail
 from .forms import ContactForm
 from .models import ImageTheme, Product, PolicyPage
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def gallery_page(request):
@@ -129,10 +135,23 @@ class ContactPage(FormView):
         :param form: Validated instance of :form:`shop.ContactForm`.
         :return: Redirect to the success URL.
         """
-        send_mail(
-            subject=f"Message from {form.cleaned_data['name']}",
-            message=form.cleaned_data['message'],
-            from_email=form.cleaned_data['email'],
-            recipient_list=['annisch78@gmail.com'],
-        )
+        try:
+            send_mail(
+                subject=f"Message from {form.cleaned_data['name']}",
+                message=form.cleaned_data['message'],
+                from_email=form.cleaned_data['email'],
+                recipient_list=['annisch78@gmail.com'],
+                fail_silently=False,
+            )
+            messages.success(
+                self.request,
+                "Your message has been sent successfully."
+            )
+        except (BadHeaderError, SMTPException, Exception) as e:
+            logger.error("Contact form failed to send: %s", e)
+            messages.error(
+                self.request,
+                "There was an error sending your message."
+                "Please try again later."
+            )
         return super().form_valid(form)
