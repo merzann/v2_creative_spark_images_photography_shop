@@ -673,7 +673,6 @@ The footer is elegant, functional, and consistent with the site's design languag
 - **Legal & Navigation Links**:
   - Positioned side-by-side on desktop, stacked on mobile.
   - Includes all necessary legal documents plus a Contact Page.
-  - All documents are managed via a `PolicyPage` model in the admin panel (except Contact and Licenses).
 - **Copyright**
   - Automatically updates year (manual in current setup)
   - Located on the bottom right of desktop view, centered on mobile
@@ -710,6 +709,86 @@ The footer is elegant, functional, and consistent with the site's design languag
 | Mobile UX                     | Uses `d-md-flex`/`d-md-none` for mobile/desktop layout separation       |
 | Consistent Typography         | Applies global fonts via base CSS and maintains visual identity         |
 | Error Prevention              | 404-safe: reverse routing avoids hardcoded URLs                         |
+
+---
+
+### Contact Page
+
+A user-friendly, styled contact form designed to facilitate customer inquiries and support, particularly related to orders, while maintaining accessibility, usability, and security.
+
+**Summary**
+- **Three essential input fields**: Name, Email, and Message.
+- Integrated with Django’s `FormView` for clean separation of logic and display.
+- **Server-side validation** using Django’s form API with detailed constraints:
+  - Name: required, max 100 characters
+  - Email: required, valid email format
+  - Message: required, max 1000 characters
+- Real-time **HTML5 email validation** plus visual feedback for error cases.
+- Custom error feedback using Django’s messages framework.
+- On successful submission, email is sent to the administrator using `send_mail`.
+- On failure (e.g., SMTP error), user is notified with a styled error message.
+
+---
+
+### Structure & Components
+
+- **Form Fields**:
+  - `Name`: standard text field
+  - `Email`: HTML5 email input with browser-native validation and red border on error
+  - `Message`: textarea, capped at 1000 characters
+- **Submission Button**:
+  - Centrally aligned
+  - Styled with `.btn-custom` and `px-5` for visual consistency
+- **Feedback**:
+  - Success: confirmation displayed above the form
+  - Error: styled error message appears on top if message fails to send
+
+#### Visual and UX Features
+
+- **Elegant styling** aligned with global design system:
+  - Fonts: `Poiret One` (headings), `Montserrat` (body)
+  - Padding, margins, and form control spacing harmonized
+- **Accessibility**:
+  - Proper `label` elements linked via `for`/`id`
+  - Focusable fields
+  - Semantic HTML5 markup
+- **Error Highlighting**:
+  - Django adds `is-invalid` class automatically for erroneous inputs
+  - Custom CSS displays red border for error states
+- **Cross-Device Compatibility**:
+  - Fully responsive layout with stacked fields and button on mobile
+
+---
+
+### Technical Structure & Functionalities
+
+- **Form Class**:
+  - `ContactForm` in `forms.py`
+  - Uses built-in Django form fields with `max_length`, `required`, and `EmailField` constraints
+- **View Logic**:
+  - `ContactPage` class-based view extends `FormView`
+  - Emails are sent using `send_mail()` from Django’s email backend
+  - Errors like `BadHeaderError` and `SMTPException` are caught and handled gracefully
+- **Message Framework**:
+  - `messages.success()` for successful sends
+  - `messages.error()` for email send failures
+- **Security**:
+  - CSRF protection enabled by default
+  - Validations prevent invalid or malicious input
+
+---
+
+### Security & UX Defenses
+
+| Type                     | Feature                                                                 |
+|--------------------------|-------------------------------------------------------------------------|
+| HTML5 Input Validation   | Browser detects invalid email addresses in real-time                    |
+| Max Length Constraints   | Prevents overly long names or messages via server-side form limits      |
+| Red Border on Error      | Inputs dynamically styled using `.is-invalid` for clear visual cues     |
+| SMTP Error Handling      | Graceful user message if email backend is unavailable                   |
+| CSRF Protection          | Enabled through `{% csrf_token %}` in the form                          |
+| Feedback System          | Uses `messages` framework to avoid silent failures                      |
+| Input Sanitization       | Relies on Django's built-in validators and HTML escaping                |
 
 ---
 ---
