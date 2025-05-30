@@ -115,6 +115,7 @@ Everything about the logo — from its monochrome simplicity to the organic curv
 
 This logo is not just a visual identity — it's a moment, a mood, and a mirror of the artist's spirit. It invites the viewer into a world where photography becomes more than images — it becomes experience, reflection, and connection.
 
+![Logo Mobile](README_Media/creative_spark_images_photography_shop(logo).png) ![Logo Desktop](README_Media/creative_spark_images_photography_shop_logo.png)
 
 ---
 ---
@@ -133,7 +134,6 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
   - `Experimental Photography`
   - `Landmarks`
   - `Historical Sites`
-- A fallback image is implemented via the .video-container's background style to ensure the overlay content remains visible even if the video fails to load.
 
 **Special Offer Display**
 - A **wooden signboard** graphic shows the current `SpecialOffer`, conveying a feeling of actually being at a real location in Ireland.
@@ -151,11 +151,21 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
   - **Gallery**: triggers animation and redirect
   - **About Us**: scrolls smoothly to the about section
 
+![Upper Homepage part1](README_MEDIA/homepage_upper_pt.1.png)
+
+
+**Fallback Image**
+- A fallback image is implemented via the .video-container's background style to ensure the overlay content remains visible even if the video fails to load.
+
+![Fallback Image](README_Media/sunny_day_at_ballinskelligsbay.jpg)
+
 **Homepage part 2: Animated Gallery Entrance (initially hidden)**
   - Clicking “Gallery” fades out the intro section and plays `cottage-animation.mp4`.
   - Overlay welcome message appears and fades.
   - After ~6 seconds, user is redirected to `/shop/gallery/`.
   - The animation can be skipped by selecting 'Gallery -> Images by Theme' from the Menu in the Navbar which takes the User directly to the gallery room
+
+![Upper Homepage Animation](README_Media/homepage_animation.png)
 
 **Audio Toggle**
   - Walking sound plays during animation (`walking-on-gravel.mp3`).
@@ -194,8 +204,6 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
     - Bag-level modifications during checkout
 
 - Countdown managed with JavaScript using `data-expiry` rendered server-side.
-
-![Upper Homepage part1](README_Media/homepage_upper_pt1.png) ![Upper Homepage part2](README_Media/homepage_upper_pt2.png)
 
 ---
 
@@ -298,6 +306,160 @@ A dynamic multilingual placeholder page was implemented to inform users when a l
 ---
 ---
 
+### Footer
+
+The website footer is fully responsive, accessible, and legally comprehensive, built to reinforce trust, provide clear navigation, and comply with modern data protection and e-commerce standards.
+
+**Summary**
+- **Centralized social section** with accessible social media links (Facebook, Instagram, YouTube).
+- **Grouped legal/documentation links**:
+  - Privacy Policy
+  - Cookie Policy
+  - Licenses (digital use rights overview)
+  - Terms & Conditions
+  - Contact Page
+- **Dynamically rendered links** using Django's `{% url %}` template tag.
+- **Responsive structure** with split layout for mobile and desktop views.
+- **Clean and modern styling** using the global `Poiret One` (headings) and `Montserrat` (text) font stack.
+
+---
+
+### From the User’s Perspective
+
+The footer is elegant, functional, and consistent with the site's design language:
+
+- **Header ("Find us on social media")**: centered and styled with global heading font.
+- **Social Icons**:
+  - Font-Awesome-Icons for **Facebook**, **Instagram**, and **YouTube**
+  - Each opens in a new tab with `target="_blank"` and includes `aria-labels` for screen readers.
+- **Legal & Navigation Links**:
+  - Positioned side-by-side on desktop, stacked on mobile.
+  - Includes all necessary legal documents plus a Contact Page.
+- **Copyright**
+  - Automatically updates year (manual in current setup)
+  - Located on the bottom right of desktop view, centered on mobile
+
+---
+
+### Technical Structure & Functionalities
+
+- **Templates**:
+  - The footer is included via a shared template: ```django {% include 'includes/footer_links.html' %}
+  - Loaded into `base.html` under both mobile and desktop containers.
+- **Routing**:
+  - All links use `{% url %}` tags and rely on named views:
+    - `policy_page` for privacy, cookies, terms (uses `PolicyPage` model)
+    - `contact_page` for contact form
+    - `license_info` for license overview (`products.views.image_licenses`)
+- **Models Involved**:
+  - `PolicyPage` (shop)
+  - `LicenseType` (products)
+- **Dynamic content**:
+  - Policies and licenses are rendered from database-controlled models.
+  - Content is editable via Django admin interface.
+
+---
+
+### Security & UX Defenses
+
+| Type                          | Feature                                                                 |
+|-------------------------------|-------------------------------------------------------------------------|
+| Accessible Icons              | Social media icons have `aria-label` for screen reader support          |
+| Secure External Links         | All external links use `rel="noopener"` and `target="_blank"`           |
+| View Protection               | Licenses and policies pulled only if `is_active=True`                   |
+| URL Resolution Safety         | All internal links use named routes (`{% url %}`) to prevent breakage   |
+| Mobile UX                     | Uses `d-md-flex`/`d-md-none` for mobile/desktop layout separation       |
+| Consistent Typography         | Applies global fonts via base CSS and maintains visual identity         |
+| Error Prevention              | 404-safe: reverse routing avoids hardcoded URLs                         |
+
+![Footer desktop](README_Media/footer_desktop.png)  ![Footer Mobilel](README_Media/footer_mobile.png)
+
+---
+
+### Contact Page
+
+A user-friendly, styled contact form designed to facilitate customer inquiries and support, particularly related to orders, while maintaining accessibility, usability, and security.
+The addition of the shop's logo further supports the personal note of the contact form.
+
+**Summary**
+- **Three essential input fields**: Name, Email, and Message.
+- Integrated with Django’s `FormView` for clean separation of logic and display.
+- **Server-side validation** using Django’s form API with detailed constraints:
+  - Name: required, max 100 characters
+  - Email: required, valid email format
+  - Message: required, max 1000 characters
+- Real-time **HTML5 email validation** plus visual feedback for error cases.
+- Custom error feedback using Django’s messages framework.
+- On successful submission, email is sent to the administrator using `send_mail`.
+- On failure (e.g., SMTP error), user is notified with a styled error message.
+
+---
+
+### Structure & Components
+
+- **Form Fields**:
+  - `Name`: standard text field
+  - `Email`: HTML5 email input with browser-native validation and red border on error
+  - `Message`: textarea, capped at 1000 characters
+- **Submission Button**:
+  - Centrally aligned
+  - Styled with `.btn-custom` and `px-5` for visual consistency
+- **Feedback**:
+  - Success: confirmation displayed above the form
+  - Error: styled error message appears on top if message fails to send
+
+#### Visual and UX Features
+
+- **Elegant styling** aligned with global design system:
+  - Fonts: `Poiret One` (headings), `Montserrat` (body)
+  - Padding, margins, and form control spacing harmonized
+- **Accessibility**:
+  - Proper `label` elements linked via `for`/`id`
+  - Focusable fields
+  - Semantic HTML5 markup
+- **Error Highlighting**:
+  - Django adds `is-invalid` class automatically for erroneous inputs
+  - Custom CSS displays red border for error states
+- **Cross-Device Compatibility**:
+  - Fully responsive layout with stacked fields and button on mobile
+
+---
+
+### Technical Structure & Functionalities
+
+- **Form Class**:
+  - `ContactForm` in `forms.py`
+  - Uses built-in Django form fields with `max_length`, `required`, and `EmailField` constraints
+- **View Logic**:
+  - `ContactPage` class-based view extends `FormView`
+  - Emails are sent using `send_mail()` from Django’s email backend
+  - Errors like `BadHeaderError` and `SMTPException` are caught and handled gracefully
+- **Message Framework**:
+  - `messages.success()` for successful sends
+  - `messages.error()` for email send failures
+- **Security**:
+  - CSRF protection enabled by default
+  - Validations prevent invalid or malicious input
+
+![Contact Form](README_Media/contact_form.png)
+
+---
+
+### Security & UX Defenses
+
+| Type                     | Feature                                                                 |
+|--------------------------|-------------------------------------------------------------------------|
+| HTML5 Input Validation   | Browser detects invalid email addresses in real-time                    |
+| Max Length Constraints   | Prevents overly long names or messages via server-side form limits      |
+| Red Border on Error      | Inputs dynamically styled using `.is-invalid` for clear visual cues     |
+| SMTP Error Handling      | Graceful user message if email backend is unavailable                   |
+| CSRF Protection          | Enabled through `{% csrf_token %}` in the form                          |
+| Feedback System          | Uses `messages` framework to avoid silent failures                      |
+| Input Sanitization       | Relies on Django's built-in validators and HTML escaping                |
+
+---
+---
+
 ### Shopping Bag 
 
 A polished, user-friendly feature that dynamically adapts to product configurations, provides transparency in costs, and enforces validation to reduce user error or skipped inputs.
@@ -375,6 +537,7 @@ This provides clarity and control while avoiding any accidental submissions with
 
 ![Cart Preview](README_Media/cart_preview.png)
 
+---
 ---
 
 ### User Profile Management
@@ -640,155 +803,6 @@ Stripe Checkout was styled to visually match the project using:
 ### Step 5: Confirmation
 
 
-
----
----
-
-### Footer
-
-The website footer is fully responsive, accessible, and legally comprehensive, built to reinforce trust, provide clear navigation, and comply with modern data protection and e-commerce standards.
-
-**Summary**
-- **Centralized social section** with accessible social media links (Facebook, Instagram, YouTube).
-- **Grouped legal/documentation links**:
-  - Privacy Policy
-  - Cookie Policy
-  - Licenses (digital use rights overview)
-  - Terms & Conditions
-  - Contact Page
-- **Dynamically rendered links** using Django's `{% url %}` template tag.
-- **Responsive structure** with split layout for mobile and desktop views.
-- **Clean and modern styling** using the global `Poiret One` (headings) and `Montserrat` (text) font stack.
-
----
-
-### From the User’s Perspective
-
-The footer is elegant, functional, and consistent with the site's design language:
-
-- **Header ("Find us on social media")**: centered and styled with global heading font.
-- **Social Icons**:
-  - Font-Awesome-Icons for **Facebook**, **Instagram**, and **YouTube**
-  - Each opens in a new tab with `target="_blank"` and includes `aria-labels` for screen readers.
-- **Legal & Navigation Links**:
-  - Positioned side-by-side on desktop, stacked on mobile.
-  - Includes all necessary legal documents plus a Contact Page.
-- **Copyright**
-  - Automatically updates year (manual in current setup)
-  - Located on the bottom right of desktop view, centered on mobile
-
----
-
-### Technical Structure & Functionalities
-
-- **Templates**:
-  - The footer is included via a shared template: ```django {% include 'includes/footer_links.html' %}
-  - Loaded into `base.html` under both mobile and desktop containers.
-- **Routing**:
-  - All links use `{% url %}` tags and rely on named views:
-    - `policy_page` for privacy, cookies, terms (uses `PolicyPage` model)
-    - `contact_page` for contact form
-    - `license_info` for license overview (`products.views.image_licenses`)
-- **Models Involved**:
-  - `PolicyPage` (shop)
-  - `LicenseType` (products)
-- **Dynamic content**:
-  - Policies and licenses are rendered from database-controlled models.
-  - Content is editable via Django admin interface.
-
----
-
-### Security & UX Defenses
-
-| Type                          | Feature                                                                 |
-|-------------------------------|-------------------------------------------------------------------------|
-| Accessible Icons              | Social media icons have `aria-label` for screen reader support          |
-| Secure External Links         | All external links use `rel="noopener"` and `target="_blank"`           |
-| View Protection               | Licenses and policies pulled only if `is_active=True`                   |
-| URL Resolution Safety         | All internal links use named routes (`{% url %}`) to prevent breakage   |
-| Mobile UX                     | Uses `d-md-flex`/`d-md-none` for mobile/desktop layout separation       |
-| Consistent Typography         | Applies global fonts via base CSS and maintains visual identity         |
-| Error Prevention              | 404-safe: reverse routing avoids hardcoded URLs                         |
-
----
-
-### Contact Page
-
-A user-friendly, styled contact form designed to facilitate customer inquiries and support, particularly related to orders, while maintaining accessibility, usability, and security.
-
-**Summary**
-- **Three essential input fields**: Name, Email, and Message.
-- Integrated with Django’s `FormView` for clean separation of logic and display.
-- **Server-side validation** using Django’s form API with detailed constraints:
-  - Name: required, max 100 characters
-  - Email: required, valid email format
-  - Message: required, max 1000 characters
-- Real-time **HTML5 email validation** plus visual feedback for error cases.
-- Custom error feedback using Django’s messages framework.
-- On successful submission, email is sent to the administrator using `send_mail`.
-- On failure (e.g., SMTP error), user is notified with a styled error message.
-
----
-
-### Structure & Components
-
-- **Form Fields**:
-  - `Name`: standard text field
-  - `Email`: HTML5 email input with browser-native validation and red border on error
-  - `Message`: textarea, capped at 1000 characters
-- **Submission Button**:
-  - Centrally aligned
-  - Styled with `.btn-custom` and `px-5` for visual consistency
-- **Feedback**:
-  - Success: confirmation displayed above the form
-  - Error: styled error message appears on top if message fails to send
-
-#### Visual and UX Features
-
-- **Elegant styling** aligned with global design system:
-  - Fonts: `Poiret One` (headings), `Montserrat` (body)
-  - Padding, margins, and form control spacing harmonized
-- **Accessibility**:
-  - Proper `label` elements linked via `for`/`id`
-  - Focusable fields
-  - Semantic HTML5 markup
-- **Error Highlighting**:
-  - Django adds `is-invalid` class automatically for erroneous inputs
-  - Custom CSS displays red border for error states
-- **Cross-Device Compatibility**:
-  - Fully responsive layout with stacked fields and button on mobile
-
----
-
-### Technical Structure & Functionalities
-
-- **Form Class**:
-  - `ContactForm` in `forms.py`
-  - Uses built-in Django form fields with `max_length`, `required`, and `EmailField` constraints
-- **View Logic**:
-  - `ContactPage` class-based view extends `FormView`
-  - Emails are sent using `send_mail()` from Django’s email backend
-  - Errors like `BadHeaderError` and `SMTPException` are caught and handled gracefully
-- **Message Framework**:
-  - `messages.success()` for successful sends
-  - `messages.error()` for email send failures
-- **Security**:
-  - CSRF protection enabled by default
-  - Validations prevent invalid or malicious input
-
----
-
-### Security & UX Defenses
-
-| Type                     | Feature                                                                 |
-|--------------------------|-------------------------------------------------------------------------|
-| HTML5 Input Validation   | Browser detects invalid email addresses in real-time                    |
-| Max Length Constraints   | Prevents overly long names or messages via server-side form limits      |
-| Red Border on Error      | Inputs dynamically styled using `.is-invalid` for clear visual cues     |
-| SMTP Error Handling      | Graceful user message if email backend is unavailable                   |
-| CSRF Protection          | Enabled through `{% csrf_token %}` in the form                          |
-| Feedback System          | Uses `messages` framework to avoid silent failures                      |
-| Input Sanitization       | Relies on Django's built-in validators and HTML escaping                |
 
 ---
 ---

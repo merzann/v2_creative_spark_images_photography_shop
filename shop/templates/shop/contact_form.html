@@ -11,7 +11,16 @@
 
 {% block content %}
 <div class="contact-form-container">
+    <section aria-label="Logo of shop" class="contact-logo-wrapper text-center mb-4">
+        <a href="{% url 'shop' %}">
+            <img src="{% static 'shop/images/creative_spark_images_photography_shop_logo.png' %}"
+            class="contact-logo-img"
+            alt="Logo with shop name Creative Spark Images and an Art Deco Portrait of a female photographer">
+        </a>
+    </section>
+
     <h1>Contact Us</h1>
+    
     <form method="post" novalidate>
         {% csrf_token %}
 
