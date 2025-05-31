@@ -42,6 +42,247 @@ Creative Spark Images isn’t just a portfolio or a shop — it’s a visual lov
 
 ![Responsive Mock-up View](README_Media/responsive_mockup.png)
 
+---
+---
+
+## Business Plan
+
+# Creative Spark Images  
+### *A Digital & Printed Photography eCommerce Platform*
+
+---
+
+## Executive Summary
+
+**Creative Spark Images** is a refined online photography shop blending nature-inspired visual storytelling with seamless eCommerce functionality. Designed for nature lovers, designers, and art collectors, the platform offers both digital and physical art prints via a serene, cinematic user experience. With active social media presence on Facebook and Instagram over the past five years, the brand already enjoys an engaged following and visual credibility that accelerates market entry.
+
+---
+
+## Business Objectives
+
+- Monetize a curated portfolio of photography through digital licenses and fine-art print sales
+- Leverage an existing social media audience to drive store traffic and brand loyalty
+- Expand into multilingual European markets
+- Launch targeted campaigns for seasonal collections and limited editions
+- Build a sustainable digital art brand with potential for future scaling
+
+---
+
+## Target Audience
+
+- shortterm to establish shop: B2C
+- longterm: B2C and B2B
+
+---
+
+## Products & Services
+
+### Digital Photography Downloads
+- Editorial & Personal License
+- Commercial License
+- Advertising License
+
+### Printed Formats
+- Posters
+- Canvas Prints
+- Framed Art
+
+### Value-Added Features
+- Dynamic special offers (e.g., Free Shipping, Buy X Get Y)
+- Curated gallery by theme
+- Licensing transparency through a structured license info page
+- Contact and support form
+- Future roadmap: ratings, SEO enhancements, and social media integrations
+
+---
+
+## Target Market
+
+### Primary Audience
+- Nature and landscape photography collectors
+- Interior decorators and design studios
+- Content creators, marketers, and advertisers
+- Tourists and expats nostalgic for Irish/European landscapes
+
+### Geographic Focus
+- English-speaking Europe (UK, Ireland)
+- DACH region (Germany, Austria, Switzerland)
+- France and Spain (planned language rollouts)
+
+---
+
+## Unique Value Proposition (UVP)
+
+**Creative Spark Images** is not only a thoughtfully crafted store — it’s the digital extension of an already-recognized visual brand. With a **5-year presence on Instagram and Facebook**, it offers a familiar and authentic connection for followers now able to support the artist directly through secure and beautiful purchases.
+
+---
+
+## Business Model
+
+### Revenue Streams
+1. **Digital Downloads** – High-margin, low-overhead
+2. **Print Sales** – Print-on-demand or in-house fulfillment
+3. **Limited Editions / Promotions** – Seasonal exclusives
+4. **Future: Commissioned Work** – Premium, bespoke options
+
+### Cost Structure
+- Hosting & domain
+- Transaction fees (Stripe, Zapier)
+- Printing & shipping
+- Visual asset creation
+- Marketing (ads, tools, partnerships)
+
+---
+
+## Technology Stack
+
+- **Backend:** Django, PostgreSQL
+- **Frontend:** HTML5, CSS3, Bootstrap, JavaScript
+- **eCommerce:** Stripe Integration
+- **Admin Tools:** Django Admin, Crispy Forms
+- **Email Automation:** Zapier
+- **Media Storage:** Cloudinary
+- **Testing/CI:** Automated test scripts, user flow testing
+- **Security:** CSRF, session handling, validation
+
+---
+
+## Operations Plan
+
+### Order Fulfillment
+- Digital: Instant download post-payment
+- Prints: Partner or manual fulfillment
+
+### Customer Support
+- Contact form (form validation and feedback)
+- Admin message handling
+
+### Inventory Management
+- Controlled through Django Admin
+- Dynamic product, license, and print type settings
+
+---
+
+## Marketing & Growth Strategy
+
+### Phase 1: Foundation (0–3 months)
+- Announce store launch to existing Facebook/Instagram followers
+- Use organic posts and story features
+- Add bio links and product tags where applicable
+- Begin collecting emails for newsletters
+
+### Phase 2: Expansion (3–12 months)
+- Boost high-performing posts via Meta Ads
+- Launch targeted Instagram/Facebook ads
+- Collaborate with photographers and lifestyle influencers
+- Promote seasonal offers and UGC stories
+
+### Phase 3: Scale (12+ months)
+- Embed Instagram feed on the homepage
+- Run giveaways and contests to boost engagement
+- Launch a referral program
+
+---
+
+## SWOT Analysis
+
+### Strengths
+- Established social media presence
+- Emotionally resonant brand story
+- Fully functional multilingual store
+- High-quality visuals and UX
+
+### Weaknesses
+- Limited initial SEO/social integrations
+- Manual fulfillment overhead
+- No current user-generated content system
+
+### Opportunities
+- Convert loyal followers into customers
+- Partner with design/lifestyle influencers
+- Expand into Instagram Shopping
+- Monetize storytelling and UGC
+
+### Threats
+- Competition from larger photo marketplaces
+- Changes to social platform algorithms
+- Image piracy/digital license abuse
+
+---
+
+## Financial Projections (Year 1 Estimate)
+
+| Metric                         | Value                  |
+|--------------------------------|------------------------|
+| Avg. Digital Product Price     | €10                   |
+| Avg. Printed Product Price     | €20                   |
+| Assumed Sales Mix              | 60% digital / 40% printed |
+| Avg. Order Value (blended)     | €14 (0.6×10 + 0.4×20)  |
+| Monthly Orders Estimate        | 150                   |
+| Annual Orders                  | 1,800                 |
+| **Annual Revenue**             | €25,200 (1,800 × €14) |
+
+### Estimated Costs
+
+| Cost Category                  | Estimate (EUR)         |
+|--------------------------------|------------------------|
+| COGS (prints & shipping, ~35%) | €8,820                |
+| Stripe & Ops Fees (~15%)       | €3,780                |
+| **Net Revenue**                | **€12,600**            |
+
+---
+
+## Milestones & Timeline
+
+| Quarter | Goal |
+|--------|------|
+| Q1     | Launch store, promote on social media |
+| Q2     | Start ad campaigns, build email list |
+| Q3     | Run seasonal limited edition promos |
+| Q4     | Launch Instagram integration and referral program |
+
+---
+
+## Team & Roles
+
+| Role       | Responsibility |
+|------------|----------------|
+| Founder    | Photography, design, development, customer support |
+| (Future) Assistant | Fulfillment and email responses |
+| (Future) Marketing | Paid ads, SEO, influencer partnerships |
+
+---
+
+## Risk Management
+
+- Regular platform backups
+- Stripe keys stored securely
+- CSRF, input, and session protection
+- GDPR-compliant user deletion
+- Email send error catching via Zapier and Django messages
+
+---
+
+## Exit Strategy
+
+- License the platform to other creators
+- Expand into multi-artist marketplace
+- Potential acquisition by photography or art platforms
+
+---
+
+## Appendices
+
+- Live Site: [https://creative-spark-images-shop-6e4790dd908e.herokuapp.com](https://creative-spark-images-shop-6e4790dd908e.herokuapp.com)
+- Instagram: *[Add handle]*
+- Facebook: *[Add link or name]*
+- Tech Stack Summary
+- Licensing Examples
+- Admin Panel Capabilities
+
+---
+---
+
 ## Features
 
 - Summary:
