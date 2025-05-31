@@ -157,7 +157,7 @@ h1.heading {
 
 /* Contact form styles */
 .contact-form-container {
-    height: 80vh;
+    height: 100vh;
     max-width: 600px;
     margin: 8.75rem auto;
     padding: 2rem 1rem;
