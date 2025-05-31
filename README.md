@@ -4,6 +4,7 @@
 
 - [About the Project](#about-the-project)
 - [Responsive Mock-up View](#responsive-mock-up-view)
+- [Business Plan](#business-plan)
 - [Features](#features)
   - [Existing Features](#existing-features)
   - [Features Left to Implement](#features-left-to-implement)
@@ -68,10 +69,56 @@ Creative Spark Images isn’t just a portfolio or a shop — it’s a visual lov
 
 ---
 
-## Target Audience
+## Business Strategy: B2C First, B2B Expansion Later
 
-- shortterm to establish shop: B2C
-- longterm: B2C and B2B
+Creative Spark Images will begin as a **B2C-focused business**, selling digital downloads and printed artworks directly to individual customers through the online store. This approach allows for organic brand growth, leveraging existing audiences on Facebook and Instagram, and refining the user experience based on real-time customer feedback.
+
+### Why B2C First?
+- Immediate revenue potential with lower operational complexity
+- Builds brand credibility and community
+- Allows refinement of product-market fit before scaling operations
+- Capitalizes on 5 years of social media presence and personal brand recognition
+
+---
+
+## Transitioning to B2B (While Retaining B2C)
+
+The long-term strategy includes developing a **B2B offering in parallel**, without compromising the existing B2C channel. The two segments will complement each other — B2C remains the foundation, while B2B becomes a scalable revenue stream through licensing, bulk orders, and collaborations with businesses.
+
+### B2B Target Segments
+- Interior designers and decorators
+- Hospitality (hotels, spas, cafés)
+- Marketing and media agencies
+- Publishers and corporate offices
+
+### Key B2B Offerings
+- Commercial licensing tiers
+- Bulk print orders at volume pricing
+- Custom-curated collections for business interiors
+- Subscription-based access to digital assets
+- Invoicing and VAT-compliant workflows
+
+---
+
+## Timeline: B2C to B2B Expansion
+
+| Timeline | Strategy Focus                        |
+|----------|----------------------------------------|
+| Months 0–3  | Launch B2C shop, promote via social media |
+| Months 4–6  | Set up B2B page, licenses, and inquiry flow |
+| Months 6–12 | Begin B2B outreach, secure pilot clients    |
+| Months 12–18| Offer curated business packages, scale B2B |
+
+---
+
+### Maintaining Both Channels
+
+- B2C remains active and prioritized in UX and marketing
+- Separate navigation and content will be provided for B2B customers (e.g., “For Businesses” page)
+- Cross-promotional opportunities will allow existing fans to refer or introduce B2B leads
+- Systems will be built to support both streams: dynamic pricing, order management, and customer segmentation
+
+> This dual-channel approach ensures long-term sustainability, diversified income, and broader reach — all while staying true to the heart of Creative Spark Images: connecting people to nature through visual art.
 
 ---
 
