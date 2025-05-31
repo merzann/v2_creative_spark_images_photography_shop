@@ -476,7 +476,7 @@ A well-structured, accessible page presenting key licensing options for digital 
   - Only one card can expand at a time.
 - **Equal height and spacing** across all cards for a visually cohesive layout.
 - **Safe HTML rendering** of license descriptions stored in the database.
-- **Fully responsive design** for desktop and mobile. Cards are stacked on small and medium screens and displayed next to each other on large and xl-screens.
+- **Fully responsive design** for desktop and mobile.
 - **Click pointer cursor** reinforces interactivity.
 
 - **Content**: The page content is managed through **License types** in the Products Section of the Admin Panel.
@@ -516,7 +516,7 @@ Each card includes:
   - Transition is handled using Bootstrap `d-none` utility class.
 - **Responsiveness**: Implemented using Bootstrap grid (`col-lg-4`) with custom shadow, spacing, and padding.
 
-![Licenses Page](README_Media/license_page.png)
+![Licenses Page](README_Media/licenses_page.png)
 
 ---
 ---
