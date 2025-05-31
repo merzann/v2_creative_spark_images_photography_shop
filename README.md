@@ -1243,6 +1243,11 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
   | Webhook failures          | 400/404 errors in Stripe dashboard when using dynamic Ngrok URLs           | Replaced with a static Ngrok domain and re-authenticated the tunnel       |
   | Stripe session unverified | Webhook didn’t validate signature on localhost                             | Correct `STRIPE_WH_SECRET` used and token passed securely                 |
   | Print statement silent    | `print('✅ Payment received:', session)` not visible in production logs     | Print removed, replaced with proper logging and DB order creation routine  |
+  | Cards open all at once | Clicking one license card caused all cards to expand simultaneously on large and extra-large screens. | Updated the JavaScript to target the clicked `.license-card`'s specific `.license-description` element using `querySelector` instead of relying on duplicate IDs. |
+| Duplicate `id` values | All `.license-description` divs shared the same `id`, causing conflicts and invalid HTML. | Switched to using unique identifiers by dynamically appending `license.pk` in the `id` attribute. |
+| Script error: `addEventListener` of null | JS tried to bind `addEventListener` on an element that didn't exist when `emailInput` was missing from the DOM. | Renamed `emailInput` to the actual Django-generated `id_email` and added a `null` check in JS before attaching the listener. |
+| Back-to-gallery button not visible on empty pages | On pages with no content and no scroll, the button relying on scroll detection never became visible. | Replaced dynamic JS logic with a hardcoded fallback button in the HTML template for empty pages. |
+| JavaScript event listener conflict | `shop_script.js` and inline scripts created overlapping behavior on elements like `.read-more-btn` and `.license-card`. | Removed no-longer-needed inline JS blocks and scoped `shop_script.js` to handle only its designated classes. |
 
 
 ---
