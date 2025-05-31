@@ -161,6 +161,7 @@ h1.heading {
     max-width: 600px;
     margin: 8.75rem auto;
     padding: 2rem 1rem;
+    overflow: scroll;
 }
 
 .contact-form-container h1 {

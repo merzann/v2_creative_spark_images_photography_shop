@@ -441,8 +441,6 @@ The addition of the shop's logo further supports the personal note of the contac
   - CSRF protection enabled by default
   - Validations prevent invalid or malicious input
 
-![Contact Form](README_Media/contact_form.png)
-
 ---
 
 ### Security & UX Defenses
@@ -456,6 +454,69 @@ The addition of the shop's logo further supports the personal note of the contac
 | CSRF Protection          | Enabled through `{% csrf_token %}` in the form                          |
 | Feedback System          | Uses `messages` framework to avoid silent failures                      |
 | Input Sanitization       | Relies on Django's built-in validators and HTML escaping                |
+
+![Contact Page](README_Media/contact_form.png)
+
+---
+---
+
+### Licenses Page
+
+A well-structured, accessible page presenting key licensing options for digital image downloads. Designed for clarity and usability, this page helps customers understand usage rights and choose the appropriate license with confidence.
+
+**Summary**
+- **Three licensing options**, each represented as a uniform card:
+  - **Editorial & Personal License**
+  - **Commercial License**
+  - **Advertising License**
+  
+- **Expandable card interface**:
+  - Cards show title and short label by default.
+  - Clicking a card reveals full license terms.
+  - Only one card can expand at a time.
+- **Equal height and spacing** across all cards for a visually cohesive layout.
+- **Safe HTML rendering** of license descriptions stored in the database.
+- **Fully responsive design** for desktop and mobile. Cards are stacked on small and medium screens and displayed next to each other on large and xl-screens.
+- **Click pointer cursor** reinforces interactivity.
+
+- **Content**: The page content is managed through **License types** in the Products Section of the Admin Panel.
+
+---
+
+### Structure & Components
+
+The Licenses Page is accessible from the footer and delivers three clearly labeled license options, each within an elegant card. 
+
+Each card includes:
+- A **heading** with the license type.
+- A **subtitle**: "Overview".
+- **Expandable content**: full license details slide open below on click.
+- A **cursor pointer** indicating interactivity.
+
+**User Experience Highlights:**
+- Only the selected card expands — others remain collapsed.
+- Expanded content may include:
+  - Legal terms and notes on license transfer.
+- Clean presentation with **consistent spacing**.
+- Design matches the branding and aesthetics of the shop.
+- Visually intuitive, with zero reloads or distractions.
+
+---
+
+### Technical Structure & Functionalities
+
+- **Model**: `LicenseType` model includes `name`, `description`, `is_active`.
+- **View**: `image_licenses` view filters active licenses and passes them to the template.
+- **Template**: `products/includes/image_licenses.html`
+  - Uses Django templating with `{{ license.description|safe }}` for HTML content.
+  - Cards are styled via a custom CSS file `licenses.css`.
+- **JavaScript Behavior**:
+  - Each card toggles its content section independently.
+  - Clicking a second card closes the previous one.
+  - Transition is handled using Bootstrap `d-none` utility class.
+- **Responsiveness**: Implemented using Bootstrap grid (`col-lg-4`) with custom shadow, spacing, and padding.
+
+![Licenses Page](README_Media/license_page.png)
 
 ---
 ---
