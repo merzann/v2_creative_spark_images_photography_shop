@@ -10,6 +10,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Collapse navbar when clicking on dropdown items
+    document.querySelectorAll('.dropdown-menu .dropdown-item').forEach((item) => {
+        item.addEventListener('click', function () {
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+            const instance = bootstrap.Collapse.getInstance(navbarCollapse);
+            if (instance) {
+                instance.hide();
+            }
+        });
+    });
+
     /**
      * Handle Bootstrap alert dismissals properly.
      * Removes alert elements and cleans up the container.
