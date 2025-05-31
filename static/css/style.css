@@ -218,7 +218,8 @@ a.dropdown-item {
 }
 
 .btn-custom:hover {
-    background-color: #5a5252;
+    background-color: #000;
+    color: #fff;
 }
 
 /* Forgot Password & Sign-up Link */

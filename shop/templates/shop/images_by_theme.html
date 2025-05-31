@@ -35,6 +35,11 @@
             {% empty %}
             <hr>
             <p class="text-center"><strong>No images available in this theme.</strong></p>
+            <div class="text-center mt-3">
+                <a href="{% url 'gallery_page' %}" class="btn btn-custom">
+                    ← Back to Gallery
+                </a>
+            </div>
             {% endfor %}
         </div>
 </section>
