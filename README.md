@@ -321,8 +321,14 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
 ## Appendices
 
 - Live Site: [https://creative-spark-images-shop-6e4790dd908e.herokuapp.com](https://creative-spark-images-shop-6e4790dd908e.herokuapp.com)
-- Instagram: *[Add handle]*
-- Facebook: *[Add link or name]*
+- Instagram: [https://www.instagram.com/irelandinsunset/](https://www.instagram.com/irelandinsunset/)
+
+![Instagram](README_Media/instagram.png)
+
+- Facebook: [https://www.facebook.com/profile.php?id=61574557148446](https://www.facebook.com/profile.php?id=61574557148446)
+
+![Facebook](README_Media/fb_business_page.png)
+
 - Tech Stack Summary
 - Licensing Examples
 - Admin Panel Capabilities
