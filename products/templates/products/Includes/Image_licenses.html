@@ -5,35 +5,22 @@
 <link rel="stylesheet" href="{% static 'products/css/licenses.css' %}">
 {% endblock %}
 
-{% block extra_js %}
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.license-card').forEach((card) => {
-      const id = card.dataset.id;
-      card.addEventListener('click', function () {
-        const section = document.getElementById(`overview-${id}`);
-        if (section) {
-          section.classList.toggle('d-none');
-        }
-      });
-    });
-  });
-</script>
-{% endblock %}
-
 {% block content %}
 <section class="container py-5 license-section">
   <h1 class="text-center mb-5">Image Licensing Information</h1>
   <div class="row g-4">
     {% for license in licenses %}
-    <div class="col-12 col-lg-4">
-      <div class="card license-card h-100 shadow" data-id="{{ license.pk }}" style="cursor: pointer;">
+    <div class="col-12">
+      <div class="card license-card h-100 shadow" style="cursor: pointer;">
         <div class="card-body">
           <h3 class="card-title">{{ license.name }}</h3>
           <p class="card-subtitle mb-2 text-muted text-decoration-underline">Read more</p>
-          <div id="overview-{{ license.pk }}" class="license-description mt-4 d-none">
+
+          <!-- No ID used here -->
+          <div class="license-description mt-4 d-none overview-content">
             {{ license.description|safe }}
           </div>
+
           <p class="text-muted small">{{ license.slug }}</p>
         </div>
       </div>
@@ -41,4 +28,19 @@
     {% endfor %}
   </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.license-card').forEach(card => {
+      card.addEventListener('click', function () {
+        const overview = this.querySelector('.overview-content');
+        if (overview) {
+          overview.classList.toggle('d-none');
+        }
+      });
+    });
+  });
+</script>
 {% endblock %}
