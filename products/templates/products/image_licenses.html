@@ -17,9 +17,14 @@
           <p class="card-subtitle mb-2 text-muted text-decoration-underline">Read more</p>
 
           <!-- No ID used here -->
-          <div class="license-description mt-4 d-none overview-content">
-            {{ license.description|safe }}
-          </div>
+          {% if license.description %}
+            <div class="license-description mt-4 d-none overview-content">
+              {{ license.description|safe }}
+            </div>
+          {% else %}
+            <p class="text-muted fst-italic">This license is currently not available.</p>
+          {% endif %}
+
 
           <p class="text-muted small">{{ license.slug }}</p>
         </div>

@@ -78,6 +78,6 @@ def image_licenses(request):
     licenses = LicenseType.objects.filter(is_active=True)
     return render(
         request,
-        "products/includes/image_licenses.html",
+        "products/image_licenses.html",
         {"licenses": licenses},
     )
