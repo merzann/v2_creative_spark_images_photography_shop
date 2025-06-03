@@ -1,0 +1,155 @@
+/* Scoped styles for checkout layout */
+
+.checkout-container {
+  min-height: 100vh;
+  margin-top: 7.5rem;
+  max-width: 85%;
+  }
+
+  /* Wrap progress steps on small screens */
+  .progress-steps {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .progress-steps .step {
+    width: 35px;
+    height: 35px;
+    border: 2px solid #005f73;
+    border-radius: 50%;
+    background-color: white;
+    color: #005f73;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 31px;
+  }
+
+  .progress-steps .step-active {
+    background-color: #005f73;
+    color: white;
+  }
+
+  .progress-labels > div {
+    width: 35px;
+    text-align: center;
+    font-size: 0.55rem;
+  }
+
+  /* Checkout summary page */
+  .item-details {
+    margin: 0;      
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* Buttons */
+  .checkout-choice .btn-custom {
+    background-color: #7c7575;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    border: none;
+  }
+  
+  .checkout-choice .btn-custom:hover {
+    background-color: #222;
+  }
+
+  .checkout-choice .btn-outline-secondary {
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .pagination .btn-secondary {
+    background-color: #616161;
+    color: #fff;
+    padding: 10px 20px;
+    font-weight: 500;
+    border: none;
+  }
+  
+  .pagination .btn-secondary:hover {
+    background-color: #4a4a4a;
+    color: #222;
+  }
+
+/* Media Queries */
+@media (min-width: 400px) {
+  .checkout-container {
+    margin-top: 10rem;
+  }
+  
+  .flex-sm-custom-row {
+    flex-direction: row !important;
+  }
+
+  .me-sm-custom-3 {
+    margin-right: 1rem !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .checkout-container {
+    max-width: 80%;
+    }
+
+  .progress-labels > div {
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .checkout-container {
+    max-width: 70%;
+  }
+
+  .progress-labels > div {
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .progress-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 60%;
+  }
+
+  .summary-col {
+    max-width: 80%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .checkout-container {
+    max-width: 60%;
+  }
+
+  .checkout-summary-card .row {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .checkout-summary-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .checkout-main-col {
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+
+  .summary-col {
+    flex: 0 0 35%;
+    max-width: 35%;
+  }
+}

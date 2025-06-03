@@ -1,5 +1,6 @@
 .license-section {
     background-color: #f9f9f9;
+    margin: 7rem auto 5rem;
     padding: 2rem;
     border-radius: 10px;
 }
@@ -10,17 +11,19 @@
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    cursor: pointer;
 }
 
 .license-name {
-    font-family: "Poiret One", cursive;
     font-size: 2rem;
     color: #333;
 }
 
 .license-description {
-    margin-top: 1rem;
-    line-height: 1.7;
+  transition: max-height 0.3s ease-in-out;
+  overflow: scroll;
+  max-height: 50vh; 
+  margin-top: 1rem;
 }
 
 .summernote-content img {

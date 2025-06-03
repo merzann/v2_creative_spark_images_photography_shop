@@ -1,5 +1,14 @@
+/* Asterisk wildcard selector to override default styles added by the browser */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 /* General styles */
+html,
 body {
+    height: 100%;
     font-family: "Montserrat", sans-serif;
     font-size: 14px;
 }
@@ -11,6 +20,10 @@ h1, h2, h3, h4, h5 {
 
 header {
     height: 7vh;
+}
+
+#message-container {
+    margin-top: 5rem;
 }
 
 #message-container .alert {
@@ -205,7 +218,8 @@ a.dropdown-item {
 }
 
 .btn-custom:hover {
-    background-color: #5a5252;
+    background-color: #000;
+    color: #fff;
 }
 
 /* Forgot Password & Sign-up Link */
@@ -263,6 +277,41 @@ a.dropdown-item {
     font-size: 0.9rem;
 }
 
+/* 404 page under construction styles */ 
+.page-under-construction {
+min-height: 80vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+}
+
+.page-under-construction h1 {
+font-family: 'Poiret One', cursive;
+font-size: 3rem;
+margin-bottom: 1rem;
+color: #7c7575;
+}
+
+.page-under-construction p {
+font-size: 1.1rem;
+max-width: 600px;
+}
+
+.page-under-construction .btn {
+margin-top: 1.5rem;
+background-color: #7c7575;
+color: #fff;
+border-radius: 25px;
+padding: 0.5rem 1.5rem;
+}
+
+.page-under-construction .btn:hover {
+background-color: #5e5757;
+}
+  
+
 /* footer */
 footer {
     font-size: 12px;
@@ -285,7 +334,7 @@ footer a i {
     font-size: 1.5rem;
 }
 
-/* Media Queries for screens from 576px */
+/* Responsive Adjustments */
 @media (min-width: 576px) {
 
     .menu-text {
@@ -309,16 +358,16 @@ footer a i {
     }
 }
 
-/* Responsive Adjustments */
+@media (min-width: 768px) {
+    #message-container {
+        margin-top: 8rem;
+    }
+}
 
 @media (min-width: 992px) {
 
     #logo-desktop {
         height: 5rem;
-    }
-
-    #message-container {
-        margin-top: 2rem;
     }
 
     .fa-user, .fa-cart-shopping {

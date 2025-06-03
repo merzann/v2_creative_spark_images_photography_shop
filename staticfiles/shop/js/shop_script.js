@@ -1,40 +1,47 @@
-// Handles click event for Read More button
 document.addEventListener("DOMContentLoaded", function () {
+    // READ MORE TOGGLE
     const readMoreBtns = document.querySelectorAll(".read-more-btn");
+    if (readMoreBtns.length > 0) {
+        readMoreBtns.forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const cardBody = this.parentElement;
+                const shortText = cardBody.querySelector(".short-text");
+                const fullText = cardBody.querySelector(".full-text");
 
-    readMoreBtns.forEach((btn) => {
-        btn.addEventListener("click", function () {
-            const cardBody = this.parentElement;
-            const shortText = cardBody.querySelector(".short-text");
-            const fullText = cardBody.querySelector(".full-text");
+                if (shortText && fullText) {
+                    const isHidden = fullText.classList.contains("d-none");
 
-            if (fullText.classList.contains("d-none")) {
-                fullText.classList.remove("d-none");
-                shortText.classList.add("d-none");
-                this.textContent = "Read Less";
-            } else {
-                fullText.classList.add("d-none");
-                shortText.classList.remove("d-none");
-                this.textContent = "Read More";
-            }
+                    fullText.classList.toggle("d-none", !isHidden);
+                    shortText.classList.toggle("d-none", isHidden);
+                    this.textContent = isHidden ? "Read Less" : "Read More";
+                }
+            });
         });
-    });
+    }
 
-    // Handles click event for Back-to-top button
+    // BACK TO TOP & GALLERY BUTTONS
     const backToTopBtn = document.getElementById("backToTop");
     const backToGalleryBtn = document.getElementById("backToGallery");
 
-    window.addEventListener("scroll", function () {
-        if (window.scrollY > 200) {
-            backToTopBtn.style.opacity = "1";
-            backToTopBtn.style.visibility = "visible";
-            backToGalleryBtn.style.opacity = "1";
-            backToGalleryBtn.style.visibility = "visible";
-        } else {
-            backToTopBtn.style.opacity = "0";
-            backToTopBtn.style.visibility = "hidden";
-            backToGalleryBtn.style.opacity = "0";
-            backToGalleryBtn.style.visibility = "hidden";
-        }
-    });
+    if (backToTopBtn || backToGalleryBtn) {
+        window.addEventListener("scroll", function () {
+            const show = window.scrollY > 200;
+
+            if (backToTopBtn) {
+                backToTopBtn.style.opacity = show ? "1" : "0";
+                backToTopBtn.style.visibility = show ? "visible" : "hidden";
+            }
+
+            if (backToGalleryBtn) {
+                backToGalleryBtn.style.opacity = show ? "1" : "0";
+                backToGalleryBtn.style.visibility = show ? "visible" : "hidden";
+            }
+        });
+    }
+
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
 });

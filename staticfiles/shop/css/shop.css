@@ -1,7 +1,7 @@
 /* General styles */
-#image-themes {
-    height: 100vh;
-    padding: 0 2rem;
+article {
+    margin-top: 8.5rem !important;
+    padding: 0 1.2rem;
 }
 
 /* Search bar styles */
@@ -153,6 +153,58 @@ h1.heading {
     padding: 3px 8px;
     border-radius: 4px;
     font-size: 0.7rem;
+}
+
+/* Contact form styles */
+.contact-form-container {
+    height: 100vh;
+    max-width: 600px;
+    margin: 8.75rem auto;
+    padding: 2rem 1rem;
+    overflow: scroll;
+}
+
+.contact-form-container h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.contact-form-container label {
+    font-weight: 500;
+    margin-top: 1rem;
+    display: block;
+}
+
+.contact-form-container input,
+.contact-form-container textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.contact-form-container textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+.contact-form-container.btn-custom:hover {
+    background-color: #333;
+}
+
+.contact-logo-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.contact-logo-img {
+    width: 50%;
+    max-width: 400px;
 }
 
 /* Responsiveness Adjustement */
