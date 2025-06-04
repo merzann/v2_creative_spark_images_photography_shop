@@ -91,15 +91,25 @@ def create_checkout_session(request):
         payment_method_types=['card'],
         line_items=line_items,
         mode='payment',
-        customer_email=request.user.email if request.user.is_authenticated else request.POST.get("email", ""),
-        success_url=request.build_absolute_uri('/checkout/success/') + '?session_id={CHECKOUT_SESSION_ID}',
+        customer_email=(
+            request.user.email
+            if request.user.is_authenticated
+            else request.POST.get("email", "")
+        ),
+        success_url=(
+            request.build_absolute_uri('/checkout/success/')
+            + '?session_id={CHECKOUT_SESSION_ID}'
+        ),
         cancel_url=request.build_absolute_uri('/checkout/summary/'),
         metadata={
             "bag": json.dumps(request.session.get("bag", {})),
-            "user_email": request.user.email if request.user.is_authenticated else request.POST.get("email", "")
+            "user_email": (
+                request.user.email
+                if request.user.is_authenticated
+                else request.POST.get("email", "")
+            ),
         }
     )
-
 
     # Return session ID as JSON for JS redirect
     return JsonResponse({'id': session.id})
@@ -523,7 +533,8 @@ def stripe_webhook(request):
 
         # If user is still not found, do not create order
         if not user:
-            return HttpResponse(status=200)  # Return 200 so Stripe doesn't retry
+            # Return 200 so Stripe doesn't retry
+            return HttpResponse(status=200)
 
         # Get bag (cart) data from metadata
         try:
@@ -559,7 +570,8 @@ def stripe_webhook(request):
 
 def checkout_success(request):
     """
-    Clear the cart session and render the success page for both guest and logged-in users.
+    Clear the cart session and
+    render the success page for both guest and logged-in users.
 
     Uses Stripe session ID passed via query string to fetch user and order.
 
