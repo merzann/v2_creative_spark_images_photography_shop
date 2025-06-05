@@ -28,7 +28,7 @@
                 <div class="carousel-item active">
                     <div class="row g-4 justify-content-center">
                         <div class="col-12 col-lg-8">
-                            <div class="profile-card user_contact_details">
+                            <div class="profile-card user_contact_details my-5">
                                 <h2 class="profile-title">My Profile Details</h2>
 
                                 <form method="POST" enctype="multipart/form-data" class="profile-form">
@@ -110,15 +110,26 @@
                     </div>
                 </div>
 
-                <!-- Order History (no form) -->
+                <!-- Order History -->
                 <div class="carousel-item">
                     <div class="row g-4 justify-content-center">
                         <div class="col-12 col-lg-8">
-                            <div class="profile-card user_order_history">
+                            <div class="profile-card user_order_history my-5">
                                 <h2 class="profile-title">My Order History</h2>
                                 <p class="profile-subtitle">Your past orders will be displayed here.</p>
                                 <div class="order-history-content">
-                                    <p class="text-muted">You have no past orders yet.</p>
+                                    {% if orders %}
+                                        {% for order in orders %}
+                                            <div class="order-history-item mb-4 p-3 border rounded">
+                                                <h6 class="mb-1">Order <strong>{{ order.order_number }}</strong></h6>
+                                                <p class="mb-1 small text-muted">Placed on {{ order.created_at|date:"d M Y, H:i" }}</p>
+                                                <p class="mb-1 small text-muted">Total: €{{ order.total_price|floatformat:2 }}</p>
+                                                <p class="mb-1 small text-muted">Status: <strong>{{ order.status|title }}</strong></p>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="text-muted">You have no past orders yet.</p>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -164,7 +175,7 @@
         </div>
     </div>
 
-    <!-- Second modal requesting user confirmation to proceed (Moved Outside) -->
+    <!-- Second modal requesting user confirmation to proceed -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-4">

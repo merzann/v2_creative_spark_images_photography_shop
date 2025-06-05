@@ -5,6 +5,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .forms import UserProfileForm
 
+from shop.models import OrderModel
+
 
 @login_required
 def profile(request):
@@ -54,6 +56,8 @@ def profile(request):
     else:
         form = UserProfileForm(instance=user_profile)
 
+    orders = OrderModel.objects.filter(user=request.user).order_by('-created_at')
+
     return render(
         request,
         "user_profiles/profile.html",
@@ -61,6 +65,7 @@ def profile(request):
             "form": form,
             "first_name": user.first_name,
             "last_name": user.last_name,
+            "orders": orders,
         },
     )
 
