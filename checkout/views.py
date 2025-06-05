@@ -12,14 +12,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from django.http import HttpResponse, JsonResponse
 
-from decimal import Decimal
-
 from user_profiles.models import UserProfile
 from user_profiles.forms import UserProfileForm
 from home.models import SpecialOffer
-from products.models import Product
+from products.models import CountryVAT, Product, PrintType, ShippingRate
 from shop.models import OrderModel
 
+from decimal import Decimal
 import json
 import stripe
 import string
@@ -404,7 +403,8 @@ def checkout_summary(request):
     bag = request.session.get("bag", {})
     bag_items = []
     bag_total = Decimal("0.00")
-    shipping_total = Decimal("10.00")
+    country = request.session.get('country', DEFAULT_COUNTRY)
+    shipping_total = Decimal("0.00")
 
     for key, item in bag.items():
         product = get_object_or_404(Product, pk=item["product_id"])
@@ -412,6 +412,20 @@ def checkout_summary(request):
         unit_price = product.price
         line_total = unit_price * quantity
         bag_total += line_total
+
+        shipping_cost = Decimal("0.00")
+        if item.get("format") == "printed":
+            print_type_name = item.get("print_type")
+            shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(print_type_name)
+            if shipping_key:
+                shipping_obj = ShippingRate.objects.filter(
+                    product_type=shipping_key,
+                    country=country,
+                    shipping_option=DEFAULT_OPTION.lower()
+                ).first()
+                if shipping_obj:
+                    shipping_cost = shipping_obj.price * quantity
+                    shipping_total += shipping_cost
 
         bag_items.append({
             "key": key,
@@ -422,6 +436,7 @@ def checkout_summary(request):
             "format": item.get("format"),
             "license": item.get("license"),
             "print_type": item.get("print_type"),
+            "shipping_cost": shipping_cost,
         })
 
     new_total, shipping_total, discount, special_offer = apply_special_offer(
@@ -434,12 +449,9 @@ def checkout_summary(request):
     grand_total = new_total + shipping_total + vat
 
     contact_info = {
-        "first_name": request.user.first_name
-        if request.user.is_authenticated else "",
-        "last_name": request.user.last_name
-        if request.user.is_authenticated else "",
-        "email": request.user.email
-        if request.user.is_authenticated else "",
+        "first_name": request.user.first_name if request.user.is_authenticated else "",
+        "last_name": request.user.last_name if request.user.is_authenticated else "",
+        "email": request.user.email if request.user.is_authenticated else "",
     }
 
     profile = (
@@ -448,27 +460,13 @@ def checkout_summary(request):
     )
 
     billing_info = {
-        "billing_street1": (
-            profile.default_street_address1 if profile else ""
-        ),
-        "billing_street2": (
-            profile.default_street_address2 if profile else ""
-        ),
-        "billing_city": (
-            profile.default_town_or_city if profile else ""
-        ),
-        "billing_county": (
-            profile.default_county if profile else ""
-        ),
-        "billing_postcode": (
-            profile.default_postcode if profile else ""
-        ),
-        "billing_country": (
-            profile.default_country if profile else ""
-        ),
-        "billing_phone": (
-            profile.default_phone_number if profile else ""
-        ),
+        "billing_street1": profile.default_street_address1 if profile else "",
+        "billing_street2": profile.default_street_address2 if profile else "",
+        "billing_city": profile.default_town_or_city if profile else "",
+        "billing_county": profile.default_county if profile else "",
+        "billing_postcode": profile.default_postcode if profile else "",
+        "billing_country": profile.default_country if profile else "",
+        "billing_phone": profile.default_phone_number if profile else "",
     }
 
     context = {
@@ -489,6 +487,18 @@ def checkout_summary(request):
         "checkout/includes/checkout_summary.html",
         context
     )
+
+
+PRINT_TYPE_TO_SHIPPING_TYPE = {
+    "Poster Print": "poster",
+    "Canvas Wrap": "canvas",
+    "Framed Print": "framed",
+    "Mug": "mug",
+}
+
+DEFAULT_COUNTRY = "Ireland"
+DEFAULT_OPTION = "Standard"
+FALLBACK_VAT = 0.21
 
 
 @csrf_exempt
@@ -578,35 +588,25 @@ def checkout_success(request):
     **Template:**
     :template:`checkout/includes/checkout_success.html`
     """
-    from decimal import Decimal
-
     session_id = request.GET.get('session_id')
     if not session_id:
         return HttpResponse("Missing session ID", status=400)
 
     try:
-        # Retrieve the session from Stripe
         session = stripe.checkout.Session.retrieve(session_id)
         customer_email = session.get("customer_email")
-
-        # Find the user by email
         user = User.objects.filter(email=customer_email).first()
         if not user:
             return HttpResponse("User not found", status=404)
-
-        # Find the latest order for that user
         order = OrderModel.objects.filter(user=user).latest("created_at")
-
     except Exception as e:
         return HttpResponse(f"Error fetching order: {str(e)}", status=500)
 
-    # Retrieve and decode the original bag from Stripe metadata
     try:
         bag = json.loads(session.get("metadata", {}).get("bag", "{}"))
     except (TypeError, json.JSONDecodeError):
         bag = {}
 
-    # Build download links for digital files
     download_links = []
     for product in order.products.all():
         if product.file:
@@ -615,17 +615,14 @@ def checkout_success(request):
                 type='attachment',
                 expires=3600
             )
-            download_links.append({
-                "title": product.title,
-                "url": url
-            })
+            download_links.append({"title": product.title, "url": url})
 
-    # Clear cart after success
     request.session["bag"] = {}
 
     bag_items = []
     bag_total = Decimal("0.00")
-    shipping_total = Decimal("10.00")
+    country = request.session.get('country', DEFAULT_COUNTRY)
+    shipping_total = Decimal("0.00")
 
     for key, item in bag.items():
         product = get_object_or_404(Product, pk=item["product_id"])
@@ -634,26 +631,39 @@ def checkout_success(request):
         line_total = unit_price * quantity
         bag_total += line_total
 
+        shipping_cost = Decimal("0.00")
+        if item.get("format") == "printed":
+            print_type_name = item.get("print_type")
+            shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(print_type_name)
+            if shipping_key:
+                shipping_obj = ShippingRate.objects.filter(
+                    product_type=shipping_key,
+                    country=country,
+                    shipping_option=DEFAULT_OPTION.lower()
+                ).first()
+                if shipping_obj:
+                    shipping_cost = shipping_obj.price * quantity
+                    shipping_total += shipping_cost
+
         bag_items.append({
             "product": product,
             "license": item.get('license'),
+            "print_type": item.get("print_type"),
             "quantity": quantity,
             "unit_price": unit_price,
             "line_total": line_total,
+            "shipping_cost": shipping_cost,
         })
 
-    # Apply special offer
     new_total, shipping_total, discount, special_offer = apply_special_offer(
         bag_items, bag_total, shipping_total
     )
 
-    # VAT and grand total calculation
     vat_rate_display = 21
     vat_rate = Decimal(vat_rate_display) / 100
     vat = (new_total * vat_rate).quantize(Decimal("0.01"))
     grand_total = (new_total + vat + shipping_total).quantize(Decimal("0.01"))
 
-    # Get billing details from user profile
     profile = getattr(user, "userprofile", None)
 
     billing_info = {
