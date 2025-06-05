@@ -578,6 +578,8 @@ def checkout_success(request):
     **Template:**
     :template:`checkout/includes/checkout_success.html`
     """
+    from decimal import Decimal
+
     session_id = request.GET.get('session_id')
     if not session_id:
         return HttpResponse("Missing session ID", status=400)
@@ -615,12 +617,58 @@ def checkout_success(request):
     # Clear cart after success
     request.session["bag"] = {}
 
+    # Reconstruct bag items manually from order
+    bag_items = []
+    bag_total = Decimal("0.00")
+    shipping_total = Decimal("0.00")  # Set default
+
+    # Rebuild line items with dummy quantities
+    for product in order.products.all():
+        quantity = 1  # If your model supports quantity, use it here
+        unit_price = product.price
+        line_total = unit_price * quantity
+        bag_total += line_total
+
+        bag_items.append({
+            "product": product,
+            "quantity": quantity,
+            "unit_price": unit_price,
+            "line_total": line_total,
+        })
+
+    # VAT and grand total calculation
+    vat_rate_display = 21
+    vat_rate = Decimal(vat_rate_display) / 100
+    vat = (bag_total * vat_rate).quantize(Decimal("0.01"))
+    grand_total = (bag_total + vat + shipping_total).quantize(Decimal("0.01"))
+
+    # Get billing details from user profile
+    profile = getattr(user, "userprofile", None)
+
+    billing_info = {
+        "billing_street1": profile.default_street_address1 if profile else "",
+        "billing_street2": profile.default_street_address2 if profile else "",
+        "billing_city": profile.default_town_or_city if profile else "",
+        "billing_county": profile.default_county if profile else "",
+        "billing_postcode": profile.default_postcode if profile else "",
+        "billing_country": profile.default_country if profile else "",
+        "billing_phone": profile.default_phone_number if profile else "",
+    }
+
     return render(
         request,
         "checkout/includes/checkout_success.html",
         {
             "order": order,
             "download_links": download_links,
+            "bag_items": bag_items,
+            "bag_total": bag_total,
+            "vat": vat,
+            "vat_rate_display": vat_rate_display,
+            "shipping_total": shipping_total,
+            "grand_total": grand_total,
+            "billing_info": billing_info,
+            "step": 5,
         }
     )
 
