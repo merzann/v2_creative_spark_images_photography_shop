@@ -15,7 +15,7 @@ from django.http import HttpResponse, JsonResponse
 from user_profiles.models import UserProfile
 from user_profiles.forms import UserProfileForm
 from home.models import SpecialOffer
-from products.models import CountryVAT, Product, PrintType, ShippingRate
+from products.models import CountryVAT, Product, ShippingRate
 from shop.models import OrderModel
 
 from decimal import Decimal
@@ -39,10 +39,13 @@ def checkout(request):
 
 def load_guest_form(request):
     """
-    Load the empty user form for guest checkout.
+    Render and return an empty user form for guest checkout.
 
-    **Template:**
-    :template:`checkout/includes/user_form.html`
+    Template:
+        checkout/includes/user_form.html
+
+    Returns:
+        HttpResponse: Rendered HTML form for the guest user.
     """
     html = render_to_string(
         'checkout/includes/user_form.html',
@@ -59,6 +62,9 @@ def create_checkout_session(request):
 
     Converts session bag items to Stripe line items and redirects
     the user to Stripe's hosted checkout page.
+
+    Models:
+        products.Product
 
     **Redirects:**
     - On success: :url:`/checkout/success/`
@@ -124,6 +130,9 @@ def apply_special_offer(bag_items, bag_total, shipping_total):
     - Percentage discount on items from a specific theme
     - Buy X Get Y Free on eligible product quantities
 
+    Models:
+        offers.SpecialOffer
+
     Args:
         bag_items: List of items in the shopping bag.
         bag_total: Decimal representing the total cost of items.
@@ -184,6 +193,10 @@ def save_profile_from_checkout(request):
 
     Handles both authenticated users and guests.
     Ensures a :model:`user_profiles.UserProfile` exists or is created.
+
+    Models:
+        auth.User
+        user_profiles.UserProfile
 
     **Returns:**
     - JSON success or error message
@@ -265,12 +278,18 @@ def save_profile_from_checkout(request):
 @require_GET
 def billing_info(request):
     """
-    Return billing form HTML with pre-filled fields for authenticated users.
+    Render billing form HTML with prefilled data for authenticated users.
 
-    Used during the AJAX-driven checkout flow.
+    Used in AJAX during checkout.
 
-    **Template:**
-    :template:`checkout/includes/billing_form.html`
+    Models:
+        user_profiles.UserProfile
+
+    Template:
+        checkout/includes/billing_form.html
+
+    Returns:
+        HttpResponse: Rendered billing form.
     """
     initial_data = {}
 
@@ -298,12 +317,18 @@ def billing_info(request):
 @require_GET
 def load_billing_form(request):
     """
-    Return billing form HTML with prefilled data for authenticated users.
+    Render billing form HTML with pre-filled fields for logged-in users.
 
-    Triggered during checkout Step 2 (Billing Info).
+    Triggered during step 2 of the checkout process.
 
-    **Template:**
-    :template:`checkout/includes/billing_form.html`
+    Requires authentication. Maps billing fields to
+    :model:`user_profiles.UserProfile`.
+
+    Template:
+        checkout/includes/billing_form.html
+
+    Returns:
+        HttpResponse: Rendered billing form with initial data.
     """
     initial_data = {}
 
@@ -386,6 +411,13 @@ def checkout_summary(request):
     Shows contact info, billing info, shopping cart summary, discounts,
     and a pricing breakdown (net, tax, shipping, total).
 
+    Maps:
+    :model:`products.Product`
+    :model:`offers.SpecialOffer`
+    :model:`user_profiles.UserProfile`
+    :model:`shipping.ShippingRate`
+    :model:`tax.CountryVAT`
+
     **Context:**
     - bag_items: List of product line items with prices and quantities
     - bag_total: Total cost before tax and shipping
@@ -405,6 +437,12 @@ def checkout_summary(request):
     bag_total = Decimal("0.00")
     country = request.session.get('country', DEFAULT_COUNTRY)
     shipping_total = Decimal("0.00")
+
+    try:
+        vat_obj = CountryVAT.objects.get(country__iexact=country)
+        vat_rate = float(vat_obj.vat_rate)
+    except CountryVAT.DoesNotExist:
+        pass
 
     for key, item in bag.items():
         product = get_object_or_404(Product, pk=item["product_id"])
@@ -449,9 +487,15 @@ def checkout_summary(request):
     grand_total = new_total + shipping_total + vat
 
     contact_info = {
-        "first_name": request.user.first_name if request.user.is_authenticated else "",
-        "last_name": request.user.last_name if request.user.is_authenticated else "",
-        "email": request.user.email if request.user.is_authenticated else "",
+        "first_name": (
+            request.user.first_name if request.user.is_authenticated else ""
+        ),
+        "last_name": (
+            request.user.last_name if request.user.is_authenticated else ""
+        ),
+        "email": (
+            request.user.email if request.user.is_authenticated else ""
+        ),
     }
 
     profile = (
@@ -504,10 +548,20 @@ FALLBACK_VAT = 0.21
 @csrf_exempt
 def stripe_webhook(request):
     """
-    Handle Stripe webhook events.
+    Process incoming Stripe webhook events.
 
-    Specifically listens for 'checkout.session.completed' events
-    to create an order, associate products, and send confirmation email.
+    Primarily listens for `checkout.session.completed` events to:
+    - Create orders
+    - Attach products
+    - Trigger confirmation email
+
+    Related to models:
+    :model:`auth.User`
+    :model:`orders.OrderModel`
+    :model:`products.Product`
+
+    Returns:
+        HttpResponse: 200 if handled, 400 if error in payload/signature.
     """
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
@@ -580,13 +634,28 @@ def stripe_webhook(request):
 
 def checkout_success(request):
     """
-    Clear the cart session and
-    render the success page for both guest and logged-in users.
+    Final checkout success page after payment confirmation.
 
-    Uses Stripe session ID passed via query string to fetch user and order.
+    Clears cart and displays order summary with downloads if applicable.
 
-    **Template:**
-    :template:`checkout/includes/checkout_success.html`
+    Uses:
+        - Stripe session to fetch metadata and user.
+        - Prefilled user billing info and product list.
+
+    Related to models:
+    :model:`auth.User`
+    :model:`orders.OrderModel`
+    :model:`user_profiles.UserProfile`
+    :model:`products.Product`
+    :model:`tax.CountryVAT`
+    :model:`shipping.ShippingRate`
+    :model:`offers.SpecialOffer`
+
+    Template:
+        checkout/includes/checkout_success.html
+
+    Returns:
+        HttpResponse: Rendered success page.
     """
     session_id = request.GET.get('session_id')
     if not session_id:
@@ -623,6 +692,12 @@ def checkout_success(request):
     bag_total = Decimal("0.00")
     country = request.session.get('country', DEFAULT_COUNTRY)
     shipping_total = Decimal("0.00")
+
+    try:
+        vat_obj = CountryVAT.objects.get(country__iexact=country)
+        vat_rate = float(vat_obj.vat_rate)
+    except CountryVAT.DoesNotExist:
+        pass
 
     for key, item in bag.items():
         product = get_object_or_404(Product, pk=item["product_id"])
@@ -697,7 +772,20 @@ def checkout_success(request):
 
 
 def send_order_email(user, order):
-    """Send confirmation email with digital links if applicable."""
+    """
+    Send order confirmation email with download links if available.
+
+    Related to models:
+    :model:`orders.OrderModel`
+    :model:`products.Product`
+
+    Args:
+        user (User): The user who placed the order.
+        order (OrderModel): The completed order object.
+
+    Returns:
+        None
+    """
     products = order.products.all()
 
     # Prepare download links if files exist

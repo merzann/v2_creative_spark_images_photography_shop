@@ -25,7 +25,7 @@
             {{ billing_info.billing_street1 }}<br>
             {% if billing_info.billing_street2 %}{{ billing_info.billing_street2 }}<br>{% endif %}
             {{ billing_info.billing_postcode }} {{ billing_info.billing_city }}<br>
-            {% if billing_info.billing_county %}{{ billing_info.billing_county }}, {% endif %}{{ billing_info.billing_country }}<br>
+            {% if billing_info.billing_county %}{{ billing_info.billing_county }}, {% endif %}{{ billing_info.billing_county }}<br>
             {{ billing_info.billing_country.name }}
         </p>
 
