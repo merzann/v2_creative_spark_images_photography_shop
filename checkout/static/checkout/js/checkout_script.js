@@ -156,23 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         continueBtn.disabled = !validateBillingFormFields();
-
-        continueBtn.onclick = function () {
-          if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave) {
-            loadCheckoutSummary();
-            continueBtn.blur();
-            return;
-          }
-
-          if (formHasChanges()) {
-            continueBtn.disabled = true;
-            modalAlert.classList.add('d-none');
-            saveModal.show();
-          } else {
-            loadCheckoutSummary();
-            continueBtn.blur();
-          }
-        };
       })
       .catch(error => console.error("Billing form load failed:", error));
   }
@@ -285,21 +268,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Continue button event based on step number
   continueBtn.addEventListener('click', function () {
-    if (currentStep === 1) {
-      if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
+    const isValid = currentStep === 1
+      ? validateProfileFormFields()
+      : validateBillingFormFields();
+
+    if (!isValid) {
+      continueBtn.disabled = true;
+      return;
+    }
+
+    if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
+      // Skip save path (e.g. Cancel or Don't Save was clicked)
+      if (currentStep === 1) {
         loadBillingForm();
-        continueBtn.blur();
-      } else if (formHasChanges()) {
-        continueBtn.disabled = true;
-        modalAlert.classList.add('d-none');
-        saveModal.show();
-      } else {
-        loadBillingForm();
-        continueBtn.blur();
+      } else if (currentStep === 2) {
+        loadCheckoutSummary();
       }
-    } else if (currentStep === 2) {
-      loadCheckoutSummary();
       continueBtn.blur();
+    } else if (formHasChanges()) {
+      continueBtn.disabled = true;
+      modalAlert.classList.add('d-none');
+      saveModal.show(); // Wait for modal action
+    } else {
+      if (currentStep === 1) {
+        // In Step 1, no changes — just go to billing
+        loadBillingForm();
+        continueBtn.blur();
+      } else {
+        // In Step 2, allow modal to confirm even if no changes
+        skipProfileSave = true;
+        continueBtn.dataset.allowRedirect = "true";
+        saveModal.show();
+      }
     }
   });
 
