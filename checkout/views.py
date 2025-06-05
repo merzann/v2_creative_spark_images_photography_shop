@@ -600,6 +600,12 @@ def checkout_success(request):
     except Exception as e:
         return HttpResponse(f"Error fetching order: {str(e)}", status=500)
 
+    # Retrieve and decode the original bag from Stripe metadata
+    try:
+        bag = json.loads(session.get("metadata", {}).get("bag", "{}"))
+    except (TypeError, json.JSONDecodeError):
+        bag = {}
+
     # Build download links for digital files
     download_links = []
     for product in order.products.all():
@@ -617,30 +623,35 @@ def checkout_success(request):
     # Clear cart after success
     request.session["bag"] = {}
 
-    # Reconstruct bag items manually from order
     bag_items = []
     bag_total = Decimal("0.00")
-    shipping_total = Decimal("0.00")  # Set default
+    shipping_total = Decimal("10.00")
 
-    # Rebuild line items with dummy quantities
-    for product in order.products.all():
-        quantity = 1  # If your model supports quantity, use it here
+    for key, item in bag.items():
+        product = get_object_or_404(Product, pk=item["product_id"])
+        quantity = item["quantity"]
         unit_price = product.price
         line_total = unit_price * quantity
         bag_total += line_total
 
         bag_items.append({
             "product": product,
+            "license": item.get('license'),
             "quantity": quantity,
             "unit_price": unit_price,
             "line_total": line_total,
         })
 
+    # Apply special offer
+    new_total, shipping_total, discount, special_offer = apply_special_offer(
+        bag_items, bag_total, shipping_total
+    )
+
     # VAT and grand total calculation
     vat_rate_display = 21
     vat_rate = Decimal(vat_rate_display) / 100
-    vat = (bag_total * vat_rate).quantize(Decimal("0.01"))
-    grand_total = (bag_total + vat + shipping_total).quantize(Decimal("0.01"))
+    vat = (new_total * vat_rate).quantize(Decimal("0.01"))
+    grand_total = (new_total + vat + shipping_total).quantize(Decimal("0.01"))
 
     # Get billing details from user profile
     profile = getattr(user, "userprofile", None)
@@ -668,6 +679,8 @@ def checkout_success(request):
             "shipping_total": shipping_total,
             "grand_total": grand_total,
             "billing_info": billing_info,
+            "discount": discount,
+            "special_offer": special_offer,
             "step": 5,
         }
     )

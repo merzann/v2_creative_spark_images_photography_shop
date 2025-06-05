@@ -214,7 +214,7 @@ def update_bag_item(request, item_key):
 
     new_quantity = request.POST.get('quantity')
     new_format = request.POST.get('format')
-    new_print_type = request.POST.get('print_type')  # Optional
+    new_print_type = request.POST.get('print_type')
 
     try:
         new_quantity = int(new_quantity)
