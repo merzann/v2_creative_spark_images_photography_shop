@@ -157,7 +157,12 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(html => {
         formWrapper.innerHTML = html;
         setActiveProgressStep(2);
-        captureInitialFormValues();
+
+        // Wait for DOM and browser to populate values before capturing
+        setTimeout(() => {
+          captureInitialFormValues();
+        }, 50); // short delay to let form hydrate
+
 
         ['billing_street1', 'billing_postcode', 'billing_city', 'billing_country', 'billing_phone'].forEach(id => {
           const input = document.getElementById(id);
@@ -313,10 +318,9 @@ document.addEventListener('DOMContentLoaded', function () {
       if (currentStep === 1) {
         loadBillingForm();
         continueBtn.blur();
-      } else {
-        skipProfileSave = true;
-        continueBtn.dataset.allowRedirect = "true";
-        saveModal.show();
+      } else if (currentStep === 2) {
+        loadCheckoutSummary();
+        continueBtn.blur();
       }
     }
   });
