@@ -9,8 +9,22 @@
 <div class="container py-5 my-5 sm-shadow">
 
     <!-- Progress Tracker -->
-    <div class="mt-5">
-    {% include "checkout/includes/progress.html" with step="5" %}
+    <div class="checkout-progress progress-wrapper my-5 text-center" aria-labelledby="progress-heading">
+        <h2 class="text-center mb-4">Secure Checkout</h2>
+        <div class="progress-steps d-flex justify-content-between mt-3 px-3">
+            <div class="step">1</div>
+            <div class="step">2</div>
+            <div class="step">3</div>
+            <div class="step">4</div>
+            <div class="step step-active">5</div>
+        </div>
+        <div class="progress-labels d-flex justify-content-between mt-2 px-3 small text-muted">
+            <div>Contact<br>Details</div>
+            <div>Billing<br>Information</div>
+            <div>Order<br>Summary</div>
+            <div>Payment</div>
+            <div>Confirmation</div>
+        </div>
     </div>
 
     <h2 class="text-center mt-4">Payment Successful!</h2>
@@ -112,20 +126,4 @@
         Annika Merz, Creative Spark Images
     </p>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    function setActiveProgressStep(stepNumber) {
-        const steps = document.querySelectorAll('.progress-steps .step');
-        steps.forEach((stepEl, index) => {
-        stepEl.classList.toggle('step-active', index === stepNumber - 1);
-        });
-    }
-
-    // Activate step 5 explicitly for success page
-    setActiveProgressStep(5);
-    });
-</script>
 {% endblock %}
