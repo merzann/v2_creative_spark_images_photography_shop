@@ -65,6 +65,8 @@ def profile(request):
         ) \
         .order_by('-created_at')
 
+    active_slide = request.GET.get("slide", "profile")
+
     return render(
         request,
         "user_profiles/profile.html",
@@ -73,6 +75,7 @@ def profile(request):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "orders": orders,
+            "active_slide": active_slide,
         },
     )
 
