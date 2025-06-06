@@ -1510,6 +1510,28 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC010        | Responsive design                | Resize browser to mobile width                          | Layout adjusts without breaking              |               | Pass      | Test on real device too   |
 
 ---
+
+### Images by theme
+
+| Test Case ID | Description                              | Steps to Reproduce                                      | Expected Result                                          | Actual Result                          | Pass/Fail | Notes |
+|--------------|------------------------------------------|----------------------------------------------------------|-----------------------------------------------------------|-----------------------------------------|-----------|-------|
+| TC001        | Load page via View Images button         | On gallery page → Click 'View Images' on any theme card | Loads page with images filtered by theme                 | Loads filtered images as expected       | Pass      |       |
+| TC002        | Responsive design for image grid         | Resize browser window → Observe image layout            | Image cards adjust layout for screen size                | Responsive layout works correctly       | Pass      |       |
+| TC003        | Theme title heading                      | Open theme page → View heading at top                   | Displays current theme title                             | Displays as expected                    | Pass      |       |
+| TC004        | Image card link to product detail        | Click on any image preview                              | Navigates to image's product detail page                 | Correctly routes to product detail      | Pass      |       |
+| TC005        | Image card displays title and price      | Scroll through images                                   | Each card shows title and starting price                 | Displays correctly                      | Pass      |       |
+| TC006        | License tags under image card            | View image cards with licenses                          | Each license appears as a tag                            | Displays license tags as expected       | Pass      |       |
+| TC007        | Fallback for no images in theme          | Open theme with no images assigned                      | Message shown and button to return to gallery            | Fallback message and button display     | Pass      |       |
+| TC008        | Back to Gallery button (bottom of page)  | Scroll to bottom → Click 'Back to Gallery'              | Navigates to gallery page                                | Redirects correctly                     | Pass      |       |
+| TC009        | Back to Top button                       | Scroll down → Click 'Back to Top'                       | Scrolls smoothly to top of page                          | Works as expected                       | Pass      |       |
+
+---
+
+### Product detail page
+
+
+
+---
 ---
 
 ### Automated Testing
