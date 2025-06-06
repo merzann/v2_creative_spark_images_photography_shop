@@ -1447,8 +1447,8 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 
 | Test Case ID | Description                      | Steps to Reproduce                                      | Expected Result                             | Actual Result | Pass/Fail | Notes                     |
 |--------------|----------------------------------|----------------------------------------------------------|----------------------------------------------|---------------|-----------|---------------------------|
-| TC001        | Check homepage loads             | Open browser → Go to homepage URL                        | Homepage loads successfully                  |               |           |                           |
-| TC002        | Responsive design                | Resize browser to mobile width                          | Layout adjusts without breaking              |               |           | Test on real device too   |
+| TC001        | Check homepage loads             | Open browser → Go to homepage URL                        | Homepage loads successfully                  |               | Pass      |                           |
+| TC002        | Responsive design                | Resize browser to mobile width                          | Layout adjusts without breaking              |               | Pass      | Test on real device too   |
 | TC003        | Navbar: Image Catalogue link functionality    | Open homepage → Click 'Gallery' dropdown → Select 'Image Catalogue'| Navigates to image catalogue page                    | Link is not wired up (empty href)              | Fail        | Needs URL implementation          |
 | TC004        | Menu Navigation Links (Gallery Dropdown)   | Open homepage → Hover over "Gallery" in menu → Click each dropdown item            | Each link navigates to its respective gallery section         | All links work except Image Catalogue         | Partial   | "Image Catalogue" has no href set          |
 | TC005        | Language selector: English version            | Open homepage → Click language selector → Select English            | Reloads page with English content                    | Page loads successfully in English             | Pass        |                                   |
@@ -1457,8 +1457,8 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC008        | User Account Dropdown                         | Open homepage → Click user icon → Check options based on auth status| Login/Signup or Profile/Logout shown                | Options shown correctly                        | Pass        |                                   |
 | TC009        | User icon behavior (unauthenticated)       | Open homepage → Not logged in → Click user icon → Check dropdown links              | Links: Create account → signup, Login → login                 | `{% url 'account_signup' %}` and `account_login` | Pass      | Correctly routes to auth pages             |
 | TC010        | User icon behavior (authenticated)         | Log in → Click user icon → Check dropdown links                                     | Links: My Profile → profile, Order History → profile?slide=history, Logout | All URLs resolve as expected                  | Pass      | Uses Django auth routing                   |
-| TC012        | Successful login                 | Go to login page → Enter valid credentials → Submit     | Redirected to dashboard                      |               |           | Use test credentials      |
-| TC013        | Logout functionality             | While logged in → Click logout button                   | Redirects to login page                      |               |           | Session should be cleared |
+| TC012        | Successful login                 | Go to login page → Enter valid credentials → Submit     | Redirected to dashboard                      |               | Pass      | Use test credentials      |
+| TC013        | Logout functionality             | While logged in → Click logout button                   | Redirects to login page                      |               | Pass      | Session should be cleared |
 | TC014        | Shopping cart icon navigation              | Click cart icon in navbar                                                           | Redirects to view bag/cart page                               | `{% url 'view_bag' %}`                         | Pass      | Cart count badge updates dynamically       |
 | TC015        | Background video on intro section       | Open homepage → Wait for video to load                      | Video plays automatically as background                   | Sometimes fallback image shown after login/logout| Partial Pass | Intermittent load failure for video        |
 | TC016        | Catchphrase text visibility             | Open homepage → Observe overlay text on video               | Catchphrase headings are displayed over video             | Displays correctly                               | Pass        |                                            |
@@ -1492,6 +1492,24 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC013        | Read more interaction on license cards     | Click license card → Toggle description                     | Description toggles visibility                               | Works as expected using JS                       | Pass      | JS toggle for overview             |
 | TC014        | Fallback for missing license description   | Open page with license having no description                | Shows placeholder message                                    | Displays 'This license is currently not available.' | Pass      |                                    |
 
+---
+
+### Gallery Page
+
+| Test Case ID | Description                                      | Steps to Reproduce                             | Expected Result                                             | Actual Result                        | Pass/Fail | Notes |
+|--------------|--------------------------------------------------|-------------------------------------------------|--------------------------------------------------------------|-------------------------------------|-----------|-------|
+| TC001        | Check gallery page loads             | On homepage → click on Gallery 'Road Sign' at the bottom right or chose 'Images by theme' in the navbar dropdown        | Gallery page loads successfully                  |               | Pass                                 |
+| TC002        | Page title and heading                           | Open gallery page → View heading                | Gallery title is displayed prominently                       | Displayed as expected                | Pass      |       |
+| TC003        | Search bar functionality                         | Enter text in search bar → Click 'Search'       | Search submits query via GET method                          | Works as expected                    | Pass      |       |
+| TC004        | Theme card displays title, short description, image | Open gallery page → View a theme card        | Each card shows title, short description, and an image       | Displays correctly                   | Pass      |       |
+| TC005        | Fallback image for missing theme image           | View card with no theme image                   | Shows default placeholder image                              | Placeholder displays correctly       | Pass      |       |
+| TC006        | Read More button expands full text               | Click 'Read More' on any card                   | Reveals full description content                             | Expands text as expected             | Pass      |       |
+| TC007        | View Images button navigation                    | Click 'View Images' on a theme card             | Navigates to images filtered by theme slug                   | Links resolve and load content       | Pass      |       |
+| TC008        | No themes available message                      | Load page with no themes                        | Displays 'No themes available.' message                      | Fallback message appears             | Pass      |       |
+| TC009        | Back to Top button                               | Scroll down → Click 'Back to Top'               | Scrolls to top of gallery page                               | Scrolls smoothly as expected         | Pass      |       |
+| TC010        | Responsive design                | Resize browser to mobile width                          | Layout adjusts without breaking              |               | Pass      | Test on real device too   |
+
+---
 ---
 
 ### Automated Testing
