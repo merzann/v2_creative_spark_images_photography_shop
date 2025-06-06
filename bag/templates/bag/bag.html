@@ -9,25 +9,28 @@
 {% block content %}
 <article aria-label="shopping bag with all items selected including configuration">
   <section id="shopping-cart" class="container-fluid shopping-bag-section">
-  <h2 class="mt-5 mb-3">Your Shopping Bag</h2>
+    <h2 class="mt-5 mb-3">Your Shopping Bag</h2>
     <div>
       {% if bag_items %}
-        <ul class="list-group mb-4">
-          {% for item in bag_items %}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <form method="POST"
-                  action="{% url 'update_bag_item' item.key %}"
-                  class="d-flex align-items-center w-100"
-                  data-item-form
-                  data-pending-update="false">
-              {% csrf_token %}
-          
-              <img src="{{ item.product.image_preview.url }}" alt="{{ item.product.title }}" class="me-3">
-          
+      <ul class="list-group mb-4">
+        {% for item in bag_items %}
+        <li class="list-group-item">
+          <form method="POST"
+                action="{% url 'update_bag_item' item.key %}"
+                class="d-flex flex-column flex-sm-row align-items-sm-center w-100"
+                data-item-form
+                data-pending-update="false">
+            {% csrf_token %}
+
+            <div class="d-flex flex-column flex-sm-row w-100 gap-3">
+              <!-- Image -->
+              <img src="{{ item.product.image_preview.url }}" alt="{{ item.product.title }}" class="bag-item-img">
+
+              <!-- Product Details -->
               <div class="flex-grow-1">
                 <strong>{{ item.product.title }}</strong><br>
-          
-                <!-- Format -->
+
+                <!-- Format Choice -->
                 <label class="form-label mb-0"><small>Format:</small></label>
                 <select name="format"
                         class="form-select form-select-sm mb-1 format-select"
@@ -38,16 +41,16 @@
                   <option value="digital" {% if item.format == 'digital' %}selected{% endif %}>Digital</option>
                   <option value="printed" {% if item.format == 'printed' %}selected{% endif %}>Printed</option>
                 </select>
-          
+
                 <!-- Quantity -->
                 <label class="form-label mb-0"><small>Qty:</small></label>
                 <select name="quantity" class="form-select form-select-sm mb-1" style="max-width: 80px;">
                   {% for i in 1|to_range:10 %}
-                    <option value="{{ i }}" {% if item.quantity == i %}selected{% endif %}>{{ i }}</option>
+                  <option value="{{ i }}" {% if item.quantity == i %}selected{% endif %}>{{ i }}</option>
                   {% endfor %}
                 </select>
-          
-                <!-- Print Type (hidden unless printed selected) -->
+
+                <!-- Print Type (shown only if printed) -->
                 <div id="print-wrapper-{{ forloop.counter }}"
                      class="print-type-wrapper"
                      {% if item.format != 'printed' %}
@@ -61,14 +64,14 @@
                           data-update-btn-id="update-btn-{{ forloop.counter }}">
                     <option value="" disabled {% if not item.print_type %}selected{% endif %}>---</option>
                     {% for option in item.print_type_options %}
-                      <option value="{{ option }}" {% if option == item.print_type %}selected{% endif %}>{{ option }}</option>
+                    <option value="{{ option }}" {% if option == item.print_type %}selected{% endif %}>{{ option }}</option>
                     {% endfor %}
                   </select>
                 </div>
-          
+
                 <small>Subtotal: €{{ item.subtotal|floatformat:2 }}</small><br>
 
-                <!-- Button Group -->
+                <!-- Buttons for desktop -->
                 <div class="ms-3 d-none d-sm-flex flex-column align-items-end">
                   <button type="submit"
                           class="btn btn-sm btn-outline-primary mb-2"
@@ -79,7 +82,7 @@
                   <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-outline-danger btn-sm">Remove</a>
                 </div>
 
-                <!-- Mobile button group (shown only on xs screens) -->
+                <!-- Buttons for mobile -->
                 <div class="d-flex flex-wrap justify-content-between mt-2 d-sm-none gap-2">
                   <button type="submit"
                           class="btn btn-sm btn-outline-primary flex-fill"
@@ -89,45 +92,44 @@
                   </button>
                   <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-outline-danger btn-sm flex-fill">Remove</a>
                 </div>
-                </div>
-            </form>
-          </li>          
-          {% endfor %}
-        </ul>
-        
-        <!-- Show Total -->
-        <div class="d-flex flex-column align-items-end mb-3 totals">
-          <p class="mb-1"><strong>Subtotal (excl. VAT):</strong> €{{ bag_total|floatformat:2 }}</p>
-          <p class="mb-1"><strong>VAT ({{ vat_rate_display }}%):</strong> €{{ vat|floatformat:2 }}</p>
-          <p class="mb-1"><strong>Shipping:</strong> €{{ shipping_total|floatformat:2 }}</p>
-          <h5 class="mt-2 mb-4"><strong>Total (incl. VAT):</strong> €{{ grand_total|floatformat:2 }}</h5>
-        </div>
-      
+              </div>
+            </div>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
 
-        <div class="d-flex justify-content-between">
-          <a href="{% url 'gallery_page' %}"
-              class="btn btn-secondary mt-3 mb-5">
-              ⬅ Continue shopping
-          </a>
-          <p id="checkout-warning" class="text-danger small mb-2" style="display: none;">
-            Have you selected a Print Type for all Printed Products?<br>
-            Please click "Update" to save your changes before proceeding.
-          </p>          
-          <a id="checkout-btn"
-              href="{% url 'checkout' %}"
-              class="btn btn-custom mb-5"
-              aria-disbaled="true"
-              tabindex="-1">Proceed to Checkout ➡
-          </a>
-        </div>
+      <!-- Totals Section -->
+      <div class="d-flex flex-column align-items-end mb-3 totals">
+        <p class="mb-1"><strong>Subtotal (excl. VAT):</strong> €{{ bag_total|floatformat:2 }}</p>
+        <p class="mb-1"><strong>VAT ({{ vat_rate_display }}%):</strong> €{{ vat|floatformat:2 }}</p>
+        <p class="mb-1"><strong>Shipping:</strong> €{{ shipping_total|floatformat:2 }}</p>
+        <h5 class="mt-2 mb-4"><strong>Total (incl. VAT):</strong> €{{ grand_total|floatformat:2 }}</h5>
+      </div>
+
+      <!-- Checkout Actions -->
+      <div class="d-flex justify-content-between">
+        <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-3 mb-5">⬅ Continue shopping</a>
+        <p id="checkout-warning" class="text-danger small mb-2" style="display: none;">
+          Have you selected a Print Type for all Printed Products?<br>
+          Please click "Update" to save your changes before proceeding.
+        </p>
+        <a id="checkout-btn"
+           href="{% url 'checkout' %}"
+           class="btn btn-custom mb-5"
+           aria-disbaled="true"
+           tabindex="-1">Proceed to Checkout ➡</a>
+      </div>
+
       {% else %}
-        <div class="alert text-center mt-5">
-          <p>No items added to the cart yet.</p>
-          <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-5 mb-3">⬅ Continue Shopping</a>
-        </div>
+      <div class="alert text-center mt-5">
+        <p>No items added to the cart yet.</p>
+        <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-5 mb-3">⬅ Continue Shopping</a>
+      </div>
       {% endif %}
     </div>
-</section>
+  </section>
+</article>
 {% endblock %}
 
 {% block extra_js %}
@@ -161,7 +163,6 @@
       }
     }
 
-    // Mark form as needing update if format or print type is changed
     formatSelects.forEach(select => {
       select.addEventListener('change', function () {
         const form = this.closest('[data-item-form]');
@@ -200,7 +201,6 @@
       });
     });
 
-    // Mark form as updated when clicking Update button
     itemForms.forEach(form => {
       const updateBtn = form.querySelector('button[type="submit"]');
       updateBtn.addEventListener('click', function () {
@@ -209,7 +209,6 @@
       });
     });
 
-    // Initial check
     checkEligibility();
   });
 </script>
