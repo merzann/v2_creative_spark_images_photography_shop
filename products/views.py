@@ -32,11 +32,9 @@ def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     shipping_rates = {}
 
-    # Build shipping rates dict using matching PrintType
     for print_type in product.print_types.all():
         name = str(print_type.name)
         shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(name)
-
         if shipping_key:
             rate = (
                 ShippingRate.objects
@@ -46,17 +44,26 @@ def product_detail(request, product_id):
             if rate:
                 shipping_rates[name] = float(rate.price)
 
-    default_shipping_cost = next(iter(shipping_rates.values()), 0.00)
+    bag = request.session.get("bag", {})
+    digital_in_cart = 0
+    printed_in_cart = 0
 
-    return render(
-        request,
-        "products/product_detail.html",
-        {
-            "product": product,
-            "shipping_cost": default_shipping_cost,
-            "shipping_rates": json.dumps(shipping_rates),
-        },
-    )
+    for key, item in bag.items():
+        if str(item.get('product_id')) == str(product.id):
+            if item.get("format") == "digital":
+                digital_in_cart += item.get("quantity", 0)
+            elif item.get("format") == "printed":
+                printed_in_cart += item.get("quantity", 0)
+
+    remaining_digital = max(0, 10 - digital_in_cart)
+    remaining_printed = max(0, 10 - printed_in_cart)
+
+    return render(request, "products/product_detail.html", {
+        "product": product,
+        "shipping_rates": json.dumps(shipping_rates),
+        "remaining_digital": remaining_digital,
+        "remaining_printed": remaining_printed,
+    })
 
 
 def image_licenses(request):

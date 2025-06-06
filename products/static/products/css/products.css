@@ -67,3 +67,20 @@
     border-top: 1px solid #aaa;
 }
 
+/* Media Queries */
+@media (max-width: 767.98px) {
+  .product-page-config-card .btn-custom,
+  .product-page-config-card .btn-secondary,
+  .product-page-config-card .btn-outline-dark {
+    padding: 6px 12px;
+    font-size: 11px;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .product-page-config-card .btn-group-responsive {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}

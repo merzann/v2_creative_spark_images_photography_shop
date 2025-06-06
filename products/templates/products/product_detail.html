@@ -66,11 +66,14 @@
                             <!-- Quantity Selector -->
                             <label for="quantitySelect" class="form-label mt-2" style="color: #333;">Choose a quantity (max.10):</label>
                             <select name="quantity" class="form-select w-25" id="quantitySelect" aria-label="Select quantity to purchase">
-                                {% for i in product.stock|get_range:10 %}
-                                    <option value="{{ i }}">{{ i }}</option>
-                                {% endfor %}
+                                {% if remaining_digital > 0 %}
+                                    {% for i in remaining_digital|get_range %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option disabled selected>Limit reached (max in cart)</option>
+                                {% endif %}
                             </select>                        
-
                             <hr>
 
                             <!-- Summary -->
@@ -82,10 +85,8 @@
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mt-4">
-                                <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-3"
-                                aria-label="go back to gallery">⬅ Back to Gallery
-                                </a>
-                                <button class="btn btn-custom" aria-label="add product to cart">Add to Cart</button>
+                                <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-3" aria-label="go back to gallery">⬅ Back to Gallery</a>
+                                <button class="btn btn-custom" id="addToCartBtn">Add to Cart</button>
                             </div>
                        </form> 
                     </div>
@@ -95,6 +96,9 @@
     </div>    
 </section>
 
+<!-- Injected remaining quantities -->
+{{ remaining_digital|json_script:"remaining-digital" }}
+{{ remaining_printed|json_script:"remaining-printed" }}
 {% endblock %}
 
 {% block extra_js %}
@@ -116,6 +120,10 @@
 
         // Parse shipping rates passed from Django
         const shippingRates = JSON.parse('{{ shipping_rates|escapejs }}');
+
+        // Parse remaining quantities
+        const remainingDigital = JSON.parse(document.getElementById('remaining-digital').textContent);
+        const remainingPrinted = JSON.parse(document.getElementById('remaining-printed').textContent);
 
         /**
          * Get the selected print type's shipping rate.
@@ -143,6 +151,31 @@
             totalDisplay.textContent = total;
         }
 
+        /**
+         * Update quantity dropdown based on format selection and remaining allowance
+         */
+        function updateQuantityDropdown(remaining) {
+            quantitySelect.innerHTML = '';
+            const addToCartBtn = document.getElementById('addToCartBtn');
+
+            if (remaining <= 0) {
+                const option = document.createElement('option');
+                option.text = 'Limit reached (max 10 in cart)';
+                option.disabled = true;
+                option.selected = true;
+                quantitySelect.appendChild(option);
+                addToCartBtn.disabled = true;
+            } else {
+                for (let i = 1; i <= remaining; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.text = i;
+                    quantitySelect.appendChild(option);
+                }
+                addToCartBtn.disabled = false;
+            }
+        }
+
         // Format toggle buttons
         const formatInput = document.getElementById('formatInput');
         const btnDigital = document.getElementById('btnDigital');
@@ -152,6 +185,7 @@
             digital.classList.remove('d-none');
             printed.classList.add('d-none');
             formatInput.value = "digital";
+            updateQuantityDropdown(remainingDigital);
             updateSummary(false);
         });
 
@@ -159,6 +193,7 @@
             digital.classList.add('d-none');
             printed.classList.remove('d-none');
             formatInput.value = "printed";
+            updateQuantityDropdown(remainingPrinted);
             updateSummary(true);
         });
 
@@ -178,6 +213,7 @@
         const isPrinted = btnPrinted.checked;
         digital.classList.toggle('d-none', isPrinted);
         printed.classList.toggle('d-none', !isPrinted);
+        updateQuantityDropdown(isPrinted ? remainingPrinted : remainingDigital);
         updateSummary(isPrinted);
     });
 </script>
