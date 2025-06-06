@@ -1246,8 +1246,8 @@ The project includes two custom 404 pages:
 
 - Rating and comment system for products
 - Image zoom/lightbox on product detail
+- Image catalogue displaying all images
 - SEO optimization and sitemap auto-generation
-- Instagram feed integration
 
 ---
 ---
@@ -1529,6 +1529,21 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 
 ### Product detail page
 
+| Test Case ID | Description                                 | Steps to Reproduce                                                | Expected Result                                           | Actual Result                              | Pass/Fail | Notes                                 |
+|--------------|---------------------------------------------|--------------------------------------------------------------------|------------------------------------------------------------|---------------------------------------------|-----------|----------------------------------------|
+| TC001        | Load page from image grid                   | On 'Images by Theme' page → Click on any image                    | Product detail page for selected image loads              | Loads correct product page                  | Pass      |                                        |
+| TC002        | Responsive design layout                    | Resize browser window                                              | Product image and form layout adjusts to screen size      | Responsive layout works correctly           | Pass      |                                        |
+| TC003        | Product image display                       | View product detail page                                           | Main preview image displays                               | Image renders as expected                   | Pass      |                                        |
+| TC004        | Toggle format between Digital and Printed   | Click format toggle buttons                                        | Form fields update accordingly                            | Toggles work correctly                      | Pass      |                                        |
+| TC005        | License select dropdown (digital)           | Choose Digital format → Open license dropdown                      | License options are shown                                 | Dropdown displays license types             | Pass      |                                        |
+| TC006        | Fallback for missing license options        | Open product with no digital licenses                   | Shows disabled `<option>` with text "No license available"| Disabled message displays correctly            | Pass      |              |
+| TC007        | Print type select dropdown (printed)        | Choose Printed format → Open print type dropdown                   | Print options are shown                                   | Dropdown displays print types               | Pass      |                                        |
+| TC008        | Fallback for missing print type options     | Switch to Printed → Open dropdown on product with no prints | Shows disabled `<option>` with text "No print option available"| Disabled message displays correctly      | Pass      |                                |
+| TC009        | Quantity selector (1–10)                    | Open quantity dropdown                                             | Dropdown shows 1 to 10 quantity values                    | Displays correctly                          | Pass      |                                        |
+| TC010        | Add to Cart button                          | Fill form and click 'Add to Cart'                                 | Item is added to cart                                     | Cart updates                                | Pass      |                                        |
+| TC011        | Price summary updates on input change       | Change quantity/print type/format                                 | Price, VAT, and total update correctly                    | Summary updates dynamically                 | Pass      |                                        |
+| TC012        | Back to Gallery button                      | Click '⬅ Back to Gallery'                                         | Redirects to gallery page                                 | Navigates correctly                         | Pass      |                                        |
+| TC013        | Quantity over 10 bug via continue shopping  | Add 10 items → click Continue Shopping → add 10 more → go to cart | Max 10 items enforced or handled gracefully               | Error: cart displays invalid quantity format | Fail      | Bug: allows bypassing quantity limit   |
 
 
 ---
