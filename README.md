@@ -1441,6 +1441,59 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 
 ---
 
+## Test Matrix
+
+### Hompage
+
+| Test Case ID | Description                      | Steps to Reproduce                                      | Expected Result                             | Actual Result | Pass/Fail | Notes                     |
+|--------------|----------------------------------|----------------------------------------------------------|----------------------------------------------|---------------|-----------|---------------------------|
+| TC001        | Check homepage loads             | Open browser → Go to homepage URL                        | Homepage loads successfully                  |               |           |                           |
+| TC002        | Responsive design                | Resize browser to mobile width                          | Layout adjusts without breaking              |               |           | Test on real device too   |
+| TC003        | Navbar: Image Catalogue link functionality    | Open homepage → Click 'Gallery' dropdown → Select 'Image Catalogue'| Navigates to image catalogue page                    | Link is not wired up (empty href)              | Fail        | Needs URL implementation          |
+| TC004        | Menu Navigation Links (Gallery Dropdown)   | Open homepage → Hover over "Gallery" in menu → Click each dropdown item            | Each link navigates to its respective gallery section         | All links work except Image Catalogue         | Partial   | "Image Catalogue" has no href set          |
+| TC005        | Language selector: English version            | Open homepage → Click language selector → Select English            | Reloads page with English content                    | Page loads successfully in English             | Pass        |                                   |
+| TC006        | Language selector: Other languages            | Open homepage → Click language selector → Select non-English option | 404 or under construction message page               | Custom 404 under construction page shown       | Partial Pass | Intentional placeholder behavior  |
+| TC007        | Navbar collapses on mobile                    | Open on mobile → Tap menu button                                   | Navbar expands and shows dropdown links              | Menu expands correctly                         | Pass        |                                   |
+| TC008        | User Account Dropdown                         | Open homepage → Click user icon → Check options based on auth status| Login/Signup or Profile/Logout shown                | Options shown correctly                        | Pass        |                                   |
+| TC009        | User icon behavior (unauthenticated)       | Open homepage → Not logged in → Click user icon → Check dropdown links              | Links: Create account → signup, Login → login                 | `{% url 'account_signup' %}` and `account_login` | Pass      | Correctly routes to auth pages             |
+| TC010        | User icon behavior (authenticated)         | Log in → Click user icon → Check dropdown links                                     | Links: My Profile → profile, Order History → profile?slide=history, Logout | All URLs resolve as expected                  | Pass      | Uses Django auth routing                   |
+| TC012        | Successful login                 | Go to login page → Enter valid credentials → Submit     | Redirected to dashboard                      |               |           | Use test credentials      |
+| TC013        | Logout functionality             | While logged in → Click logout button                   | Redirects to login page                      |               |           | Session should be cleared |
+| TC014        | Shopping cart icon navigation              | Click cart icon in navbar                                                           | Redirects to view bag/cart page                               | `{% url 'view_bag' %}`                         | Pass      | Cart count badge updates dynamically       |
+| TC015        | Background video on intro section       | Open homepage → Wait for video to load                      | Video plays automatically as background                   | Sometimes fallback image shown after login/logout| Partial Pass | Intermittent load failure for video        |
+| TC016        | Catchphrase text visibility             | Open homepage → Observe overlay text on video               | Catchphrase headings are displayed over video             | Displays correctly                               | Pass        |                                            |
+| TC017        | Special offer text and countdown        | Open homepage → Look at digital sign area                   | Displays dynamic offer text and countdown timer           | Displays correctly                               | Pass        |                                            |
+| TC018        | Gallery sign (image button)             | Click 'This way to gallery' sign                            | Navigates to gallery section/page                         | Navigates correctly                              | Pass        | Bypasses animation if accessed directly    |
+| TC019        | About sign (image button)               | Click 'About Us' road sign                                  | Scrolls or navigates to About section                     | Navigates correctly                              | Pass        |                                            |
+| TC020        | Cottage animation video loads           | Wait for animation trigger (or simulate it)                 | Short animation video plays showing entrance              | Plays correctly when shown                       | Pass        |                                            |
+| TC021        | Audio toggle for walking sound          | Click speaker icon during animation                         | Toggle walking sound on/off                               | Audio toggles as expected                        | Pass        | Initially muted                            |
+| TC022        | About section profile image display     | Scroll to About section                                     | Shows image if available, fallback image otherwise         | Image displays or fallback shown                 | Pass        |                                            |
+| TC023        | About section content                   | Scroll to About section                                     | Renders title and text content                            | Displays correctly or fallback message           | Pass        | Handles empty content gracefully           |
+| TC024        | Back to Top button functionality        | Scroll down → Click 'Back to Top' button                    | Scrolls back to top of homepage                           | Works as expected                                | Pass        |                                            |
+
+---
+
+### Footer
+
+| Test Case ID | Description                    | Steps to Reproduce                        | Expected Result                                             | Actual Result                                     | Pass/Fail | Notes                      |
+|--------------|--------------------------------|--------------------------------------------|--------------------------------------------------------------|--------------------------------------------------|-----------|----------------------------|
+| TC001        | Privacy Policy link            | Click 'Privacy Policy' in footer           | Navigates to privacy policy page with correct content        | Page loads correctly with policy content         | Pass      |                            |
+| TC002        | Cookie Policy link             | Click 'Cookie Policy' in footer            | Navigates to cookie policy page with correct content         | Page loads correctly with policy content         | Pass      |                            |
+| TC003        | Licenses link                  | Click 'Licenses' in footer                 | Navigates to licenses page                                   | Page loads correctly with licenses content       | Pass      |                            |
+| TC004        | Terms & Conditions link        | Click 'Terms & Conditions' in footer       | Navigates to terms and conditions page with content          | Page loads correctly with policy content         | Pass      |                            |
+| TC005        | Contact page link              | Click 'Contact' in footer                  | Navigates to contact form/page                               | Page loads correctly                             | Pass      |                            |
+| TC006        | Policy page fallback (missing) | Navigate to a policy page with no content  | Displays fallback message: "Document Not Available"          | Fallback message shown when content is missing   | Pass      | Graceful fallback is present|
+| TC007        | Clickable shop logo on contact form        | Open contact form page → Click logo                         | Navigates to shop homepage                                   | Redirects to `{% url 'shop' %}`                  | Pass      |                                    |
+| TC008        | Form field: Name input                     | Open contact form page → Check for name input field         | Input field for name is present                              | Displays correctly                               | Pass      |                                    |
+| TC009        | Form field: Email input (with validation)  | Submit form with invalid email                              | Displays error with red border and feedback                  | Shows invalid feedback on error                  | Pass      | Conditional error block works     |
+| TC010        | Form field: Message textarea               | Open contact form → Check for message field                 | Textarea field for user message is shown                     | Displays correctly                               | Pass      |                                    |
+| TC011        | Send button functionality                  | Fill out form → Click 'Send'                                | Form is submitted to server                                  | Submits form (if valid)                          | Pass      |                                    |
+| TC012        | License cards display title and description| Open licenses page → View license cards                     | Each license card shows title and hidden description         | All display correctly with hidden descriptions   | Pass      |                                    |
+| TC013        | Read more interaction on license cards     | Click license card → Toggle description                     | Description toggles visibility                               | Works as expected using JS                       | Pass      | JS toggle for overview             |
+| TC014        | Fallback for missing license description   | Open page with license having no description                | Shows placeholder message                                    | Displays 'This license is currently not available.' | Pass      |                                    |
+
+---
+
 ### Automated Testing
 
 - Pylint/Flake8 compliance (PEP8 style fixes implemented)
