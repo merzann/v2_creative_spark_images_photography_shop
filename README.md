@@ -1221,7 +1221,6 @@ A standalone confirmation screen rendered after Stripe payment completes success
 
 ---
 
-**Example Stripe Confirmation Flow:**
 ![Confirmation Page](README_Media/checkout_confirmation.png)
 
 ---
@@ -1598,6 +1597,8 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC025        | Downloadable Items Section                  | Checkout includes digital items                                      | Shows “Download” buttons with file titles                        | Buttons download items directly                                         | Pass      | Uses `download` attribute                              |
 | TC026        | Modal Save Error Handling                   | Simulate failed save (e.g., disconnect network before clicking Save) | Error message shown in modal                                     | Error alert is shown in red within modal                                | Pass      | Simulated by console error override or server intercept |
 | TC027        | Navigation Flexibility                      | Use browser back/forward or revisit form steps                       | Page resets correctly and sections toggle                        | Sections show/hide correctly with JS                                    | Pass      | State resets properly with re-entry                    |
+| TC028        | Spinner on slow transition          | Proceed through checkout with simulated network lag or slow connection           | Loading spinner appears when submitting form or progressing to next checkout step | Spinner is shown until next step loads, giving visual feedback during delay         | Pass      | Prevents user confusion or multiple submissions        |
+
 
 ---
 
