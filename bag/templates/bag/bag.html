@@ -111,7 +111,6 @@
       <div class="d-flex justify-content-between">
         <a href="{% url 'gallery_page' %}" class="btn btn-secondary mt-3 mb-5">⬅ Continue shopping</a>
         <p id="checkout-warning" class="text-danger small mb-2" style="display: none;">
-          Have you selected a Print Type for all Printed Products?<br>
           Please click "Update" to save your changes before proceeding.
         </p>
         <a id="checkout-btn"
@@ -137,6 +136,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     const formatSelects = document.querySelectorAll('.format-select');
     const printTypeSelects = document.querySelectorAll('.print-type-select');
+    const quantitySelects = document.querySelectorAll('select[name="quantity"]');
     const itemForms = document.querySelectorAll('[data-item-form]');
     const checkoutBtn = document.getElementById('checkout-btn');
     const warningText = document.getElementById('checkout-warning');
@@ -163,6 +163,7 @@
       }
     }
 
+    // Format changed (Printed <-> Digital)
     formatSelects.forEach(select => {
       select.addEventListener('change', function () {
         const form = this.closest('[data-item-form]');
@@ -176,7 +177,7 @@
           updateBtn.disabled = true;
         } else {
           printWrapper.style.display = 'none';
-          form.dataset.pendingUpdate = "false";
+          form.dataset.pendingUpdate = "true"; // Require update even when switching to digital
           updateBtn.disabled = false;
         }
 
@@ -184,6 +185,7 @@
       });
     });
 
+    // Print type changed
     printTypeSelects.forEach(select => {
       select.addEventListener('change', function () {
         const form = this.closest('[data-item-form]');
@@ -201,6 +203,16 @@
       });
     });
 
+    // Quantity changed
+    quantitySelects.forEach(select => {
+      select.addEventListener('change', function () {
+        const form = this.closest('[data-item-form]');
+        form.dataset.pendingUpdate = "true";
+        checkEligibility();
+      });
+    });
+
+    // Update button clicked
     itemForms.forEach(form => {
       const updateBtn = form.querySelector('button[type="submit"]');
       updateBtn.addEventListener('click', function () {
@@ -209,6 +221,7 @@
       });
     });
 
+    // Initial eligibility check
     checkEligibility();
   });
 </script>
