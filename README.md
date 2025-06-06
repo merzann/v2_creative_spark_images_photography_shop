@@ -1546,6 +1546,28 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC013        | Fallback for missing print type options     | Switch to Printed → Open dropdown on product with no prints       | Shows disabled `<option>` with "No print option available"| Disabled message displays correctly         | Pass      | Uses `{% empty %}` block                           |
 
 ---
+
+### Shopping cart
+
+| Test Case ID | Description                              | Steps to Reproduce                                      | Expected Result                                              | Actual Result                          | Pass/Fail | Notes                                |
+|--------------|------------------------------------------|----------------------------------------------------------|----------------------------------------------------------------|-----------------------------------------|-----------|----------------------------------------|
+| TC001        | Access shopping bag page after adding item | Go to product detail → Select options → Click 'Add to Cart' → Open bag | Item appears in bag with correct details and configurations    | Item displays correctly in bag         | Pass      |                                        |
+| TC002        | Responsive design adapts to screen size  | Open shopping bag page on different screen sizes             | Layout adjusts appropriately (mobile vs desktop)              | Responsive layout works correctly       | Pass      |                                        |
+| TC003        | Shopping bag loads with added items      | Add items to cart → Open shopping bag page               | Shopping bag displays all items with configuration options    | Displays correctly                      | Pass      |                                        |
+| TC004        | Product image and details in cart        | Open cart with items                                     | Product image, title, format, and subtotal are visible        | All details are visible                 | Pass      |                                        |
+| TC005        | Format select (Digital/Printed)          | Change format dropdown on an item                        | UI updates accordingly (show/hide print options)              | Format toggles correctly                | Pass      |                                        |
+| TC006        | Quantity selector updates subtotal       | Change quantity → Click update                           | Subtotal recalculates per item                                | Subtotal updates correctly              | Pass      |                                        |
+| TC007        | Print type dropdown shown conditionally  | Select Printed format                                    | Print type dropdown becomes visible                           | Appears correctly                       | Pass      |                                        |
+| TC008        | Update button state logic                | Change format/quantity/print type                        | Update button enables only when valid                         | Button enables/disables correctly       | Pass      |                                        |
+| TC009        | Remove button functionality              | Click remove on a cart item                              | Item removed from bag                                         | Item is removed successfully            | Pass      |                                        |
+| TC010        | Total cost breakdown                     | View totals at bottom of bag                             | Accurate breakdown is shown                                   | Correct totals displayed                | Pass      |                                        |
+| TC011        | Checkout eligibility enforcement         | Make changes → Try to proceed without updating           | Warning shown, checkout disabled until update                 | Checkout disabled and warning shown     | Pass      | Uses JS to enforce update before checkout |
+| TC012        | Continue shopping button                 | Click 'Continue shopping'                                | Navigates back to gallery page                                | Navigates correctly                     | Pass      |                                        |
+| TC013        | Fallback for empty bag                   | Ensure cart is empty → Open bag page                     | Message shown with link to continue shopping                  | Fallback message and button shown       | Pass      |                                        |
+
+---
+
+---
 ---
 
 ### Automated Testing
