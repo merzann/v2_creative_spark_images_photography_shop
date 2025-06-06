@@ -115,17 +115,36 @@
                     <div class="row g-4 justify-content-center">
                         <div class="col-12 col-lg-8">
                             <div class="profile-card user_order_history my-5">
-                                <h2 class="profile-title">My Order History</h2>
-                                <p class="profile-subtitle">Your past orders will be displayed here.</p>
-                                <div class="order-history-content">
+                                <h2 class="profile-title mb-5">My Order History</h2>
+                                <div class="order-history-content mt-3">
                                     {% if orders %}
                                         {% for order in orders %}
-                                            <div class="order-history-item mb-4 p-3 border rounded">
-                                                <h6 class="mb-1">Order <strong>{{ order.order_number }}</strong></h6>
-                                                <p class="mb-1 small text-muted">Placed on {{ order.created_at|date:"d M Y, H:i" }}</p>
-                                                <p class="mb-1 small text-muted">Total: €{{ order.total_price|floatformat:2 }}</p>
-                                                <p class="mb-1 small text-muted">Status: <strong>{{ order.status|title }}</strong></p>
+                                        <div class="order-history-item mb-4 p-3 border rounded">
+                                            <h6 class="mb-1">Order <strong>{{ order.order_number }}</strong></h6>
+                                            <p class="mb-1 small text-muted">Placed on {{ order.created_at|date:"d M Y, H:i" }}</p>
+                                            <p class="mb-1 small text-muted">Total: €{{ order.total_price|floatformat:2 }}</p>
+                                            <p class="mb-1 small text-muted">Status: <strong>{{ order.status|title }}</strong></p>
+
+                                            <div class="row px-3 px-md-4">
+                                                {% if order.products.all %}
+                                                <div class="row align-items-center py-3 border-top gx-0">
+                                                    {% for product in order.products.all %}
+                                                    <!-- Product Image -->
+                                                    <div class="col-md-2 text-center d-none d-md-block">
+                                                        <img src="{{ product.image_preview.url }}" class="w-75" alt="{{ product.title }}">
+                                                    </div>
+                                                    <!-- Product Info -->
+                                                    <div class="col-md-7">
+                                                    <h5>{{ product.title }}</h5>
+                                                    {% if product.print_types.all %}
+                                                        <p class="small">{{ product.print_types.first.name }}</p>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    </div>
+                                                </div>
+                                                {% endif %}
                                             </div>
+                                        </div>
                                         {% endfor %}
                                     {% else %}
                                         <p class="text-muted">You have no past orders yet.</p>

@@ -1,11 +1,14 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.conf import settings
-from .forms import UserProfileForm
 
+from django.db.models import Prefetch
+from products.models import Product
 from shop.models import OrderModel
+
+from .forms import UserProfileForm
 
 
 @login_required
@@ -56,7 +59,11 @@ def profile(request):
     else:
         form = UserProfileForm(instance=user_profile)
 
-    orders = OrderModel.objects.filter(user=request.user).order_by('-created_at')
+    orders = OrderModel.objects.filter(user=request.user) \
+        .prefetch_related(
+            Prefetch('products', queryset=Product.objects.all())
+        ) \
+        .order_by('-created_at')
 
     return render(
         request,
