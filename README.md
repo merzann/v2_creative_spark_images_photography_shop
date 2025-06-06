@@ -1159,7 +1159,8 @@ Stripe Checkout was styled to visually match the project using:
 
 A standalone confirmation screen rendered after Stripe payment completes successfully. Fully decoupled from earlier checkout steps to ensure security, visual consistency, and seamless download delivery for digital purchases.
 
-**Features**
+ ### Features
+ 
   - **Standalone Django template (`checkout_success.html`)** triggered via Stripe’s `success_url` with `session_id`.
   - **Secure fetching of order** via Stripe session ID and matching `User` email.
   - Displays full **order summary**, including:
@@ -1226,6 +1227,95 @@ A standalone confirmation screen rendered after Stripe payment completes success
 ---
 ---
 
+## The Admin Panel
+
+### Features
+
+The Django Admin Panel provides a secure and intuitive interface for staff members to manage backend data. It is styled with the default Django admin theme and includes custom admin classes for model management across all core apps.
+
+---
+
+### Data Management
+
+Below is an overview of what admins can manage, grouped by Django app:
+
+#### Accounts & Users
+
+  - **Users**: View, search, add, edit, or delete registered users.
+  - **Groups**: Assign permissions and manage user roles.
+  - **Email Addresses**: Linked to Django AllAuth for email verification.
+
+#### User Profiles
+
+  - View, filter, and search user profiles.
+  - Export selected user profiles as CSV.
+  - Fields include:
+    - First/Last Name
+    - Language preference
+    - Email
+    - Country
+
+#### Shop
+
+  - **Image Themes**: Create/edit themes with slug auto-generation.
+  - **Order History**: Manage customer orders, including status and user.
+  - **Policy Pages**: Manage editable site policies using a WYSIWYG editor (Summernote).
+
+#### Products
+
+  - **Products**: CRUD management with advanced filters (tags, themes, types).
+  - **Product Types**: Related to print types, searchable.
+  - **Print Types**: Simple list with name and search support.
+  - **License Types**: Summernote editor for license descriptions.
+  - **Tags & Tag Groups**: SEO and categorization tools with slug support.
+  - **Country VAT**: View/edit country-specific VAT rates.
+  - **Shippers & Shipping Rates**:
+    - Manage shippers with tracking URLs.
+    - Shipping rates by product type, country, and shipper.
+
+#### Home
+
+  - **About Us**: Rich text editing via Summernote.
+  - **Special Offers**: Manage marketing content with expiry and filtering.
+
+#### Site & Social Accounts
+
+  - Manage:
+    - Social login providers & tokens
+    - Site domain configuration
+
+---
+
+### UX Highlights
+
+  - Fully responsive admin layout
+  - Logical grouping and section headers (e.g., SHOP, HOME)
+  - Real-time filtering and searching
+  - Dropdown filters (e.g., Country filter via DropdownFilter)
+  - Admin actions like “Export as CSV”
+  - WYSIWYG editing with Summernote
+  - Slug auto-generation for SEO consistency
+  - Recent activity panel on right sidebar
+  - Field-level customization (displaying user info from related models)
+
+---
+
+### Security & UX Defenses
+
+| Type                        | Feature                                                                                             |
+|-----------------------------|-----------------------------------------------------------------------------------------------------|
+| Admin Access Restriction    | Only superusers or staff members can access the Django `/admin/` panel                             |
+| CSRF Protection             | All admin and form views are protected by Django’s built-in CSRF middleware                        |
+| Confirmation Prompts        | Export actions like "Export as CSV" require explicit selection and action confirmation             |
+| Field-Level Permissions     | Sensitive fields like email and phone are only editable based on user role and form configuration  |
+| Scoped Data Export          | Export CSV functionality is limited to the specifically selected user profile records              |
+| Authenticated Email Control | Social account and email management are gated through Django AllAuth with proper verification      |
+| Permission Checks           | Admin views use Django’s built-in object-level and group permission checks                         |
+| Secure Filter Controls      | Dropdown filters for data fields (e.g., country) prevent unrestricted data exposure via URL params |
+
+---
+---
+
 ### Custom 404 Page
 
 The project includes two custom 404 pages:
@@ -1247,24 +1337,6 @@ The project includes two custom 404 pages:
 - Image zoom/lightbox on product detail
 - Image catalogue displaying all images
 - SEO optimization and sitemap auto-generation
-
----
----
-
-## The Admin Panel
-
-- Summary:
-
-  Admins can:
-  - Add/edit products, licenses, and print types
-  - View and manage orders via OrderModel
-  - Manage stock levels
-  - Add featured products and promotions
-
-  Admin is enhanced with:
-  - Crispy forms
-  - Status filters
-  - Automated `order_number` generation
 
 ---
 ---
