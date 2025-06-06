@@ -14,17 +14,23 @@ from .forms import UserProfileForm
 @login_required
 def profile(request):
     """
-    Display and update the user profile.
+    Display and update the user's profile and show their order history.
 
-    Handles profile updates from both :model:`auth.User` and
-    :model:`user_profiles.UserProfile`.
+    Handles updates to both :model:`auth.User` and
+    :model:`user_profiles.UserProfile`. Also retrieves the user's
+    past orders for display.
 
     **Context:**
 
     ``form``
         Instance of :form:`user_profiles.UserProfileForm` bound to user.
     ``first_name`` / ``last_name``
-        Populated from the base user model.
+        Populated from the base User model.
+    ``orders``
+        Queryset of :model:`orders.OrderModel` instances linked to user,
+        ordered by most recent first.
+    ``active_slide``
+        Indicates the currently active tab/section in the profile UI.
 
     **Template:**
     :template:`user_profiles/profile.html`

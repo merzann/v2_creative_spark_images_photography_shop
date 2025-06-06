@@ -1109,7 +1109,7 @@ Live Step Transition via AJAX:
 
 ---
 
-### Step 4: Payemnt
+### Step 4: Payment
 
 **Features**
 - Integrated [Stripe Checkout](https://stripe.com/docs/checkout) to handle secure payments.
@@ -1157,7 +1157,72 @@ Stripe Checkout was styled to visually match the project using:
 
 ### Step 5: Confirmation
 
+A standalone confirmation screen rendered after Stripe payment completes successfully. Fully decoupled from earlier checkout steps to ensure security, visual consistency, and seamless download delivery for digital purchases.
 
+**Features**
+  - **Standalone Django template (`checkout_success.html`)** triggered via Stripe’s `success_url` with `session_id`.
+  - **Secure fetching of order** via Stripe session ID and matching `User` email.
+  - Displays full **order summary**, including:
+    - Order number
+    - Billing address (from user profile)
+    - Product list with titles, pricing, quantity, and format/license
+    - Subtotals, VAT, shipping, discount, and grand total
+  - **Dynamic progress tracker** hardcoded with `.success-wrapper` classes to mimic live step progress without relying on `currentStep` logic.
+  - If digital files were purchased:
+    - Automatically fetches **secure Cloudinary download links**.
+    - Provides **1-click download buttons** for each file.
+  - Clears the bag session after confirmed payment.
+
+---
+
+### Page Behavior & Display Logic
+
+  - Confirmation page is **not part of the step-based dynamic flow** but styled to feel consistent.
+  - Uses:
+    - `session_id` from Stripe to retrieve order and bag data.
+    - Stored `request.session["bag"]` data to reconstruct bag item details (e.g. print type vs. license).
+  - Billing info is dynamically mapped from the user’s `UserProfile` model if available.
+  - **Responsive layout** adapts for digital or print formats:
+    - Product image shown on the left (≥ md breakpoint)
+    - Title, format/license, quantity, unit price, and line total shown on the right
+  - **Order Summary** at the bottom details all costs including discount and VAT.
+
+**Template-Driven Structure**
+  - Renders dynamic content with:
+    - `order`, `bag_items`, `download_links`, `billing_info`, `shipping_total`, `discount`, `vat`, `grand_total`
+  - Fully integrates with `CountryVAT`, `ShippingRate`, and `SpecialOffer` models.
+  - Session-clearing logic ensures cart is reset after success.
+
+---
+
+### UX Highlights
+
+  - **Consistent progress indicator** using `.success-step` classes styled identically to the main flow.
+  - **Responsive display of product line items**, including:
+    - Print or license info
+    - Product thumbnail (hidden on small screens)
+    - Quantity and pricing clearly shown
+  - **Download buttons** for digital files are styled consistently and offer 1-click access.
+  - **Billing address formatting** follows the same structure as in invoice emails.
+  - **Thank you note** from the artist reinforces personal branding and user trust.
+
+---
+
+### Security & UX Defenses
+
+| Type                      | Feature                                                                                       |
+|---------------------------|-----------------------------------------------------------------------------------------------|
+| Secure Order Lookup       | Order is fetched via Stripe `session_id` to prevent unauthorized access                       |
+| Session Bag Reset         | Clears `request.session["bag"]` only after Stripe confirms the payment                        |
+| Dynamic Content Rendering | All amounts, addresses, and titles are passed through context—no manual interpolation         |
+| Conditional Download UX   | Download buttons are only shown for products with valid Cloudinary files                      |
+| Access Verification       | Tied to user's email on the order and session to prevent spoofing of success URL              |
+| Layout Resilience         | Confirmation page styled using separate classes to prevent interference with checkout flow    |
+
+---
+
+**Example Stripe Confirmation Flow:**
+![Confirmation Page](README_Media/checkout_confirmation.png)
 
 ---
 ---
@@ -1542,7 +1607,13 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | Script error: `addEventListener` of null | JS tried to bind `addEventListener` on an element that didn't exist when `emailInput` was missing from the DOM. | Renamed `emailInput` to the actual Django-generated `id_email` and added a `null` check in JS before attaching the listener. |
 | Back-to-gallery button not visible on empty pages | On pages with no content and no scroll, the button relying on scroll detection never became visible. | Replaced dynamic JS logic with a hardcoded fallback button in the HTML template for empty pages. |
 | JavaScript event listener conflict | `shop_script.js` and inline scripts created overlapping behavior on elements like `.read-more-btn` and `.license-card`. | Removed no-longer-needed inline JS blocks and scoped `shop_script.js` to handle only its designated classes. |
-
+| Progress Bar Not Highlighting Step 5 | When reaching the `checkout_success.html` confirmation page, the progress bar does not visually highlight the final step (Step 5: Confirmation), breaking consistency with the rest of the checkout flow.| Replaced dynamic JavaScript-based tracker with a **static progress bar** using `.success-wrapper`, `.success-step`, and `.success-step-active` classes, styled to visually match earlier steps but without depending on JS logic or `currentStep` state.|
+| Progress Bar Not Centered on Large Screens | On screens ≥768px, the custom confirmation progress bar appeared off-center, breaking the alignment consistency set in global checkout steps. | Wrapped confirmation step in a `.success-wrapper` div and applied targeted media queries (from `1024px` and up) with `margin: 0 auto; width: 60%` to match `.progress-wrapper` from the main checkout styles. |
+| Order Line Items Missing Quantity or Type Info | The initial order summary showed only the product title without print type, license, or quantity, causing ambiguity in confirmation details for digital or printed items.| `checkout_success` view reconstructs order line items from the bag stored in the Stripe session metadata, allowing `bag_items` to include `quantity`, `format`, `print_type` or `license`, and pricing for complete and clear display. |
+| Responsive Layout Broken on Mobile | Product image and details were stacked horizontally even on small screens, making it hard to read or scroll on phones. | Used Bootstrap’s grid system (`col-md-2`, `d-none d-md-block`, etc.) to **hide image on small screens** and maintain a stacked layout. Product details are shown below image on mobile and side-by-side on desktop, mimicking cart styling for consistency.|
+| Inconsistent VAT/Shipping/Discount Calculation  | VAT and shipping were not properly recalculated on the confirmation page, leading to mismatches between payment totals and display.| VAT, shipping, and discounts are recomputed in `checkout_success()` based on Stripe’s `session.metadata`, ensuring display values match those used in payment.|
+| Confirmation Page Not Integrated with Main Flow | `checkout_success.html` was originally standalone and excluded from the linear checkout logic, causing confusion and progress tracking issues.| Used `step=5` context variable to match UI logic and hardcoded a non-interactive progress bar using shared visual styles, creating continuity without JavaScript reliance.|
+| Bag Not Reset After Order | The cart remained full after completing the checkout, potentially confusing users and allowing accidental repeat purchases. | `request.session["bag"] = {}` is explicitly reset in the view only **after** Stripe payment is confirmed and the order is successfully fetched, preventing premature clearing or skipped payments. | 
 
 ---
 ---
