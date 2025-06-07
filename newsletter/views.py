@@ -31,7 +31,7 @@ def newsletter_signup(request):
             )
         elif form.is_valid():
             form.save()
-            messages.success(request, "✅ Thank you for signing up!")
+            messages.success(request, "Thank you for signing up!")
         else:
             messages.error(
                 request,

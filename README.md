@@ -429,6 +429,16 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
   - `Landmarks`
   - `Historical Sites`
 
+**Newsletter Signup Modal**
+- Immediately below the catch phrase, users are invited to **sign up for the newsletter** via a reusable modal.
+- Key features include:
+  - Fields for First Name, Last Name, Email Address
+  - Client-side validation with required fields
+  - Real-time success and error messages (Bootstrap alerts)
+  - Duplicate email prevention
+  - Styled with rounded corners and smooth transitions
+  - Fully integrated with Django backend via `NewsletterSignup` model and `newsletter_signup` view
+
 **Special Offer Display**
 - A **wooden signboard** graphic shows the current `SpecialOffer`, conveying a feeling of actually being at a real location in Ireland.
 - Dynamically rendered using:
@@ -472,6 +482,7 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
 | Element               | Destination / Functionality                                     |
 |-----------------------|-----------------------------------------------------------------|
 | **Gallery Sign**      | Triggers animation, redirects to `/shop/gallery/`               |
+| **Newsletter Modal**  | Opens popup for name/email submission                           |
 | **About Us Sign**     | Scrolls smoothly to `#about-section`                            |
 | **Back to Top Button**| Scrolls to `#intro` section                                     |
 | **Navbar Links**      | Skip animation, direct access to views like "Gallery by Theme"  |
@@ -484,6 +495,7 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
 - Cinematic animation enhances storytelling.
 - Scroll interactions guide users naturally through content.
 - Real-world visual metaphors for signs and boards.
+- Newsletter modal prioritizes unobtrusive engagement.
 - All interactions remain accessible and responsive.
 
 ---
@@ -496,7 +508,9 @@ The homepage of Creative Spark Images acts as a narrative-driven landing page bl
     - Expiry date filtering
     - Conditional display
     - Bag-level modifications during checkout
-
+- Newsletter data is saved to the `NewsletterSignup` model with:
+  - Unique email constraint
+  - Admin CSV export action
 - Countdown managed with JavaScript using `data-expiry` rendered server-side.
 
 ---
@@ -537,6 +551,82 @@ The About section tells a heartfelt story of chasing golden light, capturing nat
   - The installation of summernote allows users to include rel-attributes into their content
 
 ![About us Homepage scetion](README_Media/about_us_section.png)
+
+---
+---
+
+## Newsletter Signup
+
+A globally accessible, reusable modal component that enables visitors to subscribe to a newsletter with instant feedback and admin-side export functionality.
+
+---
+
+### Summary
+
+- **Modal-based signup form** that can be injected anywhere in the project.
+- **Fields collected**:
+  - First Name
+  - Last Name
+  - Email Address
+- **Client-side validation** for all required fields.
+- **Django messages framework** provides real-time user feedback on form submission.
+- **Duplicate signup prevention**: Warns if email is already registered.
+- **Success and error messages** styled with Bootstrap alerts and dismissible buttons.
+- **Admin-side export**: Staff can export selected newsletter signups to CSV.
+- Fully integrated with Django Admin, using the `NewsletterSignup` model.
+
+---
+
+### Structure & Components
+
+#### From the User’s Perspective
+
+- Opens as a **modal popup**, styled with Bootstrap, rounded corners, and centered.
+- Users can interact with:
+  - First Name input field
+  - Last Name input field
+  - Email Address input (with placeholder and email validation)
+  - Submit button (`Sign Up`)
+  - Dismissal link (`Not now`)
+  - Close (×) button in the top-right
+- **Feedback**:
+  - Success message: “Thank you for signing up!”
+  - Duplicate email warning: “⚠ You have already signed up...”
+  - Validation error: “⚠ There was a problem...”
+
+#### From the Admin’s Perspective
+
+- Admin interface for `NewsletterSignup` shows:
+  - Email
+  - First Name
+  - Last Name
+  - Signup Timestamp
+- Searchable and sortable in the admin dashboard.
+- **CSV export feature via custom action**:
+  - Download email, name, and signup time with one click.
+  - Filename defaults to `newsletter_signups.csv`.
+
+---
+
+### Technical Structure & Functionalities
+
+- **Model**: `NewsletterSignup` includes unique email constraint and auto timestamp.
+- **Form**: Uses `ModelForm` with field-level validation and custom placeholders.
+- **View**: `newsletter_signup()` handles POST requests only and redirects back.
+- **Message handling**: Feedback via Django’s built-in messaging system.
+- **Template**: Newsletter modal styled with Bootstrap, can be reused site-wide.
+
+---
+
+### Security & UX Defenses
+
+| Type                   | Feature                                                                 |
+|------------------------|-------------------------------------------------------------------------|
+| CSRF Protection        | All forms protected using `{% csrf_token %}`                           |
+| Duplicate Detection    | Prevents multiple subscriptions using `.filter(email=email).exists()`  |
+| Required Fields        | All fields are marked `required` and validated both client- and server-side |
+| Admin Export Restriction | CSV export only available to logged-in admin users                   |
+| Modal Dismissal Options| Users can opt out via "Not now" link or close button                   |
 
 ---
 ---
@@ -1632,6 +1722,24 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC012        | License cards display title and description| Open licenses page → View license cards                     | Each license card shows title and hidden description         | All display correctly with hidden descriptions   | Pass      |                                    |
 | TC013        | Read more interaction on license cards     | Click license card → Toggle description                     | Description toggles visibility                               | Works as expected using JS                       | Pass      | JS toggle for overview             |
 | TC014        | Fallback for missing license description   | Open page with license having no description                | Shows placeholder message                                    | Displays 'This license is currently not available.' | Pass      |                                    |
+
+---
+
+### Global Newsletter Modal
+
+| Test Case ID | Description                          | Steps to Reproduce                                                              | Expected Result                                                  | Actual Result                                                  | Pass/Fail | Notes                                                  |
+|--------------|--------------------------------------|----------------------------------------------------------------------------------|------------------------------------------------------------------|----------------------------------------------------------------|-----------|--------------------------------------------------------|
+| TC001        | Load modal via homepage              | Visit any page where modal is included; modal may open on a delay or trigger    | Modal displays newsletter signup form                            | Modal visible with expected fields and styles                 | Pass      | Can be reused across multiple templates               |
+| TC002        | Responsive design                    | Resize browser window to mobile, tablet, desktop                                | Modal scales correctly                                            | Modal and form remain accessible and legible                  | Pass      | Bootstrap handles modal layout                        |
+| TC003        | Input required validation            | Submit form with one or more fields blank                                       | Form rejected with client-side validation                        | Browser blocks submission and shows validation messages       | Pass      |                                                          |
+| TC004        | Email format validation              | Submit an invalid email format                                                  | Form rejected before submission                                  | Browser prevents submission                                   | Pass      |                                                          |
+| TC005        | Valid signup                         | Submit valid first name, last name, and unique email                            | Success message shown and user redirected                        | Message: ✅ Thank you for signing up!                          | Pass      |                                                          |
+| TC006        | Duplicate email                      | Try to submit a second time with same email                                     | Warning message shown                                             | Message: ⚠ You have already signed up...                      | Pass      | Server-side check for duplicates                       |
+| TC007        | Message display                      | Submit form with error or success                                               | Alert box shown at top of page                                   | Styled using Bootstrap alerts                                | Pass      | Supports success, warning, and error tags             |
+| TC008        | Dismiss modal                        | Click close (×) button or “Not now” link                                        | Modal closes without submission                                  | Modal dismissed as expected                                  | Pass      | UX-friendly opt-out options                           |
+| TC009        | Admin view                           | Visit /admin/newsletter/newslettersignup/                                      | Admin shows email, name, timestamp                               | Table rendered as expected                                   | Pass      | Uses `list_display` fields                            |
+| TC010        | Admin CSV export                     | Select entries in admin → use “Export selected to CSV”                         | File downloads as newsletter_signups.csv                         | File includes header and rows                                | Pass      | Uses custom admin action                              |
+| TC011        | Server-side validation fallback      | Submit tampered POST data bypassing frontend                                   | Form invalid, error message shown                                | Form revalidated, error handled                              | Pass      | Safe against tampering                                |
 
 ---
 
