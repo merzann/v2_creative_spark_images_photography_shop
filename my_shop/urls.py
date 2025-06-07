@@ -28,7 +28,11 @@ urlpatterns = [
     path('profile/', include('user_profiles.urls')),
     path('shop/', include('shop.urls'), name='shop-urls'),
     path('summernote/', include('django_summernote.urls')),
-    path('under-construction/', page_under_construction, name='page_under_construction'),
+    path(
+        'under-construction/',
+        page_under_construction,
+        name='page_under_construction',
+    ),
     path('', include('home.urls'), name='home-urls'),
 ]
 handler404 = 'my_shop.views.handler404'

@@ -1320,13 +1320,17 @@ Below is an overview of what admins can manage, grouped by Django app:
 
 The project includes two custom 404 pages:
 
-- **404.html** is rendered when a requested route does not match any defined URL pattern, or when an error occurs preventing a view from responding correctly, resulting in a "Page Not Found" response.
+- **404.html** is rendered when a requested route does not match any defined URL pattern, or when an error occurs preventing a view from responding correctly, resulting in a "Page Not Found" response. Clicking the **Back-to-Gallery** allows the user to return to the shop.
+
+![404 Page](README_Media/404_page.png)
 
 - **page_under_construction.html** 
   - A single 404-style “Coming Soon” page is shared across all languages.
   - Language is determined via ?lang= query string (e.g. ?lang=de, ?lang=fr, ?lang=es).
   - Translations are handled on the client-side using JavaScript.
   - The feature includes a language dropdown in the navbar that links users to the under-construction page with the correct language flag and content.
+
+![404 Page under construction](README_Media/404_page_under_construction.png)
 
 ---
 ---
@@ -1755,6 +1759,24 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC026        | AboutUs WYSIWYG editing                   | Edit About Us section                                                             | Summernote editor loads                                                | Rich text editing functional                                         | Pass      |                                                              |
 | TC027        | Navigation between admin sections         | Use left sidebar or breadcrumbs                                                   | Navigation updates main content pane                                   | Seamless navigation                                                  | Pass      |                                                              |
 | TC028        | Form field validation in admin            | Submit form with required fields empty                                            | Form shows inline errors                                                | Proper error messages shown                                          | Pass      | Django admin default behavior                                 |
+
+---
+
+### 404 Page & Custom 404_Page_under_construction Page
+
+| Test Case ID | Description                                | Steps to Reproduce                                                                                   | Expected Result                                                  | Actual Result                                                   | Pass/Fail | Notes                                                                                   |
+|--------------|--------------------------------------------|--------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|------------------------------------------------------------------|-----------|-----------------------------------------------------------------------------------------|
+| TC001        | Load 404 error page                        | Manually enter a non-existent route (e.g., /nonexistent-page)                                         | Custom 404 page is shown with branding and return button        | Custom 404 with logo, message, and return button shown          | Pass      | Designed for general 404 errors                                                       |
+| TC002        | Load "Under Construction" language error   | Click language selector → choose a non-English language                                                | 404 under construction page is shown with coming soon message   | "Coming Soon" page shown for unsupported languages              | Pass      | Soft fallback UX for i18n not yet implemented                                          |
+| TC003        | Responsive Design check                    | Resize browser across mobile/tablet/desktop breakpoints                                                | Layout adjusts for all devices                                  | Images and buttons scale correctly                              | Pass      | Uses Bootstrap grid system                                                              |
+| TC004        | View shop logo                             | Load any error page                                                                                    | Logo is visible                                                  | Logo displayed with appropriate alt text                        | Pass      | In `404.html`, large logo shown via static image                                       |
+| TC005        | Error explanation message (404.html)       | Load `404.html`                                                                                        | Message explains the page is not available                      | Text shown: “The page you are looking for is not available.”   | Pass      | Clear user direction                                                                  |
+| TC006        | Error explanation message (under construction) | Load `404_page_under_construction.html`                                                                 | Message explains page is coming soon                            | Text shown: “This section isn’t quite ready yet.”               | Pass      | Includes language-related explanation                                                  |
+| TC007        | Navigation button (404.html)               | Load 404 and click “Return to shop” button                                                             | Redirects to gallery page                                       | Button redirects user to `gallery_page`                         | Pass      | Prevents dead-end navigation                                                          |
+| TC008        | Navigation button (under construction)     | Load under-construction page and click “Back to Creative Spark Images” button                         | Redirects to homepage                                            | Button correctly links to `/`                                   | Pass      | Button styled as `.btn` and functional                                                |
+| TC009        | Branding display                           | Load both pages                                                                                        | “Creative Spark Images” branding shown                          | Branding text shown prominently on both pages                   | Pass      | Reinforces site identity even during errors                                           |
+| TC010        | JS + CSS loading check (under construction)| Inspect source, view `<head>` section                                                                  | CSS/JS loaded as expected                                       | `style.css` and `script.js` included                           | Pass      | `/css/style.css` & `/js/script.js` included via `{% static %}`                        |
+| TC011        | Accessibility tags                         | Inspect semantic HTML and ARIA attributes                                                              | Sections labeled for screen readers                             | `aria-label`, `alt`, `section`, and heading tags used correctly | Pass      | Basic ARIA and semantic tags in place                                                 |
 
 ---
 ---
