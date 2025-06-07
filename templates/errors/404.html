@@ -1,26 +1,32 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
     <div class="container header-container">
         <div class="row">
             <div class="col"></div>
         </div>
     </div>
-    <div class="container h-100">
-        <div class="row h-100">
-            <div class="col-7 col-md-6 my-auto">
-                <h1 class="display-4 logo-font text-black">
-                    The page you are looking for isn't available
-                </h1>
-                <div class="my-5">
-                    <h4>
-                        <a href="{% url 'products' %}" 
-                            class="shop-now-button btn btn-lg rounded-0 text-uppercase py-3">
-                                Return to shop
-                        </a>
-                    </h4>
-                </div>
-            </div>
+
+    <!-- Apply your custom CSS class -->
+    <div class="container-fluid page-under-construction">
+        <section aria-label="Logo of shop" class="contact-logo-wrapper text-center my-5">
+            <img src="{% static 'images/logo/404_page_logo.png' %}"
+                    class="contact-logo-img w-25 mt-5"
+                    alt="Logo with shop name Creative Spark Images and an Art Deco Portrait of a female photographer">
+        </section>
+
+        <!-- Fixed typo: "cleas" to "class" -->
+        <h2 class="text-center">The page you are looking for is not available.</h2>
+
+        <p class="text-center">
+            You can return to the shop using the button below.
+        </p>
+
+        <div class="text-center">
+            <a href="{% url 'gallery_page' %}" class="btn btn-custom my-5">
+                Return to shop
+            </a>
         </div>
     </div>
 {% endblock %}

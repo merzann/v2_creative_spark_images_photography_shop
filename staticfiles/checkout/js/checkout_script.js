@@ -20,6 +20,21 @@ document.addEventListener('DOMContentLoaded', function () {
     currentStep = stepNumber;
   }
 
+  //Spinner Handler
+  function showInlineSpinner(message = 'Please wait...') {
+    formWrapper.innerHTML = `
+      <div class="text-center my-5">
+        <div class="spinner-border text-secondary" role="status" aria-label="${message}"></div>
+        <p class="mt-3">${message}</p>
+      </div>
+    `;
+    formWrapper.style.display = 'block';
+  }
+
+  function restoreFormWrapper() {
+    formWrapper.style.display = 'block';
+  }
+
   // Validates email format using a regular expression
   function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/i.test(email);
@@ -135,12 +150,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Loads billing form and attaches validation handlers
   function loadBillingForm() {
+    showInlineSpinner('Saving your details...');
+
     fetch('/checkout/load-billing-form/')
       .then(response => response.text())
       .then(html => {
         formWrapper.innerHTML = html;
         setActiveProgressStep(2);
-        captureInitialFormValues();
+
+        // Wait for DOM and browser to populate values before capturing
+        setTimeout(() => {
+          captureInitialFormValues();
+        }, 50); // short delay to let form hydrate
+
 
         ['billing_street1', 'billing_postcode', 'billing_city', 'billing_country', 'billing_phone'].forEach(id => {
           const input = document.getElementById(id);
@@ -156,28 +178,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         continueBtn.disabled = !validateBillingFormFields();
-
-        continueBtn.onclick = function () {
-          if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave) {
-            loadCheckoutSummary();
-            continueBtn.blur();
-            return;
-          }
-
-          if (formHasChanges()) {
-            continueBtn.disabled = true;
-            modalAlert.classList.add('d-none');
-            saveModal.show();
-          } else {
-            loadCheckoutSummary();
-            continueBtn.blur();
-          }
-        };
       })
       .catch(error => console.error("Billing form load failed:", error));
   }
 
   function loadCheckoutSummary() {
+    showInlineSpinner('Saving your details...');
+
     fetch('/checkout/summary/')
       .then(response => response.text())
       .then(html => {
@@ -196,6 +203,8 @@ document.addEventListener('DOMContentLoaded', function () {
         continueBtn.onclick = function () {
           // Step 4: Payment
           setActiveProgressStep(4);
+
+          showInlineSpinner('Saving your details...');
 
           fetch('/checkout/create-checkout-session/', {
             method: "POST",
@@ -220,7 +229,6 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error('Error loading summary:', error));
   }
 
-
   // Profile save logic attached to save button in modal
   document.addEventListener('click', function (event) {
     if (event.target && event.target.id === 'save-profile') {
@@ -239,6 +247,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
+      showInlineSpinner('Saving your details...');
+
       fetch(url, {
         method: 'POST',
         headers: { 'X-CSRFToken': csrfToken },
@@ -250,9 +260,8 @@ document.addEventListener('DOMContentLoaded', function () {
           const modalInstance = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
           modalInstance.hide();
 
-          // Wait for modal to finish hiding before progressing to next step
           setTimeout(() => {
-            captureInitialFormValues();  // Optional: to reset form baseline
+            captureInitialFormValues();
             if (currentStep === 1) {
               loadBillingForm();
             } else if (currentStep === 2) {
@@ -285,21 +294,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Continue button event based on step number
   continueBtn.addEventListener('click', function () {
-    if (currentStep === 1) {
-      if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
+    const isValid = currentStep === 1
+      ? validateProfileFormFields()
+      : validateBillingFormFields();
+
+    if (!isValid) {
+      continueBtn.disabled = true;
+      return;
+    }
+
+    if (continueBtn.dataset.allowRedirect === "true" || skipProfileSave === true) {
+      if (currentStep === 1) {
+        loadBillingForm();
+      } else if (currentStep === 2) {
+        loadCheckoutSummary();
+      }
+      continueBtn.blur();
+    } else if (formHasChanges()) {
+      continueBtn.disabled = true;
+      modalAlert.classList.add('d-none');
+      saveModal.show();
+    } else {
+      if (currentStep === 1) {
         loadBillingForm();
         continueBtn.blur();
-      } else if (formHasChanges()) {
-        continueBtn.disabled = true;
-        modalAlert.classList.add('d-none');
-        saveModal.show();
-      } else {
-        loadBillingForm();
+      } else if (currentStep === 2) {
+        loadCheckoutSummary();
         continueBtn.blur();
       }
-    } else if (currentStep === 2) {
-      loadCheckoutSummary();
-      continueBtn.blur();
     }
   });
 

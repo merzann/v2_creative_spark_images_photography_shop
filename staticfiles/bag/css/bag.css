@@ -92,6 +92,23 @@
     font-style: italic;
   }
 
+/* Media Queries */
+@media (max-width: 767.98px) {
+  .shopping-bag-section .btn-custom,
+  .shopping-bag-section .btn-secondary {
+    padding: 6px 12px;
+    font-size: 11px;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .shopping-bag-section .btn-group-responsive {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}
+
 @media (min-width: 768px) {
   .shopping-bag-section {
     margin-top: 9.5rem;

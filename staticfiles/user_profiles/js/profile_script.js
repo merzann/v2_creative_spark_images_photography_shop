@@ -9,8 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
         wrap: true
     });
 
-    // Triggers second modal during process for account deletion request
-    // requesting second confirmation from user
+    /** 
+     * Triggers second modal during process for account deletion request
+     * Request second confirmation from user
+    */
     const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
     const finalDeleteBtn = document.getElementById("finalDeleteBtn");
     const deleteAccountForm = document.getElementById("deleteAccountForm");
@@ -24,5 +26,15 @@ document.addEventListener("DOMContentLoaded", function () {
         finalDeleteBtn.addEventListener("click", function () {
             deleteAccountForm.submit();
         });
+    }
+
+    // Handler for My-Order_history navbar dropdown
+    const carouselEl = document.querySelector("#profileCarousel");
+    const urlSlide = new URLSearchParams(window.location.search).get("slide");
+
+    if (urlSlide === "history" && carouselEl) {
+    
+    const carousel = $(carouselEl).carousel();
+    $(carouselEl).carousel(1);  
     }
 });
