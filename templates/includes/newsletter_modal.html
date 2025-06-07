@@ -9,7 +9,7 @@
   </div>
 {% endif %}
 
-<div id="newsletter-modal" class="modal fade" tabindex="-1" aria-hidden="true">
+<section id="newsletter-modal" class="modal fade" tabindex="-1" aria-hidden="true" aria-label="form to sign-up for newsletter">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content p-4 text-center" style="border-radius: 15px;">
       
@@ -20,7 +20,7 @@
         <h5 class="mb-3">Don't miss out on offers!</h5>
         <p>Sign up to my Newsletter today!</p>
 
-        <form id="newsletter-form" method="POST" action="/newsletter/newsletter-signup/" novalidate>
+        <form id="newsletter-form" method="POST" action="/newsletter/newsletter-signup/">
           {% csrf_token %}
           
           <input type="text" name="first_name" class="form-control my-2" placeholder="First name" required>
@@ -36,4 +36,4 @@
       </div>
     </div>
   </div>
-</div>
+</section>

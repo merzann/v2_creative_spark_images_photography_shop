@@ -277,6 +277,25 @@ a.dropdown-item {
     font-size: 0.9rem;
 }
 
+/* Newsletter Modal */
+#newsletter-modal .modal-content {
+    background-color: #ddd;
+    font-family: 'Poiret One', cursive;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    border: 5px solid #333;
+}
+
+#newsletter-modal h5 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#newsletter-modal p {
+    font-size: 1.1rem;
+    color: #444;
+}
+
 
 /* 404 page-under-construction styles */ 
 .page-under-construction {
