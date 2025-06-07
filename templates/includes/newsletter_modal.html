@@ -1,0 +1,31 @@
+<div id="newsletter-modal" class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4 text-center" style="border-radius: 15px;">
+      
+      <!-- Close Button Top Right -->
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      
+      <div class="modal-body">
+        <h5 class="mb-3">Don't miss out on offers!</h5>
+        <p>Sign up to my Newsletter today!</p>
+
+        <form id="newsletter-form" method="POST" action="/newsletter/newsletter-signup/" novalidate>
+          {% csrf_token %}
+          
+          <input type="text" name="first_name" class="form-control my-2" placeholder="First name" required>
+          <input type="text" name="last_name" class="form-control my-2" placeholder="Last name" required>
+          <input type="email" name="email" class="form-control my-2" placeholder="Your email" required>
+
+          <button type="submit" class="btn btn-dark w-100 mt-2">Sign Up</button>
+
+          <div id="newsletter-success" class="text-success mt-2 d-none">✓ Thank you for signing up!</div>
+          <div id="newsletter-error" class="text-danger mt-2 d-none">⚠ Something went wrong.</div>
+        </form>
+
+        <small class="d-block mt-3">
+          <a href="#" data-bs-dismiss="modal">Not now</a>
+        </small>
+      </div>
+    </div>
+  </div>
+</div>

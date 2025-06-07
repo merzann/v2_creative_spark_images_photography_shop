@@ -45,6 +45,29 @@ video.background-video {
                  0 0 40px #0ff;
 }
 
+/* Newsletter Prompt */
+.overlay .mt-3 {
+  opacity: 0.95;
+  animation: fadeIn 2s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 0.95; transform: translateY(0); }
+}
+
+.overlay .newsletter-link {
+  color: #00bfff;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.overlay .newsletter-link {
+  color: #66e0ff;
+  text-decoration: none;
+}
+
+
 /* Product Range */
 .product-range {
     font-size: 1.2rem;
