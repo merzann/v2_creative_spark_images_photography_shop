@@ -1447,47 +1447,113 @@ This project uses clear, user-friendly messaging and fallback logic to maintain 
 
 ## Page Performance
 
-  ### Mobile
+### Desktop
 
-- Home Page
-![Home page](README_Media/)
+  - Home Page
+  ![Home page](readme_media/homepage_dtest.png)
 
-- Category Page
-![Category page](README_Media/)
+  - Gallery Page
+  ![Category page](readme_media/gallery_page_dtest.png)
 
-- Recipe Detail Page
-![Recipe detail page](README_Media/)
+  - Images by Theme Page
+  ![Recipe detail page](readme_media/images_by_theme_dtest.png)
 
-- About Page
-![About page](README_Media/)
+  - Product Detail Page
+  ![About page](readme_media/product_detail_dtest.png)
 
-- Weekly Tip
-![Weekly tip page](README_Media/)
+  - Shopping Cart Page
+  ![Contact Page](readme_media/shopping_cart_dtest.png)
 
-- Page for Login / Logout / Sign-Up
-![Login_Logout_SignUp](README_Media/)
+  - Checkout Choice Page
+  ![Checkout Choice Page](readme_media/checkout_choice_dtest.png)
 
+  - Checkout Contact Details Page
+  ![Checkout Contact Details Page](readme_media/contact_details_dtest.png)
 
+  - Checkout Billing Address Page
+  ![Checkout Billing Address Page](readme_media/billing_address_dtest.png)
 
-  ### Desktop
+  - Checkout Summary Page
+  ![Checkout Summary Page](readme_media/checkout_summary_dtest.png)
 
-- Home Page
-![Home page](readme_media/)
+  - Checkout Confirmation Page
+  ![Checkout Confirmation Page](readme_media/checkout_confirmation_dtest.png)
 
-- Category Page
-![Category page](readme_media/)
+  - Privacy Policy Page
+  ![Privacy Policy Page](readme_media/privacy_policy_dtest.png)
 
-- Recipe Detail Page
-![Recipe detail page](readme_media/)
+  - Cookies Policy Page
+  ![Cookies Policy Page](readme_media/cookies_policy_dtest.png)
 
-- About Us Page
-![About page](readme_media/)
+  - Licenses Page
+  ![Licenses Page](readme_media/licenses_dtest.png)
 
-- Contact Page
-![Contact Page](readme_media/)
+  - Terms & Conditions Page
+  ![Terms & Conditions Page](readme_media/tc_dtest.png)
 
-- Page for Login / Logout / Sign-Up
-![Login_Logout_SignUp](readme_media/)
+  - Contact Page
+  ![Contact Page](readme_media/contact_dtest.png)
+
+  - User Profile Page
+  ![User Profile Page](readme_media/user_profile_dtest.png)
+
+  - Order History Page
+  ![Order History Page](readme_media/order_history_dtest.png)
+
+---
+
+### Mobile
+
+  - Home Page
+  ![Home page](readme_media/homepage_mtest.png)
+
+  - Gallery Page
+  ![Category page](readme_media/gallery_page_mtest.png)
+
+  - Images by Theme Page
+  ![Recipe detail page](readme_media/images_by_theme_mtest.png)
+
+  - Product Detail Page
+  ![About page](readme_media/product_detail_mtest.png)
+
+  - Shopping Cart Page
+  ![Contact Page](readme_media/shopping_cart_mtest.png)
+
+  - Checkout Choice Page
+  ![Checkout Choice Page](readme_media/checkout_choice_mtest.png)
+
+  - Checkout Contact Details Page
+  ![Checkout Contact Details Page](readme_media/contact_details_mtest.png)
+
+  - Checkout Billing Address Page
+  ![Checkout Billing Address Page](readme_media/billing_address_mtest.png)
+
+  - Checkout Summary Page
+  ![Checkout Summary Page](readme_media/checkout_summary_mtest.png)
+
+  - Checkout Confirmation Page
+  ![Checkout Confirmation Page](readme_media/checkout_confirmation_mtest.png)
+
+  - Privacy Policy Page
+  ![Privacy Policy Page](readme_media/privacy_policy_mtest.png)
+
+  - Cookies Policy Page
+  ![Cookies Policy Page](readme_media/cookies_policy_mtest.png)
+
+  - Licenses Page
+  ![Licenses Page](readme_media/licenses_mtest.png)
+
+  - Terms & Conditions Page
+  ![Terms & Conditions Page](readme_media/tc_mtest.png)
+
+  - Contact Page
+  ![Contact Page](readme_media/contact_mtest.png)
+
+  - User Profile Page
+  ![User Profile Page](readme_media/user_profile_mtest.png)
+
+  - Order History Page
+  ![Order History Page](readme_media/order_history_mtest.png)
 
 ---
 ---
