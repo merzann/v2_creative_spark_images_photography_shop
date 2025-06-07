@@ -1,3 +1,14 @@
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <div id="newsletter-modal" class="modal fade" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content p-4 text-center" style="border-radius: 15px;">
@@ -17,9 +28,6 @@
           <input type="email" name="email" class="form-control my-2" placeholder="Your email" required>
 
           <button type="submit" class="btn btn-dark w-100 mt-2">Sign Up</button>
-
-          <div id="newsletter-success" class="text-success mt-2 d-none">✓ Thank you for signing up!</div>
-          <div id="newsletter-error" class="text-danger mt-2 d-none">⚠ Something went wrong.</div>
         </form>
 
         <small class="d-block mt-3">
