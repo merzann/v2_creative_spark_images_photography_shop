@@ -10,31 +10,61 @@
     height: auto;
 }
 
-/* Carousel */
+/* Carousel Styling */
 #profileCarousel {
+    position: relative;
     width: 100%;
     max-width: 57rem;
     margin: auto;
+    overflow: hidden; /* Ensures scroll stays within bounds */
 }
 
 .carousel-inner {
     padding: 20px 0;
 }
 
+/* Make carousel items scrollable */
+.carousel-item {
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    scroll-behavior: smooth;
+    padding-right: 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.carousel-item::-webkit-scrollbar {
+    display: none;
+}
+
 /* Carousel Controls */
-.carousel-control-prev, .carousel-control-next {
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    background-color: #550f0f;
+    z-index: 100;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(85, 15, 15, 0.85);
     border-radius: 50%;
-    padding: 10px;
+    opacity: 1;
+    pointer-events: auto;
 }
 
-/* Profile Cards */
+.carousel-control-prev {
+    left: 0;
+}
+
+.carousel-control-next {
+    right: 0;
+}
+
+/* Profile Card */
 .profile-card {
     background: rgb(200, 193, 193);
     margin-left: 10%;
@@ -45,15 +75,11 @@
     width: 80%;
     min-height: fit-content;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
 }
 
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-}
-
-/* Profile Titles */
+/* Titles */
 .profile-title {
     font-family: "Poiret One", cursive;
     font-size: 1.8rem;
@@ -61,11 +87,6 @@
     margin-bottom: 1rem;
 }
 
-h2.profile-title {
-    margin-top: 40px;
-}
-
-/* Profile Picture */
 .profile-picture-container {
     display: flex;
     flex-direction: column;
@@ -81,54 +102,50 @@ h2.profile-title {
     border: 2px solid #7c7575;
 }
 
-/* Order History Card */
+/* Order History Item */
 .order-history-item {
     background-color: #f9f9f9;
     border-left: 4px solid #005f73;
+}
+
+.order-history-item img {
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
 }
 
 .order-history-item h6 {
     font-weight: 600;
 }
 
-/* Form Styling */
-.profile-form {
-    text-align: left;
+/* Media Queries */
+@media (max-width: 768px) {
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .carousel-control-prev {
+        left: 0.5rem;
+        right: auto;
+    }
+
+    .carousel-control-next {
+        right: 0.5rem;
+        left: auto;
+    }
 }
 
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    font-weight: bold;
-    font-size: 0.9rem;
-    color: #333;
-    display: block;
-    margin-bottom: 5px;
-}
-
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 8px;
-    font-size: 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.btn-link {
-    color: #403e3e;
-}
-
-/* Responsive Adjustments */
 @media (min-width: 992px) {
-    .profile-card{
+    .profile-card {
         width: 100%;
     }
 }
 
 @media (min-width: 1024px) {
-    .profile-card{
+    .profile-card {
         width: 100%;
         margin: 0;
     }
