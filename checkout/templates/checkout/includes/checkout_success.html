@@ -6,6 +6,11 @@
 {% endblock %}
 
 {% block content %}
+
+{% block modals %}
+    {% include "includes/newsletter_modal.html" %}
+{% endblock %}
+
 <div class="container py-5 my-5 sm-shadow">
 
     <!-- Progress Tracker -->
@@ -125,5 +130,15 @@
         Thank you for your purchase.<br>
         Annika Merz, Creative Spark Images
     </p>
+
+    <div class="text-center mt-5 fs-3" style="color: #333;">
+        <strong>Be the first to hear about new images and my latest offers!<br>
+        Subscribe to my
+            <a href="#" class="newsletter-link text-info fs-3" 
+            data-bs-toggle="modal" 
+            data-bs-target="#newsletter-modal"
+            aria-label="Open newsletter signup form">Newsletter </a>!
+        </strong>
+    </div>
 </div>
 {% endblock %}

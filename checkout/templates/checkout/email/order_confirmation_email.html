@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>Order Confirmation</title>
 </head>
-<body style="font-family: sans-serif; padding: 20px;">
+<body>
+    
     <h2>Thank you for your order, {{ user.first_name }}!</h2>
     <p>Your order number is: <strong>{{ order.order_number }}</strong></p>
 
@@ -36,10 +37,11 @@
     </ul>
     {% endif %}
 
-    <p>
-        Thank you for shopping with Creative Spark Images!<br>
-        If you have questions, reply to this email.<br>
-        The Creative Spark Images Team
+    <p>Thank you for shopping with Creative Spark Images!<br>
+        If you have questions, reply to this email.
+    </p>
+    <p class="mb-3">
+        Annika Merz, Creative Spark Images Team
     </p>
 
     <div class="mt-3">

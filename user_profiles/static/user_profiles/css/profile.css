@@ -16,14 +16,13 @@
     width: 100%;
     max-width: 57rem;
     margin: auto;
-    overflow: hidden; /* Ensures scroll stays within bounds */
+    overflow: hidden;
 }
 
 .carousel-inner {
     padding: 20px 0;
 }
 
-/* Make carousel items scrollable */
 .carousel-item {
     max-height: 80vh;
     overflow-y: auto;
@@ -102,6 +101,15 @@
     border: 2px solid #7c7575;
 }
 
+.profile-delete-link {
+    text-decoration: none;
+    color: #555;
+}
+
+.profile-delete-link:hover {
+    text-decoration: underline;
+}
+
 /* Order History Item */
 .order-history-item {
     background-color: #f9f9f9;
@@ -146,7 +154,6 @@
 
 @media (min-width: 1024px) {
     .profile-card {
-        width: 100%;
         margin: 0;
     }
 }
