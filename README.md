@@ -2117,6 +2117,33 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 ---
 ---
 
+### Validator testing
+
+## Known HTML Validation Issues
+
+During W3C HTML validation, several warnings and errors were identified across multiple pages of the site. However, due to strict time constraints nearing the end of development, these issues were not resolved in the current version, as changes could have compromised page layout and functionality.
+
+---
+
+**Validation examples**
+
+- **Gallery / Images by Theme Page:**  
+  Semantic elements such as `<section>` and `<article>` were deliberately used with `aria-label` attributes to improve accessibility, despite validation warnings related to improper use of `id` attributes and heading structure. The use of a single `<h1>` tag for the “Gallery” title was retained to ensure proper screen reader support, overriding the validator’s recommendation for demotion to `<h2>`.
+
+- **Product Detail Page:**  
+  The use of `autocomplete="off"` on `<input type="radio">` elements was intentional and aimed at ensuring consistent user experience. This prevents browsers from auto-selecting previously chosen options, which could override default selections and cause visual or functional inconsistencies upon page reload.
+
+- **Shopping Bag Page:**  
+  A validation error flagged an incorrectly typed attribute `aria-disbaled`, which was intended to be `aria-disabled`. This attribute was used on an anchor tag styled as a button to improve accessibility by communicating a disabled state to assistive technologies, since `<a>` elements do not support the native `disabled` attribute.
+
+---
+
+In summary, while these validation issues are acknowledged, they were consciously deprioritized due to time limitations and the potential impact on layout stability and user experience.
+
+
+---
+---
+
 ### Bugs and Resolutions
 
   | Bug / Issue | Description | Resolution |
