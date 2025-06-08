@@ -8,9 +8,14 @@
 - [Features](#features)
   - [Existing Features](#existing-features)
   - [Features Left to Implement](#features-left-to-implement)
+  - [404 Page](#404-page)
 - [The Admin Panel](#the-admin-panel)
 - [Security Features and Error Handling](#security-features-and-error-handling)
+- [Page performance](#page-performance)
 - [Testing](#testing)
+  - [Test Matrix](#test-matrix)
+- [Version Control](#version-control)
+- [Sitemaps](#sitemaps)
 - [Technology Stack](#technology-stack)
 - [Deployment](#deployment)
 - [Usage](#usage)
@@ -2205,6 +2210,41 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 ---
 ---
 
+## Code Quality and Version Control
+
+- PEP8 Compliance: The code has been checked against PEP8 standards using .Flake8, .autopep8 and Pylint
+
+- Comments: Functions and classes include docstrings to describe their purpose, inputs, and outputs.
+
+- Version control is managed using Git and GitHub, with a focus on maintaining a clean and organized history. Regular commits follow a consistent format and describe the features implemented and/or reasons for changes made to existing features.
+
+---
+---
+
+## Sitemap
+
+Creative Spark Images uses a dynamically generated `sitemap.xml` to improve SEO and help search engines crawl the most relevant content.
+
+### Features
+
+- Auto-generated sitemap via Django’s `django.contrib.sitemaps` framework.
+- Accessible at [`/sitemap.xml`](https://creativesparkimages.com/sitemap.xml).
+- Covers all key public-facing routes:
+  - Homepage and static pages (via `StaticViewSitemap`)
+  - Individual product detail pages (via `ProductSitemap`)
+  - Theme-specific gallery views (via `ThemeSitemap`)
+  - About Us content (via `AboutUsSitemap`)
+- Custom priorities and change frequencies defined for each section.
+
+### Setup Highlights
+
+- A single `sitemaps.py` file is located at project level (`my_shop/sitemaps.py`).
+- Registered in `urls.py` using Django’s built-in `sitemap` view.
+- Automatically updated as products or themes are added via the admin panel.
+
+---
+---
+
 ## Technology Stack
 
 - **Backend:** Python 3, Django 4.2
@@ -2214,17 +2254,6 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 - **Payment Integration:** Stripe
 - **Email Notifications:** Zapier + SendGrid
 - **Deployment:** Heroku
-
----
----
-
-## Code Quality and Version Control
-
-- PEP8 Compliance: The code has been checked against PEP8 standards using .Flake8, .autopep8 and Pylint
-
-- Comments: Functions and classes include docstrings to describe their purpose, inputs, and outputs.
-
-- Version control is managed using Git and GitHub, with a focus on maintaining a clean and organized history. Regular commits follow a consistent format and describe the features implemented and/or reasons for changes made to existing features.
 
 ---
 ---
