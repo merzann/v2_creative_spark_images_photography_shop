@@ -1209,14 +1209,15 @@ Live Step Transition via AJAX:
 - Checkout success clears cart and renders a thank-you page.
 
 **Form Behaviour**
-- The “Continue” button becomes the **Secure Payment** button on the order summary step.
-- Stripe public key passed to JS using `<body data-stripe-public-key="{{ STRIPE_PUBLIC_KEY }}">`.
-- `checkout_script.js`:
-  - Initializes Stripe
-  - Handles the final payment step
-  - Redirects users on session creation
-  - Stripe session is initiated via AJAX (`fetch('/checkout/create-checkout-session/')`).
-  - Stripe success and cancel URLs are dynamically built and defined in the session.
+  - The “Continue” button becomes the **Secure Payment** button on the order summary step.
+  - Stripe public key passed to JS using `<body data-stripe-public-key="{{ STRIPE_PUBLIC_KEY }}">`.
+  - `checkout_script.js`:
+    - Initializes Stripe
+    - Handles the final payment step
+    - Redirects users on session creation
+    - Stripe session is initiated via AJAX (`fetch('/checkout/create-checkout-session/')`).
+    - Stripe success and cancel URLs are dynamically built and defined in the session.
+  - 
 
 **Stripe Form Customisation**
 Stripe Checkout was styled to visually match the project using:
@@ -1227,6 +1228,18 @@ Stripe Checkout was styled to visually match the project using:
 
 **⬅ Cancel Button Behavior :**
   - Customized default Stripe “←” back links to redirect users to the Order Summary page for a seamless experience.
+
+**Confirmation Email**
+- Triggered immediately after successful payment via the webhook.
+- Uses `send_order_email()` to generate and send a rich HTML confirmation email.
+- Includes:
+  - Product list with titles, quantity, format/license, price
+  - Billing summary (subtotal, VAT, shipping, discounts, grand total)
+  - Secure download links (if digital products were purchased)
+  - Personal thank-you note from the brand
+- **Fallback Logic:**
+  - If rich HTML email template fails to load (e.g., missing template or SMTP error), the system sends a **plain-text fallback email** using Django's `send_mail()` function.
+  - Ensures that users always receive confirmation, even if formatting fails.
 
 ---
 
@@ -1239,6 +1252,7 @@ Stripe Checkout was styled to visually match the project using:
 | Cancel Button UX          | Stripe cancel button redirects back to the Order Summary instead of default fallback page.  |
 | Local Webhook Testing     | Ngrok tunnel used for secure HTTPS testing with static authenticated domain.                |
 | Visual Consistency        | Stripe Checkout branded with same fonts, colors, rounded shapes, and logo as store UI.      |
+| Fallback Email Delivery   | If the HTML confirmation email fails, a plain-text backup is sent using Django's `send_mail()`.|
 
 
 ![Stripe Pay-Portal](README_Media/stripe_pay-portal.png)
@@ -1273,29 +1287,33 @@ A standalone confirmation screen rendered after Stripe payment completes success
     - `session_id` from Stripe to retrieve order and bag data.
     - Stored `request.session["bag"]` data to reconstruct bag item details (e.g. print type vs. license).
   - Billing info is dynamically mapped from the user’s `UserProfile` model if available.
-  - **Responsive layout** adapts for digital or print formats:
-    - Product image shown on the left (≥ md breakpoint)
-    - Title, format/license, quantity, unit price, and line total shown on the right
+  - **Responsive Layout**:
+    - Product thumbnails on left (for large screens)
+    - Details (title, format/license, pricing, quantity) on right
+    - Summary bar at the bottom with VAT and discounts
   - **Order Summary** at the bottom details all costs including discount and VAT.
 
-**Template-Driven Structure**
+---
+
+### Template-Driven Structure**
+
   - Renders dynamic content with:
     - `order`, `bag_items`, `download_links`, `billing_info`, `shipping_total`, `discount`, `vat`, `grand_total`
   - Fully integrates with `CountryVAT`, `ShippingRate`, and `SpecialOffer` models.
   - Session-clearing logic ensures cart is reset after success.
+  - Uses a fallback plain-text confirmation email if the HTML version fails.
+  - `send_order_email()` handles both rich HTML and fallback text for confirmation.
 
 ---
 
 ### UX Highlights
 
-  - **Consistent progress indicator** using `.success-step` classes styled identically to the main flow.
-  - **Responsive display of product line items**, including:
-    - Print or license info
-    - Product thumbnail (hidden on small screens)
-    - Quantity and pricing clearly shown
-  - **Download buttons** for digital files are styled consistently and offer 1-click access.
-  - **Billing address formatting** follows the same structure as in invoice emails.
-  - **Thank you note** from the artist reinforces personal branding and user trust.
+  - **Consistent UI experience** with earlier checkout steps via `.success-step` styling
+  - **1-click digital download buttons** auto-generated for eligible products
+  - **Billing info and product list** mimic invoice formatting for transparency
+  - **No page reloads or session exposure** — all data comes via secure Stripe webhooks and authenticated views
+  - **Order ID included** to reassure users of successful processing
+  - **Thanks note from the artist** at the bottom of the confirmation screen
 
 ---
 
@@ -1309,6 +1327,8 @@ A standalone confirmation screen rendered after Stripe payment completes success
 | Conditional Download UX   | Download buttons are only shown for products with valid Cloudinary files                      |
 | Access Verification       | Tied to user's email on the order and session to prevent spoofing of success URL              |
 | Layout Resilience         | Confirmation page styled using separate classes to prevent interference with checkout flow    |
+| Email Fallback Mechanism  | Fallback plain-text email is sent if HTML template fails or SMTP errors occur                 |
+| Webhook Signature Check   | Stripe webhook payload is verified using `construct_event` and Stripe’s secret key            |
 
 ---
 
@@ -1834,20 +1854,27 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC012        | Invalid form blocks modal                   | Leave required form fields invalid and click “Continue”              | Modal does not open                                              | Modal prevented by disabled button                                      | Pass      | JS validation ensures pre-check conditions              |
 | TC013        | Billing Form validation flow                | Fill billing form with correct/incorrect data                        | Input validated in real time                                     | All fields provide accurate feedback                                    | Pass      | Country and postcode validation tied                    |
 | TC014        | Stripe SDK & Checkout Script load           | Open browser console, observe JS loading                             | No errors; Stripe and custom checkout script loaded              | Scripts load successfully                                               | Pass      | `checkout_script.js` must be present                    |
-| TC015        | Proceed through checkout steps              | Login or continue as guest, fill all fields, continue step-by-step   | Each step appears sequentially with validation                   | All steps function as designed                                          | Pass      | Steps are conditionally visible and sequential          |
-| TC016        | Summary “Change” buttons                    | On summary step, click “Change” for contact/billing                  | Returns user to appropriate form step                            | Takes user back to input step                                           | Pass      | Could be improved by targeting correct step directly    |
-| TC017        | Summary info formatting                     | Confirm correct formatting of displayed address and user info        | Proper field spacing and content                                 | Summary matches entry fields                                            | Pass      |                                                         |
-| TC018        | Order Item Details                          | View items listed in summary                                         | Product, format/license, qty, unit price shown                   | Items displayed with preview, names, and pricing                        | Pass      | Responsive layout                                        |
-| TC019        | Order Price Breakdown                       | Review order totals                                                  | Subtotal, VAT, shipping, discount, total shown                   | Pricing is calculated and formatted correctly                           | Pass      | Includes special offer if present                      |
-| TC020        | Stripe Payment Page Customization           | Proceed to Stripe hosted checkout page                               | Stripe page matches site design, includes image & item breakdown | Colors, logo, product image, title, quantity, and price shown correctly | Pass      | Matches project branding; enhances trust & UX          |
-| TC021        | Stripe Valid/Invalid Payment Test           | Use valid and invalid Stripe test card numbers                       | Valid cards complete payment; invalid ones are rejected          | Stripe handles both correctly and shows appropriate messages            | Pass      | Used test cards from official Stripe docs              |
-| TC022        | Stripe 2-Way Verification Handling          | Use cards requiring 3D Secure (SCA) authentication                   | Authentication screen shown; passes/fails based on input         | Verification screen shows; outcome behaves as expected                  | Pass      | Simulated authentication with 3D Secure test cards     |
-| TC023        | Checkout Success Display                    | Complete checkout through Stripe                                     | Confirmation page shown with order number and summary            | Confirmation section includes all expected messages                     | Pass      |                                                         |
-| TC024        | Checkout Success Summary                    | View bottom of confirmation page                                     | Final price breakdown shown (same as step 3)                     | All amounts match pre-checkout summary                                  | Pass      | Summary consistent with order                          |
-| TC025        | Downloadable Items Section                  | Checkout includes digital items                                      | Shows “Download” buttons with file titles                        | Buttons download items directly                                         | Pass      | Uses `download` attribute                              |
-| TC026        | Modal Save Error Handling                   | Simulate failed save (e.g., disconnect network before clicking Save) | Error message shown in modal                                     | Error alert is shown in red within modal                                | Pass      | Simulated by console error override or server intercept |
-| TC027        | Navigation Flexibility                      | Use browser back/forward or revisit form steps                       | Page resets correctly and sections toggle                        | Sections show/hide correctly with JS                                    | Pass      | State resets properly with re-entry                    |
-| TC028        | Spinner on slow transition          | Proceed through checkout with simulated network lag or slow connection           | Loading spinner appears when submitting form or progressing to next checkout step | Spinner is shown until next step loads, giving visual feedback during delay         | Pass      | Prevents user confusion or multiple submissions        |
+| TC015        | Stripe payment success                        | Complete Stripe payment with valid card                                                               | Redirects to confirmation page `/checkout/success/`                             | Success page loads with order summary                                     | Pass      | Stripe webhook correctly triggers backend logic                      |
+| TC016        | Stripe payment fails                          | Use a declined test card (e.g., `4000000000000002`)                                                   | Stripe shows error, no redirection to success page                              | Error handled gracefully                                                   | Pass      | Stripe’s fail cases tested                                          |
+| TC017        | 2FA verification flow                         | Use a 3DS test card (`4000002760003184`)                                                              | 2FA modal shown, user confirms → redirect to success                            | Works as expected                                                          | Pass      | Confirms 3DS secure cards                                            |
+| TC018        | Email sent after payment                      | Complete checkout → check inbox of test user                                                          | Confirmation email with order summary is received                               | Email received with correct formatting and data                           | Pass      | Includes download links for digital items                          |
+| TC019        | Email fallback on error                       | Simulate template failure (e.g., remove HTML template) → complete checkout                            | Plain text fallback email sent                                                  | Fallback plain email is sent                                              | Pass      | Verified by removing HTML template temporarily                     |
+| TC020        | Email includes download links                 | Buy a digital product → complete checkout → open confirmation email                                  | Email contains links to download purchased files                                | Links present and working                                                 | Pass      | Secure Cloudinary links expire after 1 hour                        |
+|
+| TC021        | Proceed through checkout steps              | Login or continue as guest, fill all fields, continue step-by-step   | Each step appears sequentially with validation                   | All steps function as designed                                          | Pass      | Steps are conditionally visible and sequential          |
+| TC022        | Summary “Change” buttons                    | On summary step, click “Change” for contact/billing                  | Returns user to appropriate form step                            | Takes user back to input step                                           | Pass      | Could be improved by targeting correct step directly    |
+| TC023        | Summary info formatting                     | Confirm correct formatting of displayed address and user info        | Proper field spacing and content                                 | Summary matches entry fields                                            | Pass      |                                                         |
+| TC024        | Order Item Details                          | View items listed in summary                                         | Product, format/license, qty, unit price shown                   | Items displayed with preview, names, and pricing                        | Pass      | Responsive layout                                        |
+| TC025        | Order Price Breakdown                       | Review order totals                                                  | Subtotal, VAT, shipping, discount, total shown                   | Pricing is calculated and formatted correctly                           | Pass      | Includes special offer if present                      |
+| TC026        | Stripe Payment Page Customization           | Proceed to Stripe hosted checkout page                               | Stripe page matches site design, includes image & item breakdown | Colors, logo, product image, title, quantity, and price shown correctly | Pass      | Matches project branding; enhances trust & UX          |
+| TC027        | Stripe Valid/Invalid Payment Test           | Use valid and invalid Stripe test card numbers                       | Valid cards complete payment; invalid ones are rejected          | Stripe handles both correctly and shows appropriate messages            | Pass      | Used test cards from official Stripe docs              |
+| TC028        | Stripe 2-Way Verification Handling          | Use cards requiring 3D Secure (SCA) authentication                   | Authentication screen shown; passes/fails based on input         | Verification screen shows; outcome behaves as expected                  | Pass      | Simulated authentication with 3D Secure test cards     |
+| TC029        | Checkout Success Display                    | Complete checkout through Stripe                                     | Confirmation page shown with order number and summary            | Confirmation section includes all expected messages                     | Pass      |                                                         |
+| TC030        | Checkout Success Summary                    | View bottom of confirmation page                                     | Final price breakdown shown (same as step 3)                     | All amounts match pre-checkout summary                                  | Pass      | Summary consistent with order                          |
+| TC031        | Downloadable Items Section                  | Checkout includes digital items                                      | Shows “Download” buttons with file titles                        | Buttons download items directly                                         | Pass      | Uses `download` attribute                              |
+| TC032        | Modal Save Error Handling                   | Simulate failed save (e.g., disconnect network before clicking Save) | Error message shown in modal                                     | Error alert is shown in red within modal                                | Pass      | Simulated by console error override or server intercept |
+| TC033        | Navigation Flexibility                      | Use browser back/forward or revisit form steps                       | Page resets correctly and sections toggle                        | Sections show/hide correctly with JS                                    | Pass      | State resets properly with re-entry                    |
+| TC034        | Spinner on slow transition          | Proceed through checkout with simulated network lag or slow connection           | Loading spinner appears when submitting form or progressing to next checkout step | Spinner is shown until next step loads, giving visual feedback during delay         | Pass      | Prevents user confusion or multiple submissions        |
 
 
 ---
@@ -2128,6 +2155,11 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | Inconsistent VAT/Shipping/Discount Calculation  | VAT and shipping were not properly recalculated on the confirmation page, leading to mismatches between payment totals and display.| VAT, shipping, and discounts are recomputed in `checkout_success()` based on Stripe’s `session.metadata`, ensuring display values match those used in payment.|
 | Confirmation Page Not Integrated with Main Flow | `checkout_success.html` was originally standalone and excluded from the linear checkout logic, causing confusion and progress tracking issues.| Used `step=5` context variable to match UI logic and hardcoded a non-interactive progress bar using shared visual styles, creating continuity without JavaScript reliance.|
 | Bag Not Reset After Order | The cart remained full after completing the checkout, potentially confusing users and allowing accidental repeat purchases. | `request.session["bag"] = {}` is explicitly reset in the view only **after** Stripe payment is confirmed and the order is successfully fetched, preventing premature clearing or skipped payments. | 
+| Duplicate email confirmations sent | When `send_order_email()` failed (due to template or context issues), the fallback plain text email was always triggered, resulting in **two confirmation emails** being sent to the customer. | Updated the exception handling to only trigger fallback email when specific errors (e.g. `TemplateDoesNotExist`, `TemplateSyntaxError`, `SMTPException`) occur during the rich email rendering or sending process. |
+| `'str' object is not a mapping` error | `send_order_email()` expected a `summary` dictionary, but was incorrectly passed a `session_id` string instead, causing unpacking (`**summary`) to fail. | Ensured that `send_order_email()` either accepts a `summary` dict (with values like `bag_items`, `vat`, etc.) or is modified to rebuild context from `session_id`. Consistently used one strategy across all views. |
+| Incorrect shipping cost in confirmation email | The email summary used hardcoded or incomplete shipping calculations, resulting in the wrong shipping total (e.g. 0€ instead of 6.60€). | Aligned email view logic with `checkout_success`, using full bag data and correct shipping rates per item. |
+| Missing digital download links in confirmation email | Digital products with attached files weren’t showing download links in the email. | Re-added logic to loop over products and generate secure download links for those with associated files. |
+| Template rendering failed silently | Errors in the HTML/text email templates weren't clearly surfaced, making debugging difficult. | Added logging for `TemplateDoesNotExist` and `TemplateSyntaxError` to help identify rendering issues without affecting the customer experience. |
 
 ---
 ---
