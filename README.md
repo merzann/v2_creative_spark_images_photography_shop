@@ -2198,6 +2198,13 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 ---
 ---
 
+### Bugs remaining:
+  - clicking the **Back**-button on the Stripe payment field returns the user to a order summary page with broken styling
+  - Image catalogue link is currently not active; reason: filter functionality could not be implemented due to deadline reached
+
+---
+---
+
 ## Technology Stack
 
 - **Backend:** Python 3, Django 4.2
