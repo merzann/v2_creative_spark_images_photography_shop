@@ -20,11 +20,49 @@
 }
 
 .license-description {
-  transition: max-height 0.3s ease-in-out;
-  overflow: scroll;
-  max-height: 50vh; 
-  margin-top: 1rem;
+    transition: max-height 0.3s ease-in-out;
+    overflow: scroll;
+    max-height: 50vh; 
+    margin-top: 1rem;
+    scrollbar-width: 15px;
+    scrollbar-color: #333;
 }
+
+.license-description::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.license-description:hover::-webkit-scrollbar {
+    width: 15px;
+}
+
+.license-description::-webkit-scrollbar-track {
+    background: #ddd;
+    box-shadow: insert 0 0 5px grey;
+    border-radius: 10px;
+}
+
+.license-description::-webkit-scrollbar-thumb {
+    background-color: #7c7575;
+    border-radius: 20px;
+    border: 2px solid #f0f0f0;
+}
+
+.license-description::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+}
+
+.license-description:hover::-webkit-scrollbar-thumb {
+    background-color: #7c7575;
+    border-radius: 15px;
+    border: 2px solid #f0f0f0;
+}
+
+.license-description:hover::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+}
+
 
 .summernote-content img {
     max-width: 100%;
