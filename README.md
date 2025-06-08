@@ -581,7 +581,8 @@ A globally accessible, reusable modal component that enables visitors to subscri
 
 #### From the User’s Perspective
 
-- Opens as a **modal popup**, styled with Bootstrap, rounded corners, and centered.
+- Clicking newsletter opens as a **modal popup**, styled with Bootstrap, rounded corners, and centered.
+
 - Users can interact with:
   - First Name input field
   - Last Name input field
@@ -593,6 +594,11 @@ A globally accessible, reusable modal component that enables visitors to subscri
   - Success message: “Thank you for signing up!”
   - Duplicate email warning: “⚠ You have already signed up...”
   - Validation error: “⚠ There was a problem...”
+
+- The newwsletter has been implemented in 3 key areas: 
+  - center of the homepage (Signup via popup-modal)
+  - order confirmation page (Signup via popup-modal)
+  - order confirmation email (signup via link)
 
 #### From the Admin’s Perspective
 
@@ -1897,6 +1903,34 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 | TC012        | Delete account: second modal confirmation        | Click 'Submit Request' then 'Yes, I'm sure'                           | Second modal confirms deletion request                                | Confirms and submits deletion form                                    | Pass      | Two-step confirmation prevents accidental deletion           |
 | TC013        | All form data validated before submission        | Submit form with and without valid data                               | Form blocked from submitting if any errors                            | JS validation blocks invalid form state                               | Pass      | Enhances UX; prevents bad data                               |
 | TC014        | User profile & order history via navbar icon     | Click user icon → Profile                                             | User can access profile from any page                                 | Icon routes to profile successfully                                   | Pass      | Same icon links to checkout and profile                      |
+
+---
+
+### Newsletter Page & Modal
+
+| Test Case ID | Description                        | Steps to Reproduce                                              | Expected Result                                                | Actual Result                                                | Pass/Fail | Notes                                               |
+|--------------|------------------------------------|------------------------------------------------------------------|----------------------------------------------------------------|--------------------------------------------------------------|-----------|-----------------------------------------------------|
+| TC001        | Load the Admin Panel               | Navigate to `/admin/`                                           | Admin login screen is displayed                               | Admin panel loads and user can log in if credentials valid  | Pass      | Used to test admin access for newsletter data       |
+| TC002        | Responsive Design                  | Resize browser or simulate device                               | Layout and inputs adjust on all screen sizes                  | Form and modal remain fully accessible                       | Pass      | Verified on mobile, tablet, desktop                 |
+| TC003        | Logo Visibility                    | Open `/newsletter/` page                                        | Logo is displayed above form                                  | Logo loads and displays as expected                         | Pass      | Branding check                                      |
+| TC004        | Headings Render                    | View newsletter page                                            | “Like my work?” + subheading visible                          | Headings are correctly styled and placed                    | Pass      | Typography check                                    |
+| TC005        | First Name Input                   | Type into first name field                                      | Input is accepted                                              | Input accepted and styled                                   | Pass      | Required field                                      |
+| TC006        | Last Name Input                    | Type into last name field                                       | Input is accepted                                              | Input accepted and styled                                   | Pass      | Required field                                      |
+| TC007        | Email Input                        | Enter valid email                                               | Accepted, with email validation                               | Format validated via HTML5 and form logic                   | Pass      | Placeholder and styling correct                     |
+| TC008        | Required Field Validation          | Submit form without one or more fields                          | Browser prevents submission                                   | HTML5 form validation blocks submit                         | Pass      | Verified in all browsers                            |
+| TC009        | Sign-Up Button Works               | Click “Sign Up” after entering valid info                       | Submits form and shows success message                        | Data sent, green success message shown                      | Pass      | Backend + frontend form link works                  |
+| TC010        | Duplicate Email Warning            | Submit form with an already registered email                    | Warning message appears                                       | “You have already signed up…” message visible               | Pass      | Server filters duplicates                           |
+| TC011        | “Not now” Page Link                | Click link under the form                                       | Redirects to homepage                                         | Link works and routes to homepage                          | Pass      | Passive opt-out                                     |
+| TC012        | Modal Displays                     | Trigger modal on any page                                       | Modal pops up centered                                        | Modal appears and can be interacted with                   | Pass      | Bootstrap modal test                                |
+| TC013        | Modal Form Inputs                  | Type into modal’s form fields                                   | Fields accept input, validate same as page version            | Same behavior confirmed                                     | Pass      | Duplicate of main form                              |
+| TC014        | Modal Close Button                 | Click “×” in top right                                          | Modal closes                                                   | Modal dismissed                                              | Pass      | UI interaction functional                           |
+| TC015        | Modal “Not Now” Link               | Click under modal form                                          | Modal closes                                                   | Same as close button                                        | Pass      | User opt-out confirmed                              |
+| TC016        | Feedback: Success Message          | Submit new valid email                                          | “✅ Thank you for signing up!” shown                          | Message shown in alert div                                 | Pass      | Alert is dismissible                                |
+| TC017        | Feedback: Duplicate Email Message  | Resubmit with same email                                        | Warning message in yellow alert box                           | Correct warning visible                                     | Pass      | Alert color + copy verified                         |
+| TC018        | Feedback: General Error Message    | Submit invalid or broken form                                   | Error message in red shown                                    | “There was a problem…” appears                            | Pass      | JS and backend paths tested                         |
+| TC019        | CSRF Token Exists                  | Inspect source of newsletter form                               | {% csrf_token %} present                                      | Token rendered inside form tag                             | Pass      | Security test                                       |
+| TC020        | Accessibility: Field Inputs        | Use keyboard and screen reader                                  | Labels read, tab order logical                                | Fields accessible and usable via keyboard                  | Pass      | Manual screen reader test                           |
+| TC021        | Accessibility: Modal Compliance    | Open modal and test ARIA + keyboard nav                         | Modal fully accessible, closeable                            | Keyboard nav and screen reader compliance confirmed        | Pass      | Meets WCAG AA                                       |
 
 ---
 
