@@ -11,26 +11,28 @@
   <!-- Progress Tracker -->
   {% include "checkout/includes/progress.html" with step="1" %}
 
-  <!-- Checkout Start Options -->
-  <div id="checkout-choice-wrapper">
-    {% include "checkout/includes/checkout_choice.html" %}
-  </div>
-
   <!-- Dynamic Checkout Form Container -->
   <div
     id="checkout-form-wrapper"
     class="mt-5"
     role="region"
     aria-labelledby="user-details-heading"
-    {% if user.is_authenticated %}style="display: block;"{% else %}style="display: none;"{% endif %}
+    {% if user.is_authenticated or request.session.guest_checkout %}
+      style="display: block;"
+    {% else %}
+      <script>window.location.href = "{% url 'checkout_choice' %}";</script>
+      style="display: none;"
+    {% endif %}
   >
+
     <!-- Step 1: Contact Details -->
-    <section id="step-contact" class="checkout-step">
-      {% if user.is_authenticated %}
-        <h3 id="user-details-heading" class="visually-hidden">User Details Form</h3>
-        {% include "checkout/includes/user_form.html" %}
-      {% endif %}
-    </section>
+  <section id="step-contact" class="checkout-step">
+    {% if user.is_authenticated or request.session.guest_checkout %}
+      <h3 id="user-details-heading" class="visually-hidden">User Details Form</h3>
+      {% include "checkout/includes/user_form.html" %}
+    {% endif %}
+  </section>
+
 
     <!-- Step 2: Billing Information -->
     <section id="step-billing" class="checkout-step" style="display: none;">

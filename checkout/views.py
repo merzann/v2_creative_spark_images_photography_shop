@@ -42,6 +42,27 @@ def checkout(request):
     return render(request, 'checkout/checkout.html')
 
 
+def load_checkout_choice(request):
+    """
+    Render user checkout choice
+
+    **Template:**
+    :template:`checkout/checkout_choice.html`
+    """
+    return render(request, 'checkout/checkout_choice.html')
+
+
+def checkout_guest_view(request):
+    """
+    Render guest checkout choice
+
+    **Template:**
+    :template:`checkout/checkout.html`
+    """
+    request.session['guest_checkout'] = True
+    return redirect('checkout')
+
+
 def load_guest_form(request):
     """
     Render and return an empty user form for guest checkout.

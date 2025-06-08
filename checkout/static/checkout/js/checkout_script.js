@@ -398,4 +398,24 @@ document.addEventListener('DOMContentLoaded', function () {
     captureInitialFormValues();
     setActiveProgressStep(1);
   }
+
+  // Initialize guest checkout from server-side session flag
+  if (!isAuthenticated && document.getElementById('checkout-profile-form')) {
+    continueBtn.disabled = !validateGuestFormFields();
+    captureInitialFormValues();
+    setActiveProgressStep(1);
+
+    ['first_name', 'last_name', 'email'].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.addEventListener('input', () => {
+          validateGuestFormFields();
+          continueBtn.disabled = !validateGuestFormFields();
+          continueBtn.dataset.allowRedirect = "false";
+          skipProfileSave = false;
+        });
+        input.addEventListener('blur', validateGuestFormFields);
+      }
+    });
+  }
 });

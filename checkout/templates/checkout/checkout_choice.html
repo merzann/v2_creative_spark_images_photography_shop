@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="container-fluid checkout-container" role="region" aria-labelledby="checkout-heading">
+  <div class="checkout-choice text-center" aria-labelledby="checkout-choice-heading">
+    <p id="checkout-choice-heading" class="lead mb-4">How would you like to proceed?</p>
+
+    <a href="{% url 'account_login' %}?next={% url 'checkout' %}" class="btn btn-custom me-3" aria-label="Log in and continue to checkout">
+      Log in & Continue
+    </a>
+
+    <a href="{% url 'checkout_guest' %}" class="btn btn-outline-secondary mt-3 me-3" aria-label="Check out as guest">
+      Check Out as Guest
+    </a>
+  </div>
+</section>
+{% include "checkout/includes/modal.html" %}
+{% endblock %}
+
+{% block extra_js %}
+  <!-- Your Checkout Script -->
+  <script src="{% static 'checkout/js/checkout_script.js' %}"></script>
+{% endblock %}

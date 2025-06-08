@@ -8,6 +8,12 @@ from . import views
 
 urlpatterns = [
     path('', views.checkout, name='checkout'),
+    path(
+        'checkout/choice/',
+        views.load_checkout_choice,
+        name='load_checkout_choice'
+    ),
+    path('checkout/guest/', views.checkout_guest_view, name='checkout_guest'),
     path('load-guest-form/', views.load_guest_form, name='load_guest_form'),
     path(
         'save-profile-from-checkout/',
