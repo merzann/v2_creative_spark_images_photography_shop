@@ -2023,9 +2023,33 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 
 ### Automated Testing
 
+Automated testing was initiated but could not be fully completed due to time constraints from an approaching deadline.
+
 - Pylint/Flake8 compliance (PEP8 style fixes implemented)
 - Unit tests on views and utility functions (`calculate_total_price`)
 - Repeated regression testing after bag and checkout integration
+
+#### Code Style and Linting (PEP8)
+
+- Installed and ran `.flake8` to identify PEP8 violations.
+- Used `autopep8` to automatically correct issues. All were resolved except one (`line too long`).
+- Manually fixing that issue caused a functional error, so it was left as-is to preserve functionality.
+
+#### Tests Implemented
+
+Automated unit tests were written and run for various modules with successful results. Below is a breakdown of the test reports:
+
+- **shop/tests/test_models.py**: 6 tests – all passed  
+- **user_profiles/tests/test_models.py**: 3 tests – all passed  
+- **user_profiles/tests/test_admin.py**: 1 test – passed  
+- **user_profiles/tests/test_form.py**: 2 tests – all passed  
+- **user_profiles/tests/test_views.py**: 2 tests – all passed  
+- **user_profiles/tests/test_signals.py**: 2 tests – all passed  
+
+**Final test suite run** (after implementing all features):  
+- **10 tests run** – all passed
+
+All test runs completed with no issues reported by the Django system check. Overall, the foundational test coverage is in place and functioning correctly.
 
 ---
 
@@ -2123,8 +2147,6 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 
 During W3C HTML validation, several warnings and errors were identified across multiple pages of the site. However, due to strict time constraints nearing the end of development, these issues were not resolved in the current version, as changes could have compromised page layout and functionality.
 
----
-
 **Validation examples**
 
 - **Gallery / Images by Theme Page:**  
@@ -2140,6 +2162,23 @@ During W3C HTML validation, several warnings and errors were identified across m
 
 In summary, while these validation issues are acknowledged, they were consciously deprioritized due to time limitations and the potential impact on layout stability and user experience.
 
+---
+
+### CSS Validation:
+
+[![Valid CSS!](https://jigsaw.w3.org/css-validator/images/vcss)](https://jigsaw.w3.org/css-validator/check/referer)
+
+no CSS errors detected
+Additionally, a list with warning was displayed resulting from outdated style elements due to teh use of Bootstrap and webkits.
+
+---
+
+### Javascript
+
+Javascript errors detected and fixed
+used tool: JSHint
+no errors detected
+warning caused by the use of arrow functions only avaialbale in ES6
 
 ---
 ---
