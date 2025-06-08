@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'shop/css/shop.css' %}">
+{% endblock extra_css %}
+
+{% block extra_js %}
+<script src="{% static 'shop/js/shop_script.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="contact-form-container">
+    <section aria-label="Logo of shop" class="contact-logo-wrapper text-center">
+            <img src="{% static 'shop/images/creative_spark_images_photography_shop_logo.png' %}"
+            class="contact-logo-img"
+            alt="Logo with shop name Creative Spark Images and an Art Deco Portrait of a female photographer">
+        </a>
+    </section>
+    
+    <section aria-label="Sign-up form for my newsletter">
+
+        <h1 class="text-center mb-1">Like my work?</h1>
+        <h5 class="text-center mb-4">Don't miss out on offers!</h5>
+
+        <div>
+            <form id="newsletter-form" method="POST" action="/newsletter/newsletter-signup/">
+                {% csrf_token %}
+                
+                <input type="text" name="first_name" class="form-control my-2" placeholder="First name" required>
+                <input type="text" name="last_name" class="form-control my-2" placeholder="Last name" required>
+                <input type="email" name="email" class="form-control my-2" placeholder="Your email" required>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-custom w-50 text-center">Sign Up</button>
+                </div>
+            </form>
+
+            <div class="newsletter-link-wrapper">
+                <small><a href="{% url 'home' %}">Not now</a></small>
+            </div>
+      </div>
+    </section>
+{% endblock %}

@@ -1,8 +1,15 @@
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from .models import NewsletterSignup
 from .forms import NewsletterForm
+
+
+def newsletter_signup_page(request):
+    """
+    Handle newsletter signup's via link in order_confirmation_email
+    """
+    return render(request, 'newsletter/newsletter.html')
 
 
 @require_POST

@@ -21,5 +21,8 @@ Total: €{{ grand_total }}
 
 If you have questions, reply to this email.
 
+Don’t miss out on any offers!
+Sign up to my Newsletter: https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/
+
 – The Creative Spark Images Team
 

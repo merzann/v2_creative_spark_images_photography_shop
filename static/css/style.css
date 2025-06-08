@@ -277,9 +277,24 @@ a.dropdown-item {
     font-size: 0.9rem;
 }
 
+/* Newsletter Page */
+.newsletter-link-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.newsletter-link-wrapper a {
+    text-decoration: none;
+    color: #555;
+}
+
+.newsletter-link-wrapper a:hover {
+    text-decoration: underline;
+}
+
 /* Newsletter Modal */
 #newsletter-modal .modal-content {
-    background-color: #ddd;
     font-family: 'Poiret One', cursive;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     border: 5px solid #333;
