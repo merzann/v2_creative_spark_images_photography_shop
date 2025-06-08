@@ -720,7 +720,10 @@ def checkout_success(request):
         if product.file:
             url = product.file.build_url(
                 resource_type='raw',
-                type='attachment',
+                type='upload',
+                transformation=[
+                    {'flags': f'attachment:{product.title.replace(" ", "_")}'}
+                ],
                 expires=3600
             )
             download_links.append({"title": product.title, "url": url})
@@ -836,7 +839,10 @@ def send_order_email(user, order, summary):
         if product.file:
             url = product.file.build_url(
                 resource_type='raw',
-                type='attachment',
+                type='upload',
+                transformation=[
+                    {'flags': f'attachment:{product.title.replace(" ", "_")}'}
+                ],
                 expires=3600
             )
             download_links.append({"title": product.title, "url": url})

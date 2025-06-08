@@ -2270,7 +2270,15 @@ warning caused by the use of arrow functions only avaialbale in ES6
 ---
 
 ### Bugs remaining:
+
+  - image download link not working could not be fixed upon reaching the deadline. A message has been implemented into the email template asking the user to contact CReative Spark Images for a replacement link. Images will then be sent out as zip folder by the shop owner.
+
+  ---
+
   - clicking the **Back**-button on the Stripe payment field returns the user to a order summary page with broken styling
+
+  ---
+  
   - Image catalogue link is currently not active; reason: filter functionality could not be implemented due to deadline reached
 
 ---

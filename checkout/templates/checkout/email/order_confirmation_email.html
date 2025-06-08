@@ -5,7 +5,7 @@
     <title>Order Confirmation</title>
 </head>
 <body>
-    
+
     <h2>Thank you for your order, {{ user.first_name }}!</h2>
     <p>Your order number is: <strong>{{ order.order_number }}</strong></p>
 
@@ -32,8 +32,13 @@
     <h3>Your Digital Downloads</h3>
     <ul>
         {% for link in download_links %}
-        <li><a href="{{ link.url }}">Download {{ link.title }}</a></li>
+        <li>
+            <a href="{{ link.url }}" download>
+                Download {{ link.title }}
+            </a>
+        </li>
         {% endfor %}
+        <p>If you expirience an issue with the download, please respond to this email and we will send you a new link.</p>
     </ul>
     {% endif %}
 
