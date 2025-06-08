@@ -3,10 +3,15 @@ from django.contrib.auth import login
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import (
     render, redirect, get_object_or_404
 )
 from django.template.loader import render_to_string
+from django.template.exceptions import (
+    TemplateDoesNotExist, TemplateSyntaxError
+)
+from smtplib import SMTPException
 from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
@@ -622,20 +627,33 @@ def stripe_webhook(request):
                 product = Product.objects.get(id=item["product_id"])
                 order.products.add(product)
             except Product.DoesNotExist:
-                continue  # Skip invalid items silently
+                continue
 
         order.save()
 
-        # Send confirmation email
-        send_order_email(user, order)
+        # Fallback email in case template loader fails
+        try:
+            send_order_email(user, order, session.get("id"))
+        except (TemplateDoesNotExist, TemplateSyntaxError, SMTPException) as e:
+            print(f"[EMAIL ERROR] Failed to send rich confirmation email: {e}")
+
+            send_mail(
+                subject=f"Your Order {order.order_number} – Confirmation",
+                message=(
+                    f"Thank you for your order. Your order number is "
+                    f"{order.order_number}.\n"
+                    f"If you have questions, reply to this email.\n\n"
+                    f"Your Creative Spark Images Team"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+            )
 
     return HttpResponse(status=200)
 
 
 def checkout_success(request):
     """
-    Final checkout success page after payment confirmation.
-
     Clears cart and displays order summary with downloads if applicable.
 
     Uses:
@@ -751,6 +769,14 @@ def checkout_success(request):
         "billing_phone": profile.default_phone_number if profile else "",
     }
 
+    send_order_email(user, order, {
+        "bag_items": bag_items,
+        "grand_total": grand_total,
+        "shipping_total": shipping_total,
+        "vat": vat,
+        "discount": discount,
+    })
+
     return render(
         request,
         "checkout/includes/checkout_success.html",
@@ -771,26 +797,21 @@ def checkout_success(request):
     )
 
 
-def send_order_email(user, order):
+def send_order_email(user, order, summary):
     """
-    Send order confirmation email with download links if available.
-
-    Related to models:
-    :model:`orders.OrderModel`
-    :model:`products.Product`
+    Send order confirmation email with HTML formatting.
 
     Args:
         user (User): The user who placed the order.
         order (OrderModel): The completed order object.
-
-    Returns:
-        None
+        summary (dict): Bag items and totals.
     """
-    products = order.products.all()
+    subject = "Order Confirmation"
+    to_email = [user.email]
+    from_email = settings.DEFAULT_FROM_EMAIL
 
-    # Prepare download links if files exist
     download_links = []
-    for product in products:
+    for product in order.products.all():
         if product.file:
             url = product.file.build_url(
                 resource_type='raw',
@@ -799,16 +820,29 @@ def send_order_email(user, order):
             )
             download_links.append({"title": product.title, "url": url})
 
-    subject = f"Your Order {order.order_number} – Confirmation"
-    body = render_to_string("checkout/email/order_confirmation_email.txt", {
+    context = {
         "user": user,
         "order": order,
         "download_links": download_links,
-    })
+        **summary,
+    }
 
-    send_mail(
-        subject,
-        body,
-        settings.DEFAULT_FROM_EMAIL,
-        [user.email],
+    text_content = render_to_string(
+        "checkout/email/order_confirmation_email.txt",
+        context
     )
+
+    html_content = render_to_string(
+        "checkout/email/order_confirmation_email.html",
+        context
+    )
+
+    # Compose and send email with both formats
+    email = EmailMultiAlternatives(
+        subject=subject,
+        body=text_content,
+        from_email=from_email,
+        to=to_email
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send()

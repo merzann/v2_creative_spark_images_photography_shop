@@ -3,7 +3,7 @@ Hi {{ user.first_name }},
 Thank you for your order!
 
 Order Number: {{ order.order_number }}
-Total: €{{ order.total_price }}
+Total: €{{ grand_total }}
 
 {% if download_links %}
 Your digital downloads:
@@ -12,6 +12,14 @@ Your digital downloads:
 {% endfor %}
 {% endif %}
 
+Order Summary:
+Subtotal: €{{ bag_total }}
+VAT ({{ vat_rate_display }}%): €{{ vat }}
+Shipping: €{{ shipping_total }}
+Discount: -€{{ discount }}
+Total: €{{ grand_total }}
+
 If you have questions, reply to this email.
 
 – The Creative Spark Images Team
+

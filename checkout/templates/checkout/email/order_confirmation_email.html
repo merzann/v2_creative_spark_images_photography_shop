@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Order Confirmation</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+    <h2>Thank you for your order, {{ user.first_name }}!</h2>
+    <p>Your order number is: <strong>{{ order.order_number }}</strong></p>
+
+    <h3>Order Summary</h3>
+    <ul>
+        {% for item in bag_items %}
+        <li>
+            <strong>{{ item.product.title }}</strong><br>
+            {% if item.print_type %}{{ item.print_type }}{% elif item.license %}{{ item.license }}{% endif %} – Qty: {{ item.quantity }}<br>
+            €{{ item.line_total|floatformat:2 }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <p>
+        <strong>Subtotal:</strong> €{{ bag_total|floatformat:2 }}<br>
+        <strong>VAT ({{ vat_rate_display }}%):</strong> €{{ vat|floatformat:2 }}<br>
+        <strong>Shipping:</strong> €{{ shipping_total|floatformat:2 }}<br>
+        <strong>Discount:</strong> -€{{ discount|floatformat:2 }}<br>
+        <strong>Total:</strong> €{{ grand_total|floatformat:2 }}
+    </p>
+
+    {% if download_links %}
+    <h3>Your Digital Downloads</h3>
+    <ul>
+        {% for link in download_links %}
+        <li><a href="{{ link.url }}">Download {{ link.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <p>
+        Thank you for shopping with Creative Spark Images!<br>
+        If you have questions, reply to this email.<br>
+        The Creative Spark Images Team
+    </p>
+</body>
+</html>
