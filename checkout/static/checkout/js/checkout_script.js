@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
   const loginBtn = document.getElementById('btn-login');
   const guestBtn = document.getElementById('btn-guest');
+  const downloadButtons = document.querySelectorAll('.download-link');
 
   let formInitialData = {};
   let skipProfileSave = false;
@@ -418,4 +419,19 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+
+  // Handles image download for download button on checkout success page
+  downloadButtons.forEach(button => {
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
+      const url = this.getAttribute('data-url');
+
+      const tempLink = document.createElement('a');
+      tempLink.href = url;
+      tempLink.setAttribute('download', '');
+      document.body.appendChild(tempLink);
+      tempLink.click();
+      document.body.removeChild(tempLink);
+    });
+  });
 });

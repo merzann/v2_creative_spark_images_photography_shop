@@ -118,7 +118,7 @@
     <ul class="list-unstyled text-center">
         {% for link in download_links %}
         <li class="mb-3">
-            <a href="{{ link.url }}" class="btn btn-custom btn-lg px-4" download>
+            <a href="{{ link.url }}" class="btn btn-custom btn-lg px-4" data-url="{{ link.url }}">
                 Download {{ link.title }}
             </a>
         </li>
