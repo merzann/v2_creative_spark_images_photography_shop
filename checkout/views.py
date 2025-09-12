@@ -721,6 +721,7 @@ def checkout_success(request):
             url = product.file.build_url(
                 resource_type='raw',
                 type='upload',
+                secure=True,
                 transformation=[
                     {'flags': f'attachment:{product.title.replace(" ", "_")}'}
                 ],
