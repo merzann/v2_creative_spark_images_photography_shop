@@ -5,6 +5,7 @@
 - [About the Project](#about-the-project)
 - [Responsive Mock-up View](#responsive-mock-up-view)
 - [Business Plan](#business-plan)
+- [Design & Planning](#design--planning)
 - [Features](#features)
   - [Existing Features](#existing-features)
   - [Features Left to Implement](#features-left-to-implement)
@@ -381,10 +382,10 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
   ![heckout Order Confirmation Wireframe](README_Media/wireframe_order_confirmation.png)
 
 ### Mockups
-- Page mockups are displayed in the existing features sections.
+- Page mockups are displayed in the [Existing Features](#existing-features) sections.
 
 ### Diagrams
-- ![ERD Diagram](README_Media/diagrams/ecommerce-erd.png)
+- ![ERD Diagram](README_Media/erd_e-commerce.png)
 - ![Checkout User Flow](README_Media/diagrams/checkout-flow.png)
 
 
@@ -1549,7 +1550,7 @@ Below is an overview of what admins can manage, grouped by Django app:
 ---
 ---
 
-### Custom 404 Page
+### 404 Page
 
 The project includes two custom 404 pages:
 
