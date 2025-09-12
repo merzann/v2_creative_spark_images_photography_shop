@@ -82,7 +82,7 @@ class Product(models.Model):
     )
 
     file = CloudinaryField(
-        "file", resource_type="raw",
+        "file", resource_type="image",
         folder="digital_products",
         blank=True, null=True
     )
