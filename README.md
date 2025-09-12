@@ -341,7 +341,57 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
 ---
 ---
 
-## Features
+## Design & Planning
+
+### Wireframes
+
+#### Homepage
+
+  ![Homepage Wireframe](README_Media/wireframe-homepageUpper.png)
+  ![Homepage Wireframe](README_Media/wireframe-homepageLower.png)
+
+#### Profile Section
+  ![Checkout Order Summary Wireframe](README_Media/wireframe_profile_card.png)
+  ![Checkout Order Summary Wireframe](README_Media/wireframe_order_history_card.png)
+
+#### Gallery
+
+  ![Gallery Wireframe](README_Media/wireframe_gallery_sm-md-screens.png)
+  ![Gallery Wireframe](README_Media/wireframe_gallery_l-xl-screens.png)
+
+#### Images by Theme
+  
+  ![Images by Theme Wireframe](README_Media/wireframe_images_by_theme_sm-screens.png)
+  ![Images by Theme Wireframe](README_Media/wireframe_images_by_theme_md-l-screens.png)
+  ![Images by Theme Wireframe](README_Media/wireframe_images_by_theme_xl-screens.png)
+
+#### Product Customization Page
+
+  ![Product Wireframe](README_Media/wireframe_product_sm-screens.png)
+  ![Product Wireframe](README_Media/wireframe_product_md-l-xl-screens.png)
+
+#### Shopping Bag
+  ![Shopping Bag Wireframe](README_Media/wireframe_shopping_bag_sm-md-screens.png)
+  ![Shopping Bag Wireframe](README_Media/wireframe_shopping_bag_l-xl-screens.png)
+
+#### Checkout Page - Customer Data
+  ![Checkout Customer Wireframe](README_Media/wireframe_CO_customer.png)
+
+#### Checkout Page - Order Confirmation Page
+  ![heckout Order Confirmation Wireframe](README_Media/wireframe_order_confirmation.png)
+
+### Mockups
+- Page mockups are displayed in the existing features sections.
+
+### Diagrams
+- ![ERD Diagram](README_Media/diagrams/ecommerce-erd.png)
+- ![Checkout User Flow](README_Media/diagrams/checkout-flow.png)
+
+
+---
+---
+
+## Existing Features
 
 - Summary:
 
