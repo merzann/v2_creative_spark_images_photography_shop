@@ -1348,6 +1348,68 @@ A standalone confirmation screen rendered after Stripe payment completes success
 ---
 ---
 
+### Confirmation Email
+
+### Features
+  - Sent via send_order_email() upon verified Stripe payment and order creation.
+  - Dual-format delivery: Rich HTML email with fallback to plain-text.
+  - Includes full order summary, featuring:
+  - Order number (e.g. ORD-556445)
+  - Product title(s), license type, quantity, and individual pricing
+  - Subtotal, VAT breakdown, discount, shipping, and grand total
+  - Dynamic download section for digital files:
+  - Secure Cloudinary link(s) per item
+  - 1-click download prompts
+  - Clear support instructions in case of download issues
+
+---
+
+### Email Display & Structure
+  Clean, readable layout designed for email clients.
+
+  Includes:
+  - Personalized thank-you greeting
+  - Prominent order ID
+  - Simple product list with license details
+  - Breakdown of pricing (subtotal, VAT, discount, total)
+  - Conditional section: Download button/link appears only for digital items
+  - Friendly closing message and support fallback instructions
+  - Styled with minimal formatting for email client compatibility
+
+---
+
+### Template-Driven Logic
+  - Renders dynamic fields from the Order model:
+    - order_number, lineitems, total, vat, shipping, discount
+  - Accesses Cloudinary download links using item metadata
+  - Plain-text fallback ensures delivery even if HTML fails
+  - Sent to the customer’s email via Django's SMTP setup after checkout
+
+---
+
+### UX Highlights
+  - Instant confirmation gives peace of mind post-purchase
+  - Download access inline in the email (no login required)
+  - Clear, invoice-style layout for transparency
+  - Contact option via “reply to this email”
+  - Personal thank-you note signed by the artist
+  - Promotional CTA to subscribe to the newsletter
+
+---
+
+### Security & UX Defenses
+
+| Type                    | Feature                                                          |
+| ----------------------- | ---------------------------------------------------------------- |
+| Verified Email Delivery | Sent only after successful Stripe session confirmation           |
+| Digital Access Control  | Links only included for digital products and expire securely     |
+| Fallback Compatibility  | Plain-text version ensures receipt across all email clients      |
+| Friendly Recovery Path  | Users can reply directly to request alternate download link      |
+| Branded Closure         | Email closes with signature from Creative Spark Images for trust |
+
+---
+---
+
 ## The Admin Panel
 
 ### Features
@@ -2265,6 +2327,8 @@ warning caused by the use of arrow functions only avaialbale in ES6
 | Incorrect shipping cost in confirmation email | The email summary used hardcoded or incomplete shipping calculations, resulting in the wrong shipping total (e.g. 0€ instead of 6.60€). | Aligned email view logic with `checkout_success`, using full bag data and correct shipping rates per item. |
 | Missing digital download links in confirmation email | Digital products with attached files weren’t showing download links in the email. | Re-added logic to loop over products and generate secure download links for those with associated files. |
 | Template rendering failed silently | Errors in the HTML/text email templates weren't clearly surfaced, making debugging difficult. | Added logging for `TemplateDoesNotExist` and `TemplateSyntaxError` to help identify rendering issues without affecting the customer experience. |
+| Image download not working        | Download links for digital products were not functioning in either the confirmation page or email. | Changed `resource_type='raw'` in `build_url()` in Product model to match how the images were uploaded to Cloudinary. |
+| Chrome blocking download          | Downloads worked in Safari and email but failed in Chrome due to mixed content (HTTP download URL).| Added `secure=True` to `build_url()` to enforce HTTPS and avoid Chrome’s mixed content blocking.  |
 
 ---
 ---
@@ -2322,7 +2386,7 @@ Creative Spark Images uses a dynamically generated `sitemap.xml` to improve SEO 
 - **Database:** PostgreSQL
 - **Media Hosting:** Cloudinary
 - **Payment Integration:** Stripe
-- **Email Notifications:** Zapier + SendGrid
+- **Email Notifications:** Django Email Host + Gmail
 - **Deployment:** Heroku
 
 ---
