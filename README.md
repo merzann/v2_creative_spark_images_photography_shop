@@ -385,16 +385,67 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
 - Page mockups are displayed in the [Existing Features](#existing-features) sections.
 
 ### Diagrams
-- ![ERD Diagram](README_Media/erd_e-commerce.png)
-- ![Checkout User Flow](README_Media/diagrams/checkout-flow.png)
 
+#### Key Entities and Relationships
+
+  ![ERD Diagram](README_Media/erd_e-commerce.png)
+
+  Users & Profiles
+  - User (Django auth)
+    ↔ OneToOne → UserProfile
+    ↔ OneToMany → OrderModel
+
+Orders
+  - OrderModel
+    - belongs to User (ForeignKey)
+    - has many Products (ManyToManyField)
+
+Products & Metadata
+  - Product
+    - ForeignKey → ImageTheme
+    - ManyToMany → ProductType
+    - ManyToMany → LicenseType
+    - ManyToMany → PrintType
+    - ManyToMany → Tag
+
+Tag
+  - ForeignKey → TagGroup
+
+PrintType
+  - ForeignKey → ProductType
+
+Shop
+  - ImageTheme
+    - linked to Product (ForeignKey)
+    - linked to SpecialOffer
+
+PolicyPage: standalone (Privacy, Cookies, Terms)
+
+Shipping & VAT
+  - ShippingRate
+    - ForeignKey → Shipper
+    - Country as CharField (not FK)
+    - CountryVAT: standalone, per country
+
+Marketing
+  - NewsletterSignup: standalone.
+  - SpecialOffer
+    - may apply to an ImageTheme.
+
+AboutUs: standalone content
+
+---
+
+#### Checkout Flow Chart
+
+![Checkout Flow Chart](README_Media/checkout_flow_chart.png)
 
 ---
 ---
 
 ## Existing Features
 
-- Summary:
+### Summary
 
   Users can:
   - Browse curated photographic works
