@@ -855,7 +855,7 @@ def send_order_email(user, order, summary):
     try:
         for item in summary.get("bag_items", []):
             if item.get("print_type"):
-                continue  # Skip printed products
+                continue
 
             product = item.get("product")
             if product and product.file:
