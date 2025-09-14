@@ -92,6 +92,7 @@ def create_checkout_session(request):
 
     Models:
         products.Product
+        offers.SpecialOffer
 
     **Redirects:**
     - On success: :url:`/checkout/success/`
@@ -99,24 +100,69 @@ def create_checkout_session(request):
     """
     bag = request.session.get('bag', {})
     line_items = []
+    bag_items = []
+    bag_total = Decimal("0.00")
 
     for item in bag.values():
         product = Product.objects.get(id=item['product_id'])
         quantity = item['quantity']
-        price = int(float(product.price) * 100)  # cents
+        line_total = product.price * quantity
+        bag_total += line_total
+
+        bag_items.append({
+            "product": product,
+            "quantity": quantity,
+            "line_total": line_total,
+            "format": item.get("format"),
+            "license": item.get("license"),
+            "print_type": item.get("print_type"),
+        })
 
         line_items.append({
             'price_data': {
                 'currency': 'eur',
-                'unit_amount': price,
+                'unit_amount': int(product.price * 100),
                 'product_data': {
                     'name': product.title,
-                    'images': [request.build_absolute_uri(
-                        product.image_preview.url
-                    )],
+                    'images': [
+                        request.build_absolute_uri(
+                            product.image_preview.url
+                        )
+                    ],
                 },
             },
-            'quantity': quantity,
+        })
+
+    # Apply special offer logic
+    shipping_total = Decimal("10.00")
+    new_total, shipping_total, discount, active_offer = apply_special_offer(
+        bag_items, bag_total, shipping_total
+    )
+
+    # Add discount as a negative line item
+    if discount > 0:
+        line_items.append({
+            'price_data': {
+                'currency': 'eur',
+                'unit_amount': -int(discount * 100),
+                'product_data': {
+                    'name': 'Special Offer Discount',
+                },
+            },
+            'quantity': 1,
+        })
+
+    # Add shipping cost only if > 0
+    if shipping_total > 0:
+        line_items.append({
+            'price_data': {
+                'currency': 'eur',
+                'unit_amount': int(shipping_total * 100),
+                'product_data': {
+                    'name': 'Shipping',
+                },
+            },
+            'quantity': 1,
         })
 
     session = stripe.checkout.Session.create(
@@ -139,6 +185,10 @@ def create_checkout_session(request):
                 request.user.email
                 if request.user.is_authenticated
                 else request.POST.get("email", "")
+            ),
+            "discount": str(discount),          # store discount in metadata
+            "special_offer": (
+                str(active_offer.id) if active_offer else ""
             ),
         }
     )
@@ -181,10 +231,12 @@ def apply_special_offer(bag_items, bag_total, shipping_total):
     if not active_offer:
         return bag_total, shipping_total, discount, None
 
-    if (active_offer.offer_type == 'free_shipping'
-            and bag_total >= active_offer.min_amount):
-        # Apply free shipping if minimum spend threshold is met
-        shipping_total = Decimal("0.00")
+    if active_offer.offer_type == 'free_shipping':
+        pre_discount_total = bag_total + shipping_total
+        # Apply free shipping
+        if pre_discount_total >= active_offer.min_amount:
+            discount += shipping_total
+            shipping_total = Decimal("0.00")
 
     elif (active_offer.offer_type == 'percentage_discount'
           and active_offer.theme):
