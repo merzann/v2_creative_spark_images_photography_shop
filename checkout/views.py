@@ -716,23 +716,30 @@ def checkout_success(request):
     except (TypeError, json.JSONDecodeError):
         bag = {}
 
+    # Sanitize product title to prevent errors when creating url
     def sanitize_filename(title):
         return re.sub(r'[^\w\-_.]', '_', title)
 
     download_links = []
-    for product in order.products.all():
-        if product.file:
-            safe_title = sanitize_filename(product.title)
-            url = product.file.build_url(
-                resource_type='image',
-                type='upload',
-                secure=True,
-                transformation=[
-                    {'flags': f'attachment:{safe_title}'}
-                ],
-                expires=3600
-            )
-            download_links.append({"title": product.title, "url": url})
+
+    try:
+        for key, item in bag.items():
+            if item.get("format") == "digital":
+                product = get_object_or_404(Product, pk=item["product_id"])
+                if product.file:
+                    safe_title = sanitize_filename(product.title)
+                    url = product.file.build_url(
+                        resource_type='image',
+                        type='upload',
+                        secure=True,
+                        transformation=[
+                            {'flags': f'attachment:{safe_title}'}
+                        ],
+                        expires=3600
+                    )
+                    download_links.append({"title": product.title, "url": url})
+    except Exception as e:
+        print("Error generating download link:", str(e))
 
     request.session["bag"] = {}
 
@@ -840,23 +847,31 @@ def send_order_email(user, order, summary):
     to_email = [user.email]
     from_email = settings.DEFAULT_FROM_EMAIL
 
+    # Sanitize product title to prevent errors when creating url
     def sanitize_filename(title):
         return re.sub(r'[^\w\-_.]', '_', title)
 
     download_links = []
-    for product in order.products.all():
-        if product.file:
-            safe_title = sanitize_filename(product.title)
-            url = product.file.build_url(
-                resource_type='image',
-                type='upload',
-                secure=True,
-                transformation=[
-                    {'flags': f'attachment:{safe_title}'}
-                ],
-                expires=3600
-            )
-            download_links.append({"title": product.title, "url": url})
+    try:
+        for item in summary.get("bag_items", []):
+            if item.get("print_type"):
+                continue  # Skip printed products
+
+            product = item.get("product")
+            if product and product.file:
+                safe_title = sanitize_filename(product.title)
+                url = product.file.build_url(
+                    resource_type='image',
+                    type='upload',
+                    secure=True,
+                    transformation=[
+                        {'flags': f'attachment:{safe_title}'}
+                    ],
+                    expires=3600
+                )
+                download_links.append({"title": product.title, "url": url})
+    except Exception as e:
+        print("Error generating download link:", str(e))
 
     context = {
         "user": user,
