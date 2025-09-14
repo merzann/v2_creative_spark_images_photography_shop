@@ -28,6 +28,7 @@ import json
 import stripe
 import string
 import random
+import re
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -715,15 +716,19 @@ def checkout_success(request):
     except (TypeError, json.JSONDecodeError):
         bag = {}
 
+    def sanitize_filename(title):
+        return re.sub(r'[^\w\-_.]', '_', title)
+
     download_links = []
     for product in order.products.all():
         if product.file:
+            safe_title = sanitize_filename(product.title)
             url = product.file.build_url(
-                resource_type='raw',
+                resource_type='image',
                 type='upload',
                 secure=True,
                 transformation=[
-                    {'flags': f'attachment:{product.title.replace(" ", "_")}'}
+                    {'flags': f'attachment:{safe_title}'}
                 ],
                 expires=3600
             )
@@ -835,14 +840,19 @@ def send_order_email(user, order, summary):
     to_email = [user.email]
     from_email = settings.DEFAULT_FROM_EMAIL
 
+    def sanitize_filename(title):
+        return re.sub(r'[^\w\-_.]', '_', title)
+
     download_links = []
     for product in order.products.all():
         if product.file:
+            safe_title = sanitize_filename(product.title)
             url = product.file.build_url(
-                resource_type='raw',
+                resource_type='image',
                 type='upload',
+                secure=True,
                 transformation=[
-                    {'flags': f'attachment:{product.title.replace(" ", "_")}'}
+                    {'flags': f'attachment:{safe_title}'}
                 ],
                 expires=3600
             )
