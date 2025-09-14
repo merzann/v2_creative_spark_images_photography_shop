@@ -16,9 +16,13 @@ class TagAdmin(admin.ModelAdmin):
 
     - ``list_display``: Displays the "name" field in the admin list view.
     - ``prepopulated_fields``: Automatically creates "slug" from "name" field
+    - ``search_fields``: Enables search by tag name.
+    - ``list_filter``: Enables filtering by related TagGroup.
     """
     list_display = ("name",)
     prepopulated_fields = {"slug": ("name",)}
+    search_fields = ("name",)
+    list_filter = ("group",)
 
 
 @admin.register(TagGroup)
