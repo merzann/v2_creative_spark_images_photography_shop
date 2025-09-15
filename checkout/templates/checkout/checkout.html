@@ -17,12 +17,6 @@
     class="mt-5"
     role="region"
     aria-labelledby="user-details-heading"
-    {% if user.is_authenticated or request.session.guest_checkout %}
-      style="display: block;"
-    {% else %}
-      <script>window.location.href = "{% url 'checkout_choice' %}";</script>
-      style="display: none;"
-    {% endif %}
   >
 
     <!-- Step 1: Contact Details -->

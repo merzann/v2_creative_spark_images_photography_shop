@@ -1,12 +1,13 @@
 from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import (
-    render, redirect, get_object_or_404
+    render, get_object_or_404
 )
 from django.template.loader import render_to_string
 from django.template.exceptions import (
@@ -38,6 +39,7 @@ logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
+@login_required
 def checkout(request):
     """
     Render the main checkout page.
@@ -48,46 +50,8 @@ def checkout(request):
     return render(request, 'checkout/checkout.html')
 
 
-def load_checkout_choice(request):
-    """
-    Render user checkout choice
-
-    **Template:**
-    :template:`checkout/checkout_choice.html`
-    """
-    return render(request, 'checkout/checkout_choice.html')
-
-
-def checkout_guest_view(request):
-    """
-    Render guest checkout choice
-
-    **Template:**
-    :template:`checkout/checkout.html`
-    """
-    request.session['guest_checkout'] = True
-    return redirect('checkout')
-
-
-def load_guest_form(request):
-    """
-    Render and return an empty user form for guest checkout.
-
-    Template:
-        checkout/includes/user_form.html
-
-    Returns:
-        HttpResponse: Rendered HTML form for the guest user.
-    """
-    html = render_to_string(
-        'checkout/includes/user_form.html',
-        {'user': request.user},
-        request=request
-    )
-    return HttpResponse(html)
-
-
 @csrf_exempt
+@login_required
 def create_checkout_session(request):
     """
     Create a Stripe Checkout session based on cart items.
@@ -163,7 +127,7 @@ def create_checkout_session(request):
 
         order = OrderModel.objects.create(
             user=request.user if request.user.is_authenticated else None,
-            total_price=(new_total + shipping_total),  # net+shipping for now
+            total_price=(new_total + shipping_total),
             status="pending",
         )
         for item in bag_items:
@@ -189,10 +153,7 @@ def create_checkout_session(request):
             discounts=[{"coupon": special_offer.stripe_coupon_id}]
             if discount > 0 and hasattr(special_offer, "stripe_coupon_id")
             else None,
-            customer_email=(
-                request.user.email if request.user.is_authenticated
-                else request.POST.get("email", "")
-            ),
+            customer_email=request.user.email,
             success_url=(
                 request.build_absolute_uri("/checkout/success/")
                 + "?session_id={CHECKOUT_SESSION_ID}"
@@ -201,17 +162,12 @@ def create_checkout_session(request):
             metadata={
                 "order_id": str(order.id),
                 "bag_ref": bag_ref,
-                "user_id": (
-                    str(getattr(request.user, "id", ""))
-                    if request.user.is_authenticated
-                    else ""
-                ),
+                "user_id": str(request.user.id),
                 "user_email": (
                     request.user.email
                     if request.user.is_authenticated
                     else request.POST.get("email", "")
                 ),
-
                 "discount": str(discount),
             }
         )
@@ -291,12 +247,13 @@ def apply_special_offer(bag_items, bag_total, shipping_total):
 
 
 @require_POST
+@login_required
+@csrf_exempt
 @csrf_exempt
 def save_profile_from_checkout(request):
     """
-    Save user or guest profile from checkout form.
+    Save user or profile from checkout form.
 
-    Handles both authenticated users and guests.
     Ensures a :model:`user_profiles.UserProfile` exists or is created.
 
     Models:
