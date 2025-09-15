@@ -1,4 +1,6 @@
 from django.urls import path
+
+from . import views
 from .views import profile
 from .views import request_account_deletion
 
@@ -10,4 +12,14 @@ urlpatterns = [
         name="order_history",
     ),
     path('delete-request/', request_account_deletion, name='delete_request'),
+    path(
+        "wishlist/add/<int:product_id>/",
+        views.add_to_wishlist,
+        name="add_to_wishlist"
+    ),
+    path(
+        "wishlist/remove/<int:product_id>/",
+        views.remove_from_wishlist,
+        name="remove_from_wishlist"
+    ),
 ]

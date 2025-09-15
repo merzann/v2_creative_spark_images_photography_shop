@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 from django_countries.fields import CountryField
+from products.models import Product
 
 
 class UserProfile(models.Model):
@@ -92,3 +93,29 @@ class UserProfile(models.Model):
         - ``QuerySet``: A list of the user’s previous orders.
         """
         return self.user.ordermodel_set.all()
+
+
+class Wishlist(models.Model):
+    """
+    Stores a user's wishlist items.
+    Related to :model:`auth.User` and :model:`products.Product`.
+    """
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="wishlist"
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="wishlisted_by"
+    )
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "product")
+        ordering = ["-added_at"]
+
+    def __str__(self):
+        return f"{self.user.username}'s wishlist item: {self.product.title}"

@@ -1,10 +1,12 @@
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 
 from django.db.models import Prefetch
+
+from .models import Wishlist
 from products.models import Product
 from shop.models import OrderModel
 
@@ -136,3 +138,83 @@ def request_account_deletion(request):
             )
 
     return redirect("profile")
+
+
+@login_required
+def add_to_wishlist(request, product_id):
+    """
+    Add a product to the user's wishlist.
+
+    Ensures that the product is linked to the current user's wishlist.
+    If the product already exists, it won’t be duplicated.
+
+    **Args:**
+    ``product_id``
+        Primary key of the :model:`products.Product` to add.
+
+    **Effects:**
+    - Creates a new :model:`user_profiles.Wishlist`
+      entry if not already present.
+    - Displays a success message on completion.
+
+    **Redirects:**
+    - Redirects back to the user's profile page.
+    """
+    product = get_object_or_404(Product, id=product_id)
+    Wishlist.objects.get_or_create(user=request.user, product=product)
+    messages.success(request, f"{product.title} added to your wishlist.")
+    return redirect("profile")
+
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    """
+    Remove a product from the user's wishlist.
+
+    Deletes the wishlist entry for the given product belonging
+    to the current user.
+
+    **Args:**
+    ``product_id``
+        Primary key of the :model:`products.Product` to remove.
+
+    **Effects:**
+    - Deletes the :model:`user_profiles.Wishlist` entry for the product.
+    - Displays an info message on completion.
+
+    **Redirects:**
+    - Redirects back to the user's profile page.
+    """
+    product = get_object_or_404(Product, id=product_id)
+    Wishlist.objects.filter(user=request.user, product=product).delete()
+    messages.info(request, f"{product.title} removed from your wishlist.")
+    return redirect("profile")
+
+
+@login_required
+def wishlist_view(request):
+    """
+    Display the user's wishlist.
+
+    Retrieves all products saved by the user to their wishlist
+    for rendering in the UI.
+
+    **Context:**
+
+    ``wishlist_items``
+        Queryset of :model:`user_profiles.Wishlist` entries for the user,
+        with related :model:`products.Product` objects prefetched.
+
+    **Template:**
+    :template:`user_profiles/includes/wishlist_card.html`
+    """
+    wishlist_items = (
+        Wishlist.objects
+        .select_related("product")
+        .filter(user=request.user)
+    )
+    return render(
+        request,
+        "user_profiles/includes/wishlist_card.html",
+        {"wishlist_items": wishlist_items},
+    )
