@@ -701,7 +701,10 @@ def checkout_success(request):
     except stripe.error.InvalidRequestError:
         return HttpResponse("Invalid session ID", status=400)
     except Exception as e:
-        return HttpResponse(f"Error fetching Stripe session: {str(e)}", status=500)
+        return HttpResponse(
+            f"Error fetching Stripe session: {str(e)}",
+            status=500
+        )
 
     # --- Resolve user ---
     customer_email = session.get("customer_email")
@@ -745,7 +748,12 @@ def checkout_success(request):
         if cs:
             bag = cs.bag_data
     else:
-        cs = CheckoutSession.objects.filter(user=user).order_by("-created_at").first()
+        cs = (
+            CheckoutSession.objects
+            .filter(user=user)
+            .order_by("-created_at")
+            .first()
+        )
         if cs:
             bag = cs.bag_data
 
