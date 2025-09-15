@@ -825,10 +825,12 @@ def checkout_success(request):
 
     send_order_email(user, order, {
         "bag_items": bag_items,
-        "grand_total": grand_total,
-        "shipping_total": shipping_total,
+        "bag_total": bag_total,
         "vat": vat,
+        "vat_rate_display": vat_rate_display,
+        "shipping_total": shipping_total,
         "discount": discount,
+        "grand_total": grand_total,
     })
 
     return render(
