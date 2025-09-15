@@ -438,7 +438,7 @@ AboutUs: standalone content
 
 #### Checkout Flow Chart
 
-![Checkout Flow Chart](README_Media/checkout_flow_chart.png)
+![Checkout Flow Chart](README_Media/checkout_flow_chart.jpg)
 
 ---
 ---
@@ -1162,18 +1162,18 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 
 **Dual Entry Paths:**
   - Authenticated Users: See a pre-filled contact form with their saved profile data.
-  - Guest Users: Choose to proceed with a simplified contact form to check out without logging in.
+  - Guest Users: Can use the "Set up an account" option on the login page.
 
 **Profile Management:**
   - Authenticated users can update their first name, last name, and email directly from the checkout form.
-  - Guest users can enter their information and optionally create a temporary account with auto-login for convenience.
+  - Guest users need to create a user profile first in order to be able to complete a purchase
 
 **Modal Confirmation:**
   - Users are prompted with a modal asking whether to save changes before proceeding.
   - Options: Save, Don't Save, or Cancel, giving users full control over profile updates.
 
 **Dynamic Form Behavior:**
- - For guests, the Continue button is disabled until all form fields are valid (including correct email format).
+ - the Continue button is disabled until all form fields are valid (including correct email format).
  - For returning users, changes are tracked and compared to original data to detect modifications.
  - Real-time visual feedback allows user to easily identify errors in data provided 
 
@@ -1182,19 +1182,15 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 | Type                          | Feature                                                                 |
 |-------------------------------|-------------------------------------------------------------------------|
 | CSRF Protection               | All form submissions include CSRF tokens and are verified server-side.  |
-| Secure Guest Accounts         | Guest users are auto-created with random usernames and passwords.       |
 | Backend Validation            | All submitted data is sanitized and validated before saving.            |
 | Frontend Validation           | Email field uses regex and required attributes for early validation.    |
 | Live Feedback	                | Real-time visual validation with Bootstrap classes (is-valid/is-invalid).|
-| Session Management            | Guest users are securely authenticated via Django’s `login()` function. |
 | Modal Confirmation            | Users must confirm intent before profile data is changed.               |
 | Revert Unsaved Edits          | Canceling/discarding changes reverts fields to their original values.   |
 | Disabled Buttons              | "Continue" is only enabled when inputs are valid and complete.          |
-| Progressive Disclosure        | Guest form is hidden by default until selected to minimize noise.       |
 | ARIA & Label Compliance       | All fields include ARIA attributes for better accessibility.            |
 
-![Checkout Step 1 User](README_Media/co_step1_user.png) ![Checkout Step 1 Guest](README_Media/co_step1_guest.png)
-![Checkout User Validation](README_Media/user_form_validation.png) ![Checkout Guest Validation](README_Media/guest_form_validation.png)
+![Checkout Step 1](README_Media/co_step1.png)
 
 ---
 
@@ -1203,7 +1199,6 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 **Form Behavior:**
 
   - Fields are auto-filled for authenticated users using their saved profile data.
-  - Guest users must enter billing details manually.
   - Form is loaded dynamically via AJAX to reflect real-time profile updates.
 
 
@@ -1622,10 +1617,11 @@ The project includes two custom 404 pages:
 
 ## Features Left to Implement
 
-- Rating and comment system for products
-- Image zoom/lightbox on product detail
-- Image catalogue displaying all images
-- SEO optimization and sitemap auto-generation
+  - option to checkout as a guest without creating an account
+  - Rating and comment system for products
+  - Image zoom/lightbox on product detail
+  - Image catalogue displaying all images
+  - SEO optimization and sitemap auto-generation
 
 ---
 ---
@@ -2015,41 +2011,41 @@ Together with my test users (age 25 - 74) I reviewed the content on different de
 
 | Test Case ID | Description                                 | Steps to Reproduce                                                   | Expected Result                                                  | Actual Result                                                           | Pass/Fail | Notes                                                   |
 |--------------|---------------------------------------------|------------------------------------------------------------------------|------------------------------------------------------------------|---------------------------------------------------------------------------|-----------|---------------------------------------------------------|
-| TC001        | Load checkout page from bag                 | Click "Proceed to Checkout" on shopping bag page                     | Checkout page loads with choice buttons                          | Page loads with checkout options (login/guest)                          | Pass      |                                                         |
+| TC001        | Load checkout page from bag                 | Click "Proceed to Checkout" on shopping bag page                     | Login Screen if user is not logged in and checkout step 1 if user is logged in                       | Page loads with checkout step                         | Pass      |                                                         |
 | TC002        | Responsive Design                           | Resize window across mobile/tablet/desktop                           | Layout adjusts accordingly                                       | Layout responsive at all breakpoints                                    | Pass      | Bootstrap-based layout                                  |
-| TC003        | Login/Guest selection                       | Click "Log in & Continue" or "Check Out as Guest"                    | Displays contact details form                                    | Correct section is shown based on choice                                | Pass      | Conditional render based on user state                 |
-| TC004 | Checkout Progress Bar Display | Open checkout and proceed through steps | Progress bar updates to highlight the current step and completed steps | Visual step tracker reflects accurate step progression | Pass | Consistent across all steps and visible on confirmation page |
-| TC005        | Contact Details Form                        | Proceed past choice (authed users)                                   | Form is displayed, fields are pre-filled if user is authed       | User info correctly shown or fields empty for guest                     | Pass      |                                                         |
-| TC006        | Real-time JS form validation – user form    | Enter invalid and then valid data in user form fields                | Invalid: red border + error message. Valid: green border + tick  | Real-time validation with visual indicators works correctly             | Pass      | Email, first/last name validated                        |
-| TC007        | Real-time JS form validation – billing form | Enter invalid ZIP/email/phone/country fields                         | Red border and inline feedback if invalid, green + tick if valid | Fields respond immediately to user input                                | Pass      | Includes postcode validation by country                 |
-| TC008        | Block progress with invalid input           | Leave required fields empty or invalid                               | “Continue” button remains disabled                               | Continue button greyed out until all validations pass                   | Pass      | Button stays inactive with any error                    |
-| TC009        | Modal trigger on continue                   | Fill forms and click “Continue”                                      | Modal pops up asking to confirm profile save                     | Modal appears with correct user-specific message                        | Pass      | Guest and authed user see tailored prompt               |
-| TC010        | Modal cancel option                         | In modal, click “Cancel”                                             | Modal closes, no form progression                                | Modal dismissed and stays on current step                               | Pass      |                                                         |
-| TC011        | Modal confirm save                          | In modal, click “Save”                                               | Proceeds to next step, saves data                                | Successfully proceeds to billing step                                   | Pass      |                                                         |
-| TC012        | Invalid form blocks modal                   | Leave required form fields invalid and click “Continue”              | Modal does not open                                              | Modal prevented by disabled button                                      | Pass      | JS validation ensures pre-check conditions              |
-| TC013        | Billing Form validation flow                | Fill billing form with correct/incorrect data                        | Input validated in real time                                     | All fields provide accurate feedback                                    | Pass      | Country and postcode validation tied                    |
-| TC014        | Stripe SDK & Checkout Script load           | Open browser console, observe JS loading                             | No errors; Stripe and custom checkout script loaded              | Scripts load successfully                                               | Pass      | `checkout_script.js` must be present                    |
-| TC015        | Stripe payment success                        | Complete Stripe payment with valid card                                                               | Redirects to confirmation page `/checkout/success/`                             | Success page loads with order summary                                     | Pass      | Stripe webhook correctly triggers backend logic                      |
-| TC016        | Stripe payment fails                          | Use a declined test card (e.g., `4000000000000002`)                                                   | Stripe shows error, no redirection to success page                              | Error handled gracefully                                                   | Pass      | Stripe’s fail cases tested                                          |
-| TC017        | 2FA verification flow                         | Use a 3DS test card (`4000002760003184`)                                                              | 2FA modal shown, user confirms → redirect to success                            | Works as expected                                                          | Pass      | Confirms 3DS secure cards                                            |
-| TC018        | Email sent after payment                      | Complete checkout → check inbox of test user                                                          | Confirmation email with order summary is received                               | Email received with correct formatting and data                           | Pass      | Includes download links for digital items                          |
-| TC019        | Email fallback on error                       | Simulate template failure (e.g., remove HTML template) → complete checkout                            | Plain text fallback email sent                                                  | Fallback plain email is sent                                              | Pass      | Verified by removing HTML template temporarily                     |
-| TC020        | Email includes download links                 | Buy a digital product → complete checkout → open confirmation email                                  | Email contains links to download purchased files                                | Links present and working                                                 | Pass      | Secure Cloudinary links expire after 1 hour                        |
+Correct section is shown based on choice                                | Pass      | Conditional render based on user state                 |
+| TC003 | Checkout Progress Bar Display | Open checkout and proceed through steps | Progress bar updates to highlight the current step and completed steps | Visual step tracker reflects accurate step progression | Pass | Consistent across all steps and visible on confirmation page |
+| TC004        | Contact Details Form                        | Proceed past choice (authed users)                                   | Form is displayed, fields are pre-filled if user is authed       | User info correctly shown or fields empty when user data is incomplete                    | Pass      |                                                         |
+| TC005        | Real-time JS form validation – user form    | Enter invalid and then valid data in user form fields                | Invalid: red border + error message. Valid: green border + tick  | Real-time validation with visual indicators works correctly             | Pass      | Email, first/last name validated                        |
+| TC006        | Real-time JS form validation – billing form | Enter invalid ZIP/email/phone/country fields                         | Red border and inline feedback if invalid, green + tick if valid | Fields respond immediately to user input                                | Pass      | Includes postcode validation by country                 |
+| TC007        | Block progress with invalid input           | Leave required fields empty or invalid                               | “Continue” button remains disabled                               | Continue button greyed out until all validations pass                   | Pass      | Button stays inactive with any error                    |
+| TC008        | Modal trigger on continue                   | Fill forms and click “Continue”                                      | Modal pops up asking to confirm profile save                     | Modal appears with correct user-specific message                        | Pass      | User see tailored prompt               |
+| TC009        | Modal cancel option                         | In modal, click “Cancel”                                             | Modal closes, no form progression                                | Modal dismissed and stays on current step                               | Pass      |                                                         |
+| TC010        | Modal confirm save                          | In modal, click “Save”                                               | Proceeds to next step, saves data                                | Successfully proceeds to billing step                                   | Pass      |                                                         |
+| TC011        | Invalid form blocks modal                   | Leave required form fields invalid and click “Continue”              | Modal does not open                                              | Modal prevented by disabled button                                      | Pass      | JS validation ensures pre-check conditions              |
+| TC012        | Billing Form validation flow                | Fill billing form with correct/incorrect data                        | Input validated in real time                                     | All fields provide accurate feedback                                    | Pass      | Country and postcode validation tied                    |
+| TC013        | Stripe SDK & Checkout Script load           | Open browser console, observe JS loading                             | No errors; Stripe and custom checkout script loaded              | Scripts load successfully                                               | Pass      | `checkout_script.js` must be present                    |
+| TC014        | Stripe payment success                        | Complete Stripe payment with valid card                                                               | Redirects to confirmation page `/checkout/success/`                             | Success page loads with order summary                                     | Pass      | Stripe webhook correctly triggers backend logic                      |
+| TC014        | Stripe payment fails                          | Use a declined test card (e.g., `4000000000000002`)                                                   | Stripe shows error, no redirection to success page                              | Error handled gracefully                                                   | Pass      | Stripe’s fail cases tested                                          |
+| TC016        | 2FA verification flow                         | Use a 3DS test card (`4000002760003184`)                                                              | 2FA modal shown, user confirms → redirect to success                            | Works as expected                                                          | Pass      | Confirms 3DS secure cards                                            |
+| TC017        | Email sent after payment                      | Complete checkout → check inbox of test user                                                          | Confirmation email with order summary is received                               | Email received with correct formatting and data                           | Pass      | Includes download links for digital items                          |
+| TC018        | Email fallback on error                       | Simulate template failure (e.g., remove HTML template) → complete checkout                            | Plain text fallback email sent                                                  | Fallback plain email is sent                                              | Pass      | Verified by removing HTML template temporarily                     |
+| TC019        | Email includes download links                 | Buy a digital product → complete checkout → open confirmation email                                  | Email contains links to download purchased files                                | Links present and working                                                 | Pass      | Secure Cloudinary links expire after 1 hour                        |
 |
-| TC021        | Proceed through checkout steps              | Login or continue as guest, fill all fields, continue step-by-step   | Each step appears sequentially with validation                   | All steps function as designed                                          | Pass      | Steps are conditionally visible and sequential          |
-| TC022        | Summary “Change” buttons                    | On summary step, click “Change” for contact/billing                  | Returns user to appropriate form step                            | Takes user back to input step                                           | Pass      | Could be improved by targeting correct step directly    |
-| TC023        | Summary info formatting                     | Confirm correct formatting of displayed address and user info        | Proper field spacing and content                                 | Summary matches entry fields                                            | Pass      |                                                         |
-| TC024        | Order Item Details                          | View items listed in summary                                         | Product, format/license, qty, unit price shown                   | Items displayed with preview, names, and pricing                        | Pass      | Responsive layout                                        |
-| TC025        | Order Price Breakdown                       | Review order totals                                                  | Subtotal, VAT, shipping, discount, total shown                   | Pricing is calculated and formatted correctly                           | Pass      | Includes special offer if present                      |
-| TC026        | Stripe Payment Page Customization           | Proceed to Stripe hosted checkout page                               | Stripe page matches site design, includes image & item breakdown | Colors, logo, product image, title, quantity, and price shown correctly | Pass      | Matches project branding; enhances trust & UX          |
-| TC027        | Stripe Valid/Invalid Payment Test           | Use valid and invalid Stripe test card numbers                       | Valid cards complete payment; invalid ones are rejected          | Stripe handles both correctly and shows appropriate messages            | Pass      | Used test cards from official Stripe docs              |
-| TC028        | Stripe 2-Way Verification Handling          | Use cards requiring 3D Secure (SCA) authentication                   | Authentication screen shown; passes/fails based on input         | Verification screen shows; outcome behaves as expected                  | Pass      | Simulated authentication with 3D Secure test cards     |
-| TC029        | Checkout Success Display                    | Complete checkout through Stripe                                     | Confirmation page shown with order number and summary            | Confirmation section includes all expected messages                     | Pass      |                                                         |
-| TC030        | Checkout Success Summary                    | View bottom of confirmation page                                     | Final price breakdown shown (same as step 3)                     | All amounts match pre-checkout summary                                  | Pass      | Summary consistent with order                          |
-| TC031        | Downloadable Items Section                  | Checkout includes digital items                                      | Shows “Download” buttons with file titles                        | Buttons download items directly                                         | Pass      | Uses `download` attribute                              |
-| TC032        | Modal Save Error Handling                   | Simulate failed save (e.g., disconnect network before clicking Save) | Error message shown in modal                                     | Error alert is shown in red within modal                                | Pass      | Simulated by console error override or server intercept |
-| TC033        | Navigation Flexibility                      | Use browser back/forward or revisit form steps                       | Page resets correctly and sections toggle                        | Sections show/hide correctly with JS                                    | Pass      | State resets properly with re-entry                    |
-| TC034        | Spinner on slow transition          | Proceed through checkout with simulated network lag or slow connection           | Loading spinner appears when submitting form or progressing to next checkout step | Spinner is shown until next step loads, giving visual feedback during delay         | Pass      | Prevents user confusion or multiple submissions        |
+| TC020        | Proceed through checkout steps              | Login, fill all fields, continue step-by-step   | Each step appears sequentially with validation                   | All steps function as designed                                          | Pass      | Steps are conditionally visible and sequential          |
+| TC021        | Summary “Change” buttons                    | On summary step, click “Change” for contact/billing                  | Returns user to appropriate form step                            | Takes user back to input step                                           | Pass      | Could be improved by targeting correct step directly    |
+| TC022        | Summary info formatting                     | Confirm correct formatting of displayed address and user info        | Proper field spacing and content                                 | Summary matches entry fields                                            | Pass      |                                                         |
+| TC023        | Order Item Details                          | View items listed in summary                                         | Product, format/license, qty, unit price shown                   | Items displayed with preview, names, and pricing                        | Pass      | Responsive layout                                        |
+| TC024        | Order Price Breakdown                       | Review order totals                                                  | Subtotal, VAT, shipping, discount, total shown                   | Pricing is calculated and formatted correctly                           | Pass      | Includes special offer if present                      |
+| TC025        | Stripe Payment Page Customization           | Proceed to Stripe hosted checkout page                               | Stripe page matches site design, includes image & item breakdown | Colors, logo, product image, title, quantity, and price shown correctly | Pass      | Matches project branding; enhances trust & UX          |
+| TC026        | Stripe Valid/Invalid Payment Test           | Use valid and invalid Stripe test card numbers                       | Valid cards complete payment; invalid ones are rejected          | Stripe handles both correctly and shows appropriate messages            | Pass      | Used test cards from official Stripe docs              |
+| TC027        | Stripe 2-Way Verification Handling          | Use cards requiring 3D Secure (SCA) authentication                   | Authentication screen shown; passes/fails based on input         | Verification screen shows; outcome behaves as expected                  | Pass      | Simulated authentication with 3D Secure test cards     |
+| TC028        | Checkout Success Display                    | Complete checkout through Stripe                                     | Confirmation page shown with order number and summary            | Confirmation section includes all expected messages                     | Pass      |                                                         |
+| TC029        | Checkout Success Summary                    | View bottom of confirmation page                                     | Final price breakdown shown (same as step 3)                     | All amounts match pre-checkout summary                                  | Pass      | Summary consistent with order                          |
+| TC030        | Downloadable Items Section                  | Checkout includes digital items                                      | Shows “Download” buttons with file titles                        | Buttons download items directly                                         | Pass      | Uses `download` attribute                              |
+| TC031        | Modal Save Error Handling                   | Simulate failed save (e.g., disconnect network before clicking Save) | Error message shown in modal                                     | Error alert is shown in red within modal                                | Pass      | Simulated by console error override or server intercept |
+| TC032        | Navigation Flexibility                      | Use browser back/forward or revisit form steps                       | Page resets correctly and sections toggle                        | Sections show/hide correctly with JS                                    | Pass      | State resets properly with re-entry                    |
+| TC033        | Spinner on slow transition          | Proceed through checkout with simulated network lag or slow connection           | Loading spinner appears when submitting form or progressing to next checkout step | Spinner is shown until next step loads, giving visual feedback during delay         | Pass      | Prevents user confusion or multiple submissions        |
 
 
 ---
@@ -2438,6 +2434,7 @@ warning caused by the use of arrow functions only avaialbale in ES6
 | Passed enriched product data (`bag_items`) with format info into the email context, then filtered for digital products only in the email logic.|
 | Special Offer application stopped working | The `apply_special_offer` function stopped applying discounts, even when valid offers existed. The logic was intact, but it wasn’t integrated correctly into the updated checkout flow (e.g., `create_checkout_session`, `checkout_summary`, and `checkout_success`). This caused the special offer to silently fail. | Re-integrated the `apply_special_offer` function into all key checkout steps, ensuring discount calculation is applied consistently. Verified that discounts now flow correctly from checkout summary → Stripe session → order confirmation. |
 | Free Shipping Discount Not Applied Correctly | Customers saw `-€0.00` in the discount field, even when the total order value exceeded the minimum threshold for free shipping. The logic only checked the **subtotal** (`bag_total`) against the threshold, ignoring shipping. | Updated `apply_special_offer` to check the **order total excluding VAT** (`bag_total + shipping_total`) against the threshold. Now, when free shipping is applied, the discount equals the deducted shipping cost (e.g., `-€22.00`), clearly showing the benefit. Verified locally and in production. |
+| Checkout flow – Server 500 error during Stripe webhook | The server crashed with a 500 error after Stripe’s `checkout.session.completed` webhook because the session metadata stored the entire cart (`bag`) JSON. This caused payload bloat, and decoding errors during webhook processing. It also created discrepancies when orders were being reconstructed from that metadata. | Implemented a `bag_ref` approach: instead of storing the full `bag` JSON in the Stripe session, a unique `bag_ref` UUID is generated and mapped to the session bag in Django. Stripe metadata now only includes this lightweight reference. The webhook retrieves the original bag via `bag_ref`, eliminating payload size issues and JSON decoding failures. This stabilized order creation and fixed both Bug 1 & 2. | Orders with more than 3–4 items could not complete checkout and failed with a 500 error, blocking users from purchasing larger or multiple-item orders until resolved. |
 
 ---
 ---
