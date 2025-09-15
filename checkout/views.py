@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import (
@@ -29,6 +30,10 @@ import stripe
 import string
 import random
 import re
+import uuid
+
+import logging
+logger = logging.getLogger(__name__)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -98,103 +103,124 @@ def create_checkout_session(request):
     - On success: :url:`/checkout/success/`
     - On cancel: :url:`/bag/`
     """
-    bag = request.session.get('bag', {})
-    line_items = []
-    bag_items = []
-    bag_total = Decimal("0.00")
+    try:
+        bag = request.session.get('bag', {})
+        if not bag:
+            return JsonResponse({'error': 'Cart is empty'}, status=400)
 
-    for item in bag.values():
-        product = Product.objects.get(id=item['product_id'])
-        quantity = item['quantity']
-        line_total = product.price * quantity
-        bag_total += line_total
+        line_items = []
+        bag_items = []
+        bag_total = Decimal("0.00")
+        shipping_total = Decimal("0.00")
 
-        bag_items.append({
-            "product": product,
-            "quantity": quantity,
-            "line_total": line_total,
-            "format": item.get("format"),
-            "license": item.get("license"),
-            "print_type": item.get("print_type"),
-        })
+        for item in bag.values():
+            try:
+                product = Product.objects.get(id=item['product_id'])
+            except Product.DoesNotExist:
+                logger.error(f"Product not found for bag item: {item}")
+                continue
 
-        line_items.append({
-            'price_data': {
-                'currency': 'eur',
-                'unit_amount': int(product.price * 100),
-                'product_data': {
-                    'name': product.title,
-                    'images': [
-                        request.build_absolute_uri(
+            quantity = int(item.get("quantity", 1))
+            price = int(Decimal(product.price) * 100)  # cents
+            bag_total += (product.price * quantity)
+
+            bag_items.append({"product": product, "quantity": quantity})
+
+            line_items.append({
+                'price_data': {
+                    'currency': 'eur',
+                    'unit_amount': price,
+                    'product_data': {
+                        'name': product.title,
+                        'images': [request.build_absolute_uri(
                             product.image_preview.url
-                        )
-                    ],
+                        )] if getattr(product, "image_preview", None) else [],
+                    },
                 },
-            },
-        })
+                'quantity': quantity,
+            })
 
-    # Apply special offer logic
-    shipping_total = Decimal("10.00")
-    new_total, shipping_total, discount, active_offer = apply_special_offer(
-        bag_items, bag_total, shipping_total
-    )
+        (
+            new_total,
+            shipping_total,
+            discount,
+            special_offer,
+        ) = apply_special_offer(
+            bag_items,
+            bag_total,
+            shipping_total,
+        )
 
-    # Add discount as a negative line item
-    if discount > 0:
-        line_items.append({
-            'price_data': {
-                'currency': 'eur',
-                'unit_amount': -int(discount * 100),
-                'product_data': {
-                    'name': 'Special Offer Discount',
+        if shipping_total > 0:
+            line_items.append({
+                'price_data': {
+                    'currency': 'eur',
+                    'unit_amount': int(shipping_total * 100),
+                    'product_data': {'name': 'Shipping'},
                 },
-            },
-            'quantity': 1,
-        })
+                'quantity': 1,
+            })
 
-    # Add shipping cost only if > 0
-    if shipping_total > 0:
-        line_items.append({
-            'price_data': {
-                'currency': 'eur',
-                'unit_amount': int(shipping_total * 100),
-                'product_data': {
-                    'name': 'Shipping',
-                },
-            },
-            'quantity': 1,
-        })
+        order = OrderModel.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            total_price=(new_total + shipping_total),  # net+shipping for now
+            status="pending",
+        )
+        for item in bag_items:
+            order.products.add(item["product"])
+        order.save()
 
-    session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-        line_items=line_items,
-        mode='payment',
-        customer_email=(
-            request.user.email
-            if request.user.is_authenticated
-            else request.POST.get("email", "")
-        ),
-        success_url=(
-            request.build_absolute_uri('/checkout/success/')
-            + '?session_id={CHECKOUT_SESSION_ID}'
-        ),
-        cancel_url=request.build_absolute_uri('/checkout/summary/'),
-        metadata={
-            "bag": json.dumps(request.session.get("bag", {})),
-            "user_email": (
-                request.user.email
-                if request.user.is_authenticated
+        # --- Save full bag to cache under a short reference key ---
+        bag_ref = str(uuid.uuid4())
+        cache.set(
+            f"checkout:bag:{bag_ref}",
+            {
+                "bag": bag,
+                "discount": str(discount),
+            },
+            timeout=60 * 60 * 2  # 2 hours
+        )
+
+        # --- Create Stripe Checkout session ---
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',
+            discounts=[{"coupon": special_offer.stripe_coupon_id}]
+            if discount > 0 and hasattr(special_offer, "stripe_coupon_id")
+            else None,
+            customer_email=(
+                request.user.email if request.user.is_authenticated
                 else request.POST.get("email", "")
             ),
-            "discount": str(discount),          # store discount in metadata
-            "special_offer": (
-                str(active_offer.id) if active_offer else ""
+            success_url=(
+                request.build_absolute_uri("/checkout/success/")
+                + "?session_id={CHECKOUT_SESSION_ID}"
             ),
-        }
-    )
+            cancel_url=request.build_absolute_uri('/checkout/summary/'),
+            metadata={
+                "order_id": str(order.id),
+                "bag_ref": bag_ref,
+                "user_id": (
+                    str(getattr(request.user, "id", ""))
+                    if request.user.is_authenticated
+                    else ""
+                ),
+                "user_email": (
+                    request.user.email
+                    if request.user.is_authenticated
+                    else request.POST.get("email", "")
+                ),
 
-    # Return session ID as JSON for JS redirect
-    return JsonResponse({'id': session.id})
+                "discount": str(discount),
+            }
+        )
+
+        return JsonResponse({'id': session.id})
+
+    except Exception as e:
+        logger.exception("Stripe checkout session creation failed")
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 def apply_special_offer(bag_items, bag_total, shipping_total):
@@ -233,14 +259,14 @@ def apply_special_offer(bag_items, bag_total, shipping_total):
 
     if active_offer.offer_type == 'free_shipping':
         pre_discount_total = bag_total + shipping_total
-        # Apply free shipping
+        # --- Apply free shipping ---
         if pre_discount_total >= active_offer.min_amount:
             discount += shipping_total
             shipping_total = Decimal("0.00")
 
     elif (active_offer.offer_type == 'percentage_discount'
           and active_offer.theme):
-        # Apply percentage discount to themed products
+        # --- Apply percentage discount to themed products ---
         for item in bag_items:
             if item["product"].theme == active_offer.theme:
                 item_total = item["product"].price * item["quantity"]
@@ -249,7 +275,7 @@ def apply_special_offer(bag_items, bag_total, shipping_total):
                 )
 
     elif active_offer.offer_type == 'buy_x_get_y':
-        # Apply Buy X Get Y logic
+        # --- Apply Buy X Get Y logic ---
         for item in bag_items:
             if item["quantity"] >= (
                 active_offer.buy_quantity + active_offer.get_quantity
@@ -647,81 +673,155 @@ def stripe_webhook(request):
     wh_secret = settings.STRIPE_WH_SECRET
 
     try:
-        # Verify the webhook signature and construct event
         event = stripe.Webhook.construct_event(payload, sig_header, wh_secret)
-    except ValueError:
-        # Invalid payload
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError:
-        # Invalid signature
+    except (ValueError, stripe.error.SignatureVerificationError):
         return HttpResponse(status=400)
 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
-        metadata = session.get("metadata", {})
+        metadata = session.get("metadata", {}) or {}
 
-        user_id = metadata.get("user_id")
-        user_email = metadata.get("user_email")
+        # --- Identify the order we created pre-checkout ---
+        order_id = metadata.get("order_id")
+        if not order_id:
+            logger.error("Webhook missing order_id in metadata")
+            return HttpResponse(status=400)
+        order = OrderModel.objects.filter(id=order_id).first()
+        if not order:
+            logger.error(f"Order not found for id={order_id}")
+            return HttpResponse(status=400)
 
-        # Try to fetch the user by ID first, fallback to email
-        user = None
-        if user_id:
-            try:
-                user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                pass
-
-        if not user and user_email:
-            user = User.objects.filter(email=user_email).first()
-
-        # If user is still not found, do not create order
+        # --- Identify the user (prefer the one on the order) ---
+        user = getattr(order, "user", None)
         if not user:
-            # Return 200 so Stripe doesn't retry
-            return HttpResponse(status=200)
+            user_id = metadata.get("user_id")
+            if user_id:
+                user = User.objects.filter(id=user_id).first()
+            if not user:
+                customer_email = session.get("customer_email")
+                if customer_email:
+                    user = User.objects.filter(email=customer_email).first()
 
-        # Get bag (cart) data from metadata
-        try:
-            bag = json.loads(metadata.get("bag", "{}"))
-        except (TypeError, json.JSONDecodeError):
-            bag = {}
+        # --- Rebuild bag from cache via bag_ref ---
+        bag_ref = metadata.get("bag_ref")
+        cached = cache.get(f"checkout:bag:{bag_ref}") if bag_ref else None
+        bag = cached.get("bag") if cached else {}
 
-        # Calculate order total from Stripe session
-        order_total = Decimal(session.get("amount_total", 0)) / 100
+        bag_items = []
+        bag_total = Decimal("0.00")
+        shipping_total = Decimal("0.00")
 
-        # Create order
-        order = OrderModel.objects.create(
-            user=user,
-            total_price=order_total,
-            status="completed",
-        )
-
-        # Add each product from the bag
-        for item in bag.values():
+        # --- Convert cached bag to product lines ---
+        for item in (bag or {}).values():
             try:
                 product = Product.objects.get(id=item["product_id"])
-                order.products.add(product)
             except Product.DoesNotExist:
                 continue
 
+            quantity = int(item.get("quantity", 1))
+            line_total = product.price * quantity
+            bag_total += line_total
+
+            bag_items.append({
+                "product": product,
+                "quantity": quantity,
+                "unit_price": product.price,
+                "line_total": line_total,
+                "format": item.get("format"),
+                "license": item.get("license"),
+                "print_type": item.get("print_type"),
+            })
+
+            if item.get("format") == "printed":
+                print_type_name = item.get("print_type")
+                shipping_key = PRINT_TYPE_TO_SHIPPING_TYPE.get(print_type_name)
+                if shipping_key:
+                    shipping_obj = ShippingRate.objects.filter(
+                        product_type=shipping_key,
+                        country=DEFAULT_COUNTRY,
+                        shipping_option=DEFAULT_OPTION.lower(),
+                    ).first()
+                    if shipping_obj:
+                        shipping_total += shipping_obj.price * quantity
+
+        # --- Apply special offers ---
+        (
+            new_total,
+            shipping_total,
+            discount,
+            special_offer,
+        ) = apply_special_offer(
+            bag_items,
+            bag_total,
+            shipping_total,
+        )
+
+        vat_rate_display = 21
+        vat_rate = Decimal(vat_rate_display) / 100
+        vat = (new_total * vat_rate).quantize(Decimal("0.01"))
+        grand_total = (
+            new_total + shipping_total + vat
+        ).quantize(Decimal("0.01"))
+
+        try:
+            stripe_total = Decimal(session.get("amount_total", 0)) / 100
+            if stripe_total != grand_total:
+                logger.warning(
+                    "[WARNING] Stripe total %s != recalculated %s",
+                    stripe_total,
+                    grand_total,
+                )
+        except Exception:
+            pass
+
+        # --- Finalize order ---
+        order.total_price = grand_total
+        order.status = "completed"
         order.save()
 
-        # Fallback email in case template loader fails
-        try:
-            send_order_email(user, order, session.get("id"))
-        except (TemplateDoesNotExist, TemplateSyntaxError, SMTPException) as e:
-            print(f"[EMAIL ERROR] Failed to send rich confirmation email: {e}")
+        existing_ids = set(order.products.values_list("id", flat=True))
+        for item in bag_items:
+            if item["product"].id not in existing_ids:
+                order.products.add(item["product"])
+        order.save()
 
-            send_mail(
-                subject=f"Your Order {order.order_number} – Confirmation",
-                message=(
-                    f"Thank you for your order. Your order number is "
-                    f"{order.order_number}.\n"
-                    f"If you have questions, reply to this email.\n\n"
-                    f"Your Creative Spark Images Team"
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
+        # --- Email summary data ---
+        summary = {
+            "bag_items": bag_items,
+            "bag_total": bag_total,
+            "new_total": new_total,
+            "shipping_total": shipping_total,
+            "vat": vat,
+            "vat_rate_display": vat_rate_display,
+            "grand_total": grand_total,
+            "discount": discount,
+            "special_offer": special_offer,
+        }
+
+        try:
+            if user:
+                send_order_email(user, order, summary)
+        except (TemplateDoesNotExist, TemplateSyntaxError, SMTPException) as e:
+            logger.error(
+                "[EMAIL ERROR] Failed to send confirmation email: %s", e
             )
+            if user:
+                order_number = getattr(order, "order_number", order.id)
+
+                send_mail(
+                    subject=f"Your Order {order_number} – Confirmation",
+                    message=(
+                        "Thank you for your order. Your order number is "
+                        f"{order_number}.\n"
+                        "If you have questions, reply to this email.\n\n"
+                        "Your Creative Spark Images Team"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                )
+
+        if bag_ref:
+            cache.delete(f"checkout:bag:{bag_ref}")
 
     return HttpResponse(status=200)
 
@@ -764,11 +864,17 @@ def checkout_success(request):
         return HttpResponse(f"Error fetching order: {str(e)}", status=500)
 
     try:
-        bag = json.loads(session.get("metadata", {}).get("bag", "{}"))
+        bag = {}
+        md = session.get("metadata", {}) or {}
+        bag_ref = md.get("bag_ref")
+        if bag_ref:
+            cached = cache.get(f"checkout:bag:{bag_ref}")
+            if cached and "bag" in cached:
+                bag = cached["bag"]
     except (TypeError, json.JSONDecodeError):
         bag = {}
 
-    # Sanitize product title to prevent errors when creating url
+    # --- Sanitize product title to prevent errors when creating url ---
     def sanitize_filename(title):
         return re.sub(r'[^\w\-_.]', '_', title)
 
@@ -899,7 +1005,7 @@ def send_order_email(user, order, summary):
     to_email = [user.email]
     from_email = settings.DEFAULT_FROM_EMAIL
 
-    # Sanitize product title to prevent errors when creating url
+    # --- Sanitize product title to prevent errors when creating url ---
     def sanitize_filename(title):
         return re.sub(r'[^\w\-_.]', '_', title)
 
@@ -942,7 +1048,7 @@ def send_order_email(user, order, summary):
         context
     )
 
-    # Compose and send email with both formats
+    # --- Compose and send email with both formats ---
     email = EmailMultiAlternatives(
         subject=subject,
         body=text_content,
