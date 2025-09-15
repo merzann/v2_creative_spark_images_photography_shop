@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return firstValid && lastValid && emailValid;
   }
 
-  // --- Live Validation for Profile ---
+  // --- Live Validation for Checkout-Profile ---
   function attachProfileValidationHandlers() {
     const form = document.getElementById('checkout-profile-form');
     if (!form) return;

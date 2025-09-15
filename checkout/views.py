@@ -113,8 +113,8 @@ def create_checkout_session(request):
             mode="payment",
             customer_email=request.user.email,
             success_url=request.build_absolute_uri(
-                "/checkout/success/?session_id={CHECKOUT_SESSION_ID}"
-            ),
+                reverse("checkout_success")
+            ) + "?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=request.build_absolute_uri(reverse("view_bag")),
             metadata={
                 "bag_id": bag_id,
@@ -607,6 +607,7 @@ def stripe_webhook(request):
             user=user,
             total_price=order_total,
             status="completed",
+            stripe_session_id=session.get("id"),
         )
 
         bag_items = []
@@ -691,73 +692,81 @@ def checkout_success(request):
     if not session_id:
         return HttpResponse("Missing session ID", status=400)
 
-    placeholder = session_id.strip().startswith("{") \
-        and session_id.strip().endswith("}")
+    try:
+        # Retrieve Stripe session
+        session = stripe.checkout.Session.retrieve(
+            session_id,
+            expand=["line_items"]
+        )
+    except stripe.error.InvalidRequestError:
+        return HttpResponse("Invalid session ID", status=400)
+    except Exception as e:
+        return HttpResponse(f"Error fetching Stripe session: {str(e)}", status=500)
 
-    session = None
-    if not placeholder:
-        try:
-            session = stripe.checkout.Session.retrieve(session_id)
-        except stripe.error.InvalidRequestError:
-            return HttpResponse("Invalid session ID", status=400)
-        except Exception as e:
-            return HttpResponse(f"Error fetching order: {str(e)}", status=500)
-
-    customer_email = (
-        session.get("customer_email") if session
-        else (request.user.email if request.user.is_authenticated else None)
-    )
-    if not customer_email:
-        return HttpResponse("User not found", status=404)
-
-    user = User.objects.filter(email=customer_email).first()
+    # --- Resolve user ---
+    customer_email = session.get("customer_email")
+    user = None
+    if customer_email:
+        user = User.objects.filter(email=customer_email).first()
+    if not user and request.user.is_authenticated:
+        user = request.user
     if not user:
         return HttpResponse("User not found", status=404)
 
-    try:
-        order = OrderModel.objects.filter(user=user).latest("created_at")
-    except OrderModel.DoesNotExist:
-        return HttpResponse("Order not found", status=404)
+    # --- Guarantee Order exists (NEW LOGIC) ---
+    order_total = Decimal(session.get("amount_total", 0)) / 100
+    order, created = OrderModel.objects.get_or_create(
+        stripe_session_id=session.id,
+        defaults={
+            "user": user,
+            "total_price": order_total,
+            "status": "completed",
+        },
+    )
+
+    if created and session.get("metadata", {}):
+        bag_id = session["metadata"].get("bag_id")
+        if bag_id:
+            cs = CheckoutSession.objects.filter(bag_id=bag_id).first()
+            if cs:
+                for item in cs.bag_data.values():
+                    try:
+                        product = Product.objects.get(id=item["product_id"])
+                        order.products.add(product)
+                    except Product.DoesNotExist:
+                        continue
+                order.save()
 
     bag = {}
-    bag_id = None
-    if session:
-        md = session.get("metadata", {}) or {}
-        bag_id = md.get("bag_id")
-
+    metadata = session.get("metadata", {}) or {}
+    bag_id = metadata.get("bag_id")
     if bag_id:
         cs = CheckoutSession.objects.filter(bag_id=bag_id).first()
         if cs:
             bag = cs.bag_data
     else:
-        cs = (CheckoutSession.objects
-              .filter(user=user)
-              .order_by("-created_at")
-              .first())
+        cs = CheckoutSession.objects.filter(user=user).order_by("-created_at").first()
         if cs:
             bag = cs.bag_data
 
-    # --- Sanitize product title to prevent errors when creating url ---
+    # --- Sanitize product title for download links ---
     def sanitize_filename(title):
-        return re.sub(r'[^\w\-_.]', '_', title)
+        return re.sub(r"[^\w\-_.]", "_", title)
 
     download_links = []
-    try:
-        for key, item in (bag or {}).items():
-            if item.get("format") == "digital":
-                product = get_object_or_404(Product, pk=item["product_id"])
-                if product.file:
-                    safe_title = sanitize_filename(product.title)
-                    url = product.file.build_url(
-                        resource_type="image",
-                        type="upload",
-                        secure=True,
-                        transformation=[{"flags": f"attachment:{safe_title}"}],
-                        expires=3600,
-                    )
-                    download_links.append({"title": product.title, "url": url})
-    except Exception as e:
-        print("Error generating download link:", str(e))
+    for key, item in (bag or {}).items():
+        if item.get("format") == "digital":
+            product = get_object_or_404(Product, pk=item["product_id"])
+            if product.file:
+                safe_title = sanitize_filename(product.title)
+                url = product.file.build_url(
+                    resource_type="image",
+                    type="upload",
+                    secure=True,
+                    transformation=[{"flags": f"attachment:{safe_title}"}],
+                    expires=3600,
+                )
+                download_links.append({"title": product.title, "url": url})
 
     request.session["bag"] = {}
 
@@ -768,9 +777,9 @@ def checkout_success(request):
 
     try:
         vat_obj = CountryVAT.objects.get(country__iexact=country)
-        vat_rate = float(vat_obj.vat_rate)
+        vat_rate = Decimal(vat_obj.vat_rate) / 100
     except CountryVAT.DoesNotExist:
-        vat_rate = float(21)
+        vat_rate = Decimal(FALLBACK_VAT)
 
     for key, item in (bag or {}).items():
         product = get_object_or_404(Product, pk=item["product_id"])
@@ -807,8 +816,6 @@ def checkout_success(request):
         bag_items, bag_total, shipping_total
     )
 
-    vat_rate_display = 21
-    vat_rate = Decimal(vat_rate_display) / 100
     vat = (new_total * vat_rate).quantize(Decimal("0.01"))
     grand_total = (new_total + vat + shipping_total).quantize(Decimal("0.01"))
 
@@ -823,15 +830,16 @@ def checkout_success(request):
         "billing_phone": profile.default_phone_number if profile else "",
     }
 
-    send_order_email(user, order, {
-        "bag_items": bag_items,
-        "bag_total": bag_total,
-        "vat": vat,
-        "vat_rate_display": vat_rate_display,
-        "shipping_total": shipping_total,
-        "discount": discount,
-        "grand_total": grand_total,
-    })
+    if created:
+        send_order_email(user, order, {
+            "bag_items": bag_items,
+            "bag_total": bag_total,
+            "vat": vat,
+            "vat_rate_display": int(vat_rate * 100),
+            "shipping_total": shipping_total,
+            "discount": discount,
+            "grand_total": grand_total,
+        })
 
     return render(
         request,
@@ -842,7 +850,7 @@ def checkout_success(request):
             "bag_items": bag_items,
             "bag_total": bag_total,
             "vat": vat,
-            "vat_rate_display": vat_rate_display,
+            "vat_rate_display": int(vat_rate * 100),
             "shipping_total": shipping_total,
             "grand_total": grand_total,
             "billing_info": billing_info,
