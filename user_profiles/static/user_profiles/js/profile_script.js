@@ -32,9 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const carouselEl = document.querySelector("#profileCarousel");
     const urlSlide = new URLSearchParams(window.location.search).get("slide");
 
-    if (urlSlide === "history" && carouselEl) {
-    
-    const carousel = $(carouselEl).carousel();
-    $(carouselEl).carousel(1);  
+    if (carouselEl && urlSlide) {
+        const carousel = $(carouselEl).carousel();
+
+        if (urlSlide === "history") {
+            $(carouselEl).carousel(1);
+        } else if (urlSlide === "wishlist") {
+            $(carouselEl).carousel(2);
+        }
     }
 });
