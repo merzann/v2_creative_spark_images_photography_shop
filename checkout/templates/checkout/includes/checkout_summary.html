@@ -23,7 +23,7 @@
             {{ billing_info.billing_city }}, {{ billing_info.billing_county }}<br>
             {{ billing_info.billing_postcode }} {{ billing_info.billing_country }}
           </p>
-          <a href="/checkout/" class="btn btn-link">Change</a>
+          <a href="{% url 'checkout' %}?step=billing" class="btn btn-link">Change</a>
         </div>
       </div>
       <hr>
