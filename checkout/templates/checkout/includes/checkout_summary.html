@@ -68,10 +68,17 @@
       {% if special_offer %}
         <div class="alert alert-success my-4">
           {{ special_offer.text }}
+          {% if special_offer.offer_type != 'buy_x_get_y' and discount > 0 %}
             <li class="list-group-item d-flex justify-content-between">
-              <span>Discount applied:</span>
+              <span>Discount:</span>
               <strong>-€{{ discount|floatformat:2 }}</strong>
             </li>
+          {% elif special_offer.offer_type == 'buy_x_get_y' %}
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Offer:</span>
+              <strong>Buy {{ special_offer.buy_quantity }} – Get {{ special_offer.get_quantity }} Free</strong>
+            </li>
+          {% endif %}
         </div>
       {% endif %}
 

@@ -183,14 +183,7 @@ def apply_special_offer(bag_items, bag_total, shipping_total):
 
     elif active_offer.offer_type == 'buy_x_get_y':
         # --- Apply Buy X Get Y logic ---
-        for item in bag_items:
-            if item["quantity"] >= (
-                active_offer.buy_quantity + active_offer.get_quantity
-            ):
-                free_units = item["quantity"] // (
-                    active_offer.buy_quantity + active_offer.get_quantity
-                )
-                discount += free_units * item["product"].price
+        pass
 
     new_total = bag_total - discount
 
