@@ -163,7 +163,7 @@ def add_to_wishlist(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     Wishlist.objects.get_or_create(user=request.user, product=product)
     messages.success(request, f"{product.title} added to your wishlist.")
-    return redirect("profile")
+    return redirect("view_bag")
 
 
 @login_required
