@@ -72,25 +72,43 @@
                 <small>Subtotal: €{{ item.subtotal|floatformat:2 }}</small><br>
 
                 <!-- Buttons for desktop -->
-                <div class="ms-3 d-none d-sm-flex flex-column align-items-end">
+                <div class="ms-3 d-none d-sm-flex flex-column align-items-end" style="min-width: 140px;">
                   <button type="submit"
-                          class="btn btn-sm btn-outline-primary mb-2"
+                          class="btn btn-sm btn-outline-primary mb-2 w-100"
                           id="update-btn-{{ forloop.counter }}"
                           {% if item.format == 'printed' and not item.print_type %}disabled{% endif %}>
                     Update
                   </button>
-                  <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-outline-danger btn-sm">Remove</a>
+                  <a href="{% url 'remove_from_bag' item.key %}" 
+                    class="btn btn-outline-danger btn-sm mb-2 w-100">
+                    Remove
+                  </a>
+                  <a href="{% url 'add_to_wishlist' item.product.id %}" 
+                    class="btn btn-outline-secondary btn-sm mb-2">
+                    ♡ Add to Wishlist
+                  </a>
                 </div>
 
                 <!-- Buttons for mobile -->
-                <div class="d-flex flex-wrap justify-content-between mt-2 d-sm-none gap-2">
-                  <button type="submit"
-                          class="btn btn-sm btn-outline-primary flex-fill"
-                          id="update-btn-{{ forloop.counter }}-mobile"
-                          {% if item.format == 'printed' and not item.print_type %}disabled{% endif %}>
-                    Update
-                  </button>
-                  <a href="{% url 'remove_from_bag' item.key %}" class="btn btn-outline-danger btn-sm flex-fill">Remove</a>
+                <div class="d-sm-none mt-2 text-center">
+                  <div class="d-flex justify-content-center gap-2 mb-2 btn-row">
+                    <button type="submit"
+                            class="btn btn-sm btn-outline-primary flex-fill"
+                            id="update-btn-{{ forloop.counter }}-mobile"
+                            {% if item.format == 'printed' and not item.print_type %}disabled{% endif %}>
+                      Update
+                    </button>
+                    <a href="{% url 'remove_from_bag' item.key %}" 
+                      class="btn btn-outline-danger btn-sm flex-fill">
+                      Remove
+                    </a>
+                  </div>
+
+                  <!-- Row 2: Wishlist -->
+                  <a href="{% url 'add_to_wishlist' item.product.id %}" 
+                    class="btn btn-outline-secondary btn-sm wishlist-btn">
+                    ♡ Add to Wishlist
+                  </a>
                 </div>
               </div>
             </div>
