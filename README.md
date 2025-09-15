@@ -1160,13 +1160,15 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 
 ### Step 1: Contact details
 
-**Dual Entry Paths:**
-  - Authenticated Users: See a pre-filled contact form with their saved profile data.
-  - Guest Users: Can use the "Set up an account" option on the login page.
+**User Path:**
+  - Checkout now requires authentication: all orders are tied to a registered user account.
+  - When proceeding to checkout, unauthenticated visitors are redirected to the login/registration page.
+  - Contact details (first name, last name, email) are always loaded from or saved into the user’s profile.
+  - This change ensures a consistent link between orders, invoices, and customer profiles.
 
 **Profile Management:**
   - Authenticated users can update their first name, last name, and email directly from the checkout form.
-  - Guest users need to create a user profile first in order to be able to complete a purchase
+  - First time users need to create a user profile first in order to be able to complete a purchase
 
 **Modal Confirmation:**
   - Users are prompted with a modal asking whether to save changes before proceeding.
@@ -2381,24 +2383,18 @@ warning caused by the use of arrow functions only avaialbale in ES6
   | Modal infinite loop | Clicking "Continue" after a cancelled or skipped save reopened the modal | Tracked user intent using flags and dataset attributes to conditionally redirect |
   | Modal not closing | Clicking "Save" did not close modal despite successful save | Refactored save handler to close modal on successful response |
   | Error displayed despite success | Modal still showed "Unable to save profile" even when save succeeded | Ensured error alert is cleared upon success and modal is hidden |
-  | Duplicate profile error | Guest user triggered `IntegrityError` if profile already existed | Replaced `create()` with `get_or_create()` to ensure uniqueness |
-  | Guest login failed | Guest users caused error due to missing authentication backend | Explicitly set backend before calling Django’s `login()` |
-  | Email validation missing | Guest form accepted invalid email addresses | Added regex-based email validation before enabling "Continue" button |
-  | Continue enabled too early | Guest users could click "Continue" before completing the form | Added dynamic validation to monitor input fields and disable button if any are invalid |
   | Profile changes not reverted | Authenticated users clicking "Don't Save" saw their edits remain in the form | Reset form fields to original values by re-inserting captured initial data |
   | Pre-filled data not displayed | Billing form did not display saved profile data for authenticated users  | Used `initial.billing_*` context properly in the template                 |
-  | Email field accepted `.c`     | Regex allowed incomplete top-level domain in guest form                  | Updated email regex to require TLD with 2+ characters                     |
   | No field-level error feedback | Form didn’t provide immediate input feedback                             | Added `invalid-feedback` elements and real-time input validation          |
   | Continue enabled on invalid input | Button could activate before form was valid                          | Bound validation logic to real-time listeners and checked on render       |
   | Country select didn’t persist | Selected country not marked as `selected` in dropdown                    | Used `{% if initial.billing_country == 'IE' %}selected{% endif %}`        |
   | Missing Template Filter | Template filter `get_item` caused `TemplateSyntaxError` in `checkout_summary.html`.            | Removed or replaced `get_item` usage with direct dictionary access or correct filter logic. |
   | No Timestamp on Request | AttributeError: `'WSGIRequest' object has no attribute 'timestamp'` during offer lookup.       | Replaced `request.timestamp` with `timezone.now()` from Django utilities.                   |
   | Favicon 404             | Browser auto-requested `/checkout/favicon.ico`, resulting in a 404 error.                      | Added a `favicon.ico` in the static directory and linked it via `<link rel="icon">`.        |
-  | CSRF Token Warning      | Warning about missing `{% csrf_token %}` context in guest form template load.                  | Ensured `RequestContext` is used in AJAX template rendering via `render_to_string`.         |
   | Price Format Inconsistency | Some totals were displayed as `€0` instead of `€0.00`.                                         | Applied `floatformat:2` in the Django template to ensure all monetary values show two decimals. |
   | `get_item` filter error             | Template error due to undefined custom filter `get_item`                                    | Removed custom template logic and used native Django context rendering                       |
   | `request.timestamp` not found       | Attempted to access non-existent attribute `request.timestamp`                              | Replaced with `timezone.now()` in views.py to fetch current timestamp reliably              |
-  | `{% csrf_token %}` warning          | Warning shown due to missing `RequestContext` when rendering guest form                     | Ensured all form views use `RequestContext` and context processors properly configured       |
+  | `{% csrf_token %}` warning          | Warning shown due to missing `RequestContext` when rendering user form                     | Ensured all form views use `RequestContext` and context processors properly configured       |
   | Favicon 404                         | Missing `favicon.ico` request caused 404 errors in dev logs                                 | Added a `favicon.ico` static file and linked it in base template                            |
   | Missing card layout in summary      | Order Summary section lacked consistent visual card styling used in previous steps          | Wrapped entire summary content inside Bootstrap `.card` container with padding and shadow   |
   | Buttons breaking layout             | Proceed/Back buttons appeared too large or shared borders on small screens                  | Updated with responsive width classes and spacing utilities (`w-auto`, `gap-2`, etc.)       |
@@ -2434,7 +2430,8 @@ warning caused by the use of arrow functions only avaialbale in ES6
 | Passed enriched product data (`bag_items`) with format info into the email context, then filtered for digital products only in the email logic.|
 | Special Offer application stopped working | The `apply_special_offer` function stopped applying discounts, even when valid offers existed. The logic was intact, but it wasn’t integrated correctly into the updated checkout flow (e.g., `create_checkout_session`, `checkout_summary`, and `checkout_success`). This caused the special offer to silently fail. | Re-integrated the `apply_special_offer` function into all key checkout steps, ensuring discount calculation is applied consistently. Verified that discounts now flow correctly from checkout summary → Stripe session → order confirmation. |
 | Free Shipping Discount Not Applied Correctly | Customers saw `-€0.00` in the discount field, even when the total order value exceeded the minimum threshold for free shipping. The logic only checked the **subtotal** (`bag_total`) against the threshold, ignoring shipping. | Updated `apply_special_offer` to check the **order total excluding VAT** (`bag_total + shipping_total`) against the threshold. Now, when free shipping is applied, the discount equals the deducted shipping cost (e.g., `-€22.00`), clearly showing the benefit. Verified locally and in production. |
-| Checkout flow – Server 500 error during Stripe webhook | The server crashed with a 500 error after Stripe’s `checkout.session.completed` webhook because the session metadata stored the entire cart (`bag`) JSON. This caused payload bloat, and decoding errors during webhook processing. It also created discrepancies when orders were being reconstructed from that metadata. | Implemented a `bag_ref` approach: instead of storing the full `bag` JSON in the Stripe session, a unique `bag_ref` UUID is generated and mapped to the session bag in Django. Stripe metadata now only includes this lightweight reference. The webhook retrieves the original bag via `bag_ref`, eliminating payload size issues and JSON decoding failures. This stabilized order creation and fixed both Bug 1 & 2. | Orders with more than 3–4 items could not complete checkout and failed with a 500 error, blocking users from purchasing larger or multiple-item orders until resolved. |
+| Checkout flow – Server 500 error during Stripe webhook | The server crashed with a 500 error after Stripe’s `checkout.session.completed` webhook because the session metadata stored the entire cart (`bag`) JSON. This caused payload bloat, and decoding errors during webhook processing. It also created discrepancies when orders were being reconstructed from that metadata. | Implemented a `bag_ref` approach: instead of storing the full `bag` JSON in the Stripe session, a unique `bag_ref` UUID is generated and mapped to the session bag in Django. Stripe metadata now only includes this lightweight reference. The webhook retrieves the original bag via `bag_ref`, eliminating payload size issues and JSON decoding failures. This stabilized order creation | Orders with more than 3–4 items could not complete checkout and failed with a 500 error, blocking users from purchasing larger or multiple-item orders until resolved. |
+| Stripe checkout: product image not showing & cancel redirect not working | During Stripe Checkout, product images were missing and the cancel button redirected to a non-existent `/bag/view_bag/` path. This caused broken UX when customers abandoned payment. | Fixed by adding absolute image URLs (`request.build_absolute_uri(product.image_preview.url)`) to Stripe line items and correcting the cancel URL to use Django’s `reverse("view_bag")`, ensuring images display properly and cancel redirects to the shopping bag. |
 
 ---
 ---
