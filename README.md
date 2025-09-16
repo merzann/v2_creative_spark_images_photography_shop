@@ -6,6 +6,7 @@
 - [Responsive Mock-up View](#responsive-mock-up-view)
 - [Business Plan](#business-plan)
 - [Design & Planning](#design--planning)
+- [Agile Methology](#agile-methology)
 - [Features](#features)
   - [Existing Features](#existing-features)
   - [Features Left to Implement](#features-left-to-implement)
@@ -439,6 +440,53 @@ AboutUs: standalone content
 #### Checkout Flow Chart
 
 ![Checkout Flow Chart](README_Media/checkout_flow_chart.jpg)
+
+---
+---
+
+## Agile Methology
+
+This project was developed using Agile methodology, with a strong focus on iterative development, user stories, and continuous testing.  
+A GitHub Kanban board was used to manage the project, track progress, and ensure transparency in the workflow.  
+The board was divided into the columns **Ready**, **In Progress**, **In Review**, **Done**, and **Will Not Be Implemented**, enabling clear sprint planning and prioritisation of tasks.  
+
+### Key Points of Agile Usage in this Project
+
+- **User Stories**: Each feature was captured as a user story (e.g., *User Registration & Login*, *Wishlist*, *Downloading Purchased Images*).  
+  This ensured that all functionality was tied directly to user needs and business goals.  
+
+- **Incremental Delivery**: Features were built, tested, and moved through the board step by step.  
+  For example: *Adding items to shopping cart* → *Checkout & making a purchase* → *Checkout progress tracker*.  
+
+- **Backlog & Scope Control**: Non-essential features (*Custom Music Player*, *Admin Dashboard for Sales Insights*) were explicitly marked under *Will Not Be Implemented*.  
+  This demonstrates prioritisation and scope management.  
+
+- **Completed User Stories (Done)**:  
+  - **Authentication & Profiles**: User registration, login, and profile management were implemented successfully.  
+  - **Shopping Flow**: Viewing products, adding to cart, checkout process, checkout tracking, and downloading purchased images are complete.  
+  - **Admin Functionality**: Managing user data, license options, orders, images, and website content (text, footer, SEO).  
+  - **Marketing Features**: Newsletter signup and Facebook Business Page setup were added.  
+  - **Enhancements**: Order history, immersive UX improvements, and site monitoring completed.  
+
+- **Agile Transparency**: All tasks were visible on the Kanban board and tracked from *Ready* to *Done*.  
+  This ensured progress could be reviewed at any time.  
+
+- **Review & Testing**: Items moved through an *In Review* column before being marked as *Done*, aligning with Agile’s focus on validation and feedback.  
+
+
+The Agile methodology ensured:
+- Features were developed in line with user stories.  
+- Project scope was managed realistically.  
+- Progress was documented and traceable via the Kanban board.  
+- The final product reflects both user needs and continuous iteration.  
+
+link to the Kanban board for transparency:  
+
+https://github.com/users/merzann/projects/8
+
+The Kanban Board
+
+![Kanban Board](README_Media/kanban_board.png)
 
 ---
 ---
