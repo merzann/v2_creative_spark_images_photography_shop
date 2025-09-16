@@ -82,6 +82,10 @@
     color:rgb(45, 45, 236);
 }
 
+.wishlist-btn:hover {
+    background-color:rgb(165, 165, 165);
+}
+
 /* Media Queries */
 @media (max-width: 767.98px) {
   .product-page-config-card .btn-custom,

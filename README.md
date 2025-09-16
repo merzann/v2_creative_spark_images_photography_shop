@@ -772,6 +772,7 @@ When the user is logged in the following options are displayed:
 
 - **My Profile**: allows the user to access their user profile and update their information or delete their profile or view their order history
 - **Order History:** provides direct access to the order history
+- **My Wishlist:** provides direct access to the wishlist
 - **Logout:** allows the user to log out and continue to browse the page as guest
 
 ![User signed in](README_Media/user_logged_in.png)
@@ -1143,6 +1144,104 @@ The UserProfile model includes a get_order_history() method to fetch related ord
 ![User Profile Card](README_Media/user_profile_card.png)
 ![Create Account](README_Media/user_create_account.png) ![Sign up error](README_Media/user_sign_up_error.png)
 ![Order History Card](README_Media/order_history_card.png)
+![My Wishlist Card](README_Media/my_wishlist_card.png)
+
+---
+---
+
+## Wishlist  
+A streamlined feature that allows customers to save products for later purchase, enhancing engagement and providing flexibility in the shopping journey.  
+
+---
+
+### Summary  
+
+- Display of wishlist items including product thumbnail, title, and the date added.  
+- Clear action buttons for **View**, **Remove**, and **Move to Cart**.  
+- Items are stored at the user level, ensuring persistence across sessions (not tied to cookies).  
+- Duplicate prevention: products already in the wishlist cannot be added twice, with inline feedback messages for clarity.  
+- Responsive layout with proper stacking of buttons on small screens.  
+
+---
+
+### Access My Wishlist
+
+- **Profile Dropdown Access**:  
+  The wishlist can be accessed conveniently via the profile dropdown menu when the user is logged in, ensuring quick navigation without needing to go through the profile page manually.  
+
+- **Part of Profile Carousel**:  
+  Similar to **Order History**, the Wishlist is fully integrated into the User Profile Carousel.  
+  This provides a consistent user experience where users can seamlessly switch between their Profile, Order History, and Wishlist sections within the same carousel component.  
+
+---
+
+### Adding Products to the Wishlist
+Users can add products to their wishlist directly from two key touchpoints in the shopping journey:
+
+- **Product Detail Page**:  
+  Each product has a prominent **♡ Add to Wishlist** button.  
+  Clicking this saves the product in its current configuration (digital license or print type, etc.) to the user’s wishlist.
+
+- **Shopping Bag Page**:  
+  For products already in the bag, a **♡ Add to Wishlist** button is also available.  
+  This allows customers to move items they aren’t ready to purchase yet into the wishlist for safekeeping.
+
+---
+
+### Structure & Components  
+
+**From the User’s perspective**  
+When navigating to their profile and selecting the Wishlist tab, users are presented with a clean, card-based layout. Each saved product includes:  
+
+- A thumbnail preview image,  
+- The product title,  
+- A timestamp of when the product was added,  
+- Buttons for:  
+  - **View** (opens product detail page),  
+  - **Remove** (deletes the product from wishlist),  
+  - **Move to Cart** (adds the product to the shopping bag and removes it from wishlist).  
+
+---
+
+### Smart Behavior  
+
+- If a product is already in the wishlist, the user receives an **informative message** instead of a duplicate entry.  
+- Using **Move to Cart**, items seamlessly transfer into the shopping bag session while simultaneously being removed from the wishlist.  
+- All feedback is provided via **Django’s messaging system**, ensuring real-time confirmation of user actions.  
+
+---
+
+### User Experience Highlights  
+
+- **Consistency**: Buttons share the same responsive behavior and alignment rules as the Shopping Bag.  
+- **Clarity**: Inline success and info messages notify the user when items are added, already exist, or moved.  
+- **Persistence**: Unlike the bag, wishlist items are stored in the database, allowing retrieval across devices and sessions.  
+- **Responsiveness**: On mobile, buttons stack vertically and shrink proportionally to fit inside the white card area.  
+
+---
+
+### Technical Structure & Functionalities  
+
+- **Database Model**:  
+  - Each wishlist entry links a `User` with a `Product`.  
+  - Optional fields for `quantity`, `license_type`, `print_type`, and `price_at_time` provide flexibility for future expansion.  
+
+- **Views**:  
+  - `add_to_wishlist`: Adds items with duplicate prevention and user messaging.  
+  - `remove_from_wishlist`: Removes items safely.  
+  - `move_to_cart`: Transfers items into session-based shopping bag.  
+  - `wishlist_view`: Renders the user’s wishlist card in profile.  
+
+- **Session Integration**: Items moved to cart are structured correctly for the session-based bag logic.  
+
+- **Security & UX Defenses**:  
+
+  | Type              | Feature                                                                 |  
+  |-------------------|-------------------------------------------------------------------------|  
+  | Duplicate Handling| Prevents same product being saved multiple times, shows info message.   |  
+  | Feedback          | Success/info/error messages always shown after actions.                 |  
+  | DB Persistence    | Stored in `Wishlist` model → user’s data is safe and retrievable later. |  
+  | Responsiveness    | Bootstrap grid + custom media queries ensure clean layout on all screens.|  
 
 ---
 ---

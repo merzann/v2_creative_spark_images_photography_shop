@@ -18,9 +18,12 @@
 
             <!-- Carousel Indicators -->
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
-                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="0" 
+                    class="active" aria-current="true" aria-label="Profile details"></button>
+                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="1" 
+                    aria-label="Order history"></button>
+                <button type="button" data-bs-target="#profileCarousel" data-bs-slide-to="2" 
+                    aria-label="Wishlist"></button>
             </div>
 
             <div class="carousel-inner">
@@ -48,23 +51,37 @@
                                     <!-- Contact Info -->
                                     <div class="form-group mb-3">
                                         <label for="id_first_name">First Name:</label>
-                                        <input type="text" name="first_name" class="form-control" placeholder="First Name" value="{{ first_name }}" required>
+                                        <input type="text" id="id_first_name" name="first_name" 
+                                            class="form-control" placeholder="First Name" 
+                                            value="{{ first_name }}" required 
+                                            autocomplete="given-name">
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_last_name">Last Name:</label>
-                                        <input type="text" name="last_name" class="form-control" placeholder="Last Name" value="{{ last_name }}" required>
+                                        <input type="text" id="id_last_name" name="last_name" 
+                                            class="form-control" placeholder="Last Name" 
+                                            value="{{ last_name }}" required 
+                                            autocomplete="family-name">
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_email">Email Address:</label>
-                                        <input type="email" name="email" id="id_email" value="{{ user.email }}" class="form-control" required>
+                                        <input type="email" id="id_email" name="email" 
+                                            value="{{ user.email }}" class="form-control" 
+                                            required autocomplete="email">
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_language_preference">Language Preference:</label>
                                         {{ form.language_preference }}
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_default_phone_number">Phone Number:</label>
-                                        {{ form.default_phone_number }}
+                                        <input type="tel" id="id_default_phone_number" name="default_phone_number" 
+                                            class="form-control" value="{{ form.default_phone_number.value|default:'' }}" 
+                                            autocomplete="tel">
                                     </div>
 
                                     <!-- Address Info -->
@@ -72,25 +89,40 @@
                                         <label for="id_default_country">Country:</label>
                                         {{ form.default_country }}
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_default_postcode">Postcode:</label>
-                                        {{ form.default_postcode }}
+                                        <input type="text" id="id_default_postcode" name="default_postcode" 
+                                            class="form-control" value="{{ form.default_postcode.value|default:'' }}" 
+                                            autocomplete="postal-code">
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_default_town_or_city">Town / City:</label>
-                                        {{ form.default_town_or_city }}
+                                        <input type="text" id="id_default_town_or_city" name="default_town_or_city" 
+                                            class="form-control" value="{{ form.default_town_or_city.value|default:'' }}" 
+                                            autocomplete="address-level2">
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_default_street_address1">Street Address 1:</label>
-                                        {{ form.default_street_address1 }}
+                                        <input type="text" id="id_default_street_address1" name="default_street_address1" 
+                                            class="form-control" value="{{ form.default_street_address1.value|default:'' }}" 
+                                            autocomplete="address-line1">
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_default_street_address2">Street Address 2:</label>
-                                        {{ form.default_street_address2 }}
+                                        <input type="text" id="id_default_street_address2" name="default_street_address2" 
+                                            class="form-control" value="{{ form.default_street_address2.value|default:'' }}" 
+                                            autocomplete="address-line2">
                                     </div>
+
                                     <div class="form-group mb-3">
                                         <label for="id_default_county">County:</label>
-                                        {{ form.default_county }}
+                                        <input type="text" id="id_default_county" name="default_county" 
+                                            class="form-control" value="{{ form.default_county.value|default:'' }}" 
+                                            autocomplete="address-level1">
                                     </div>
 
                                     <div class="text-center mt-4">
@@ -161,7 +193,7 @@
                                 <div class="wishlist-item mb-4 p-3 border rounded d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ item.product.image_preview.url }}" 
-                                            alt="{{ item.product.title }}" 
+                                            alt="Preview of {{ item.product.title }}" 
                                             class="img-fluid rounded me-3" 
                                             style="width: 60px; height: auto;">
                                     <div>
@@ -171,11 +203,20 @@
                                     </div>
                                     <div>
                                     <a href="{% url 'product_detail' item.product.id %}" 
-                                        class="btn btn-sm btn-outline-primary me-2 mb-2">View</a>
+                                        class="btn btn-sm btn-outline-primary me-2 mb-2"
+                                        aria-label="View details for {{ item.product.title }}">
+                                        View
+                                    </a>
                                     <a href="{% url 'remove_from_wishlist' item.product.id %}" 
-                                        class="btn btn-sm btn-outline-danger me-2 mb-2">Remove</a>
+                                        class="btn btn-sm btn-outline-danger me-2 mb-2"
+                                        aria-label="Remove {{ item.product.title }} from wishlist">
+                                        Remove
+                                    </a>
                                     <a href="{% url 'move_to_cart' item.product.id %}" 
-                                    class="btn btn-sm btn-outline-secondary me-2 mb-2">Move to Cart</a>
+                                        class="btn btn-sm btn-outline-secondary me-2 mb-2"
+                                        aria-label="Move {{ item.product.title }} to shopping cart">
+                                        Move to Cart
+                                    </a>
                                     </div>
                                 </div>
                                 {% endfor %}
@@ -189,11 +230,11 @@
                 </div>
 
             <!-- Carousel Controls -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#profileCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#profileCarousel" data-bs-slide="prev" aria-label="Previous section">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#profileCarousel" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#profileCarousel" data-bs-slide="next" aria-label="Next section">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>

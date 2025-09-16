@@ -141,6 +141,35 @@ def request_account_deletion(request):
 
 
 @login_required
+def wishlist_view(request):
+    """
+    Display the user's wishlist.
+
+    Retrieves all products saved by the user to their wishlist
+    for rendering in the UI.
+
+    **Context:**
+
+    ``wishlist_items``
+        Queryset of :model:`user_profiles.Wishlist` entries for the user,
+        with related :model:`products.Product` objects prefetched.
+
+    **Template:**
+    :template:`user_profiles/includes/wishlist_card.html`
+    """
+    wishlist_items = (
+        Wishlist.objects
+        .select_related("product")
+        .filter(user=request.user)
+    )
+    return render(
+        request,
+        "user_profiles/includes/wishlist_card.html",
+        {"wishlist_items": wishlist_items},
+    )
+
+
+@login_required
 def add_to_wishlist(request, product_id):
     """
     Add a product to the user's wishlist.
@@ -196,35 +225,6 @@ def remove_from_wishlist(request, product_id):
     Wishlist.objects.filter(user=request.user, product=product).delete()
     messages.info(request, f"{product.title} removed from your wishlist.")
     return redirect("profile")
-
-
-@login_required
-def wishlist_view(request):
-    """
-    Display the user's wishlist.
-
-    Retrieves all products saved by the user to their wishlist
-    for rendering in the UI.
-
-    **Context:**
-
-    ``wishlist_items``
-        Queryset of :model:`user_profiles.Wishlist` entries for the user,
-        with related :model:`products.Product` objects prefetched.
-
-    **Template:**
-    :template:`user_profiles/includes/wishlist_card.html`
-    """
-    wishlist_items = (
-        Wishlist.objects
-        .select_related("product")
-        .filter(user=request.user)
-    )
-    return render(
-        request,
-        "user_profiles/includes/wishlist_card.html",
-        {"wishlist_items": wishlist_items},
-    )
 
 
 @login_required
