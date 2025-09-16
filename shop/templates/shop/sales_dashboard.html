@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'shop/css/shop.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Admin Sales Dashboard</h1>
+
+    <!-- KPI Cards -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>Total Sales</h5>
+                    <p class="fs-3">{{ total_sales }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>Total Revenue</h5>
+                    <p class="fs-3">€{{ total_revenue }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>Top Product</h5>
+                    <p class="fs-3">{{ top_product }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle Tabs -->
+    <h3 class="mt-5">Sales Trends</h3>
+    <ul class="nav nav-tabs" id="salesTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-period="daily">Daily</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-period="monthly">Monthly</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-period="yearly">Yearly</button>
+        </li>
+    </ul>
+
+    <canvas id="salesChart"
+        data-daily-labels='{{ labels_daily|safe }}'
+        data-daily-data='{{ data_daily|safe }}'
+        data-monthly-labels='{{ labels_monthly|safe }}'
+        data-monthly-data='{{ data_monthly|safe }}'
+        data-yearly-labels='{{ labels_yearly|safe }}'
+        data-yearly-data='{{ data_yearly|safe }}'>
+    </canvas>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const canvas = document.getElementById('salesChart');
+        const ctx = canvas.getContext('2d');
+
+        const datasets = {
+            daily: {
+                labels: JSON.parse(canvas.dataset.dailyLabels),
+                data: JSON.parse(canvas.dataset.dailyData),
+                label: "Daily Revenue (€)",
+                color: 'rgba(75, 192, 192, 1)',
+                bg: 'rgba(75, 192, 192, 0.2)'
+            },
+            monthly: {
+                labels: JSON.parse(canvas.dataset.monthlyLabels),
+                data: JSON.parse(canvas.dataset.monthlyData),
+                label: "Monthly Revenue (€)",
+                color: 'rgba(153, 102, 255, 1)',
+                bg: 'rgba(153, 102, 255, 0.2)'
+            },
+            yearly: {
+                labels: JSON.parse(canvas.dataset.yearlyLabels),
+                data: JSON.parse(canvas.dataset.yearlyData),
+                label: "Yearly Revenue (€)",
+                color: 'rgba(255, 159, 64, 1)',
+                bg: 'rgba(255, 159, 64, 0.2)'
+            }
+        };
+
+        let chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: datasets.daily.labels,
+                datasets: [{
+                    label: datasets.daily.label,
+                    data: datasets.daily.data,
+                    borderWidth: 2,
+                    borderColor: datasets.daily.color,
+                    backgroundColor: datasets.daily.bg,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: true } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        document.querySelectorAll('#salesTabs button').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('#salesTabs button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const period = this.dataset.period;
+                const dataset = datasets[period];
+
+                chart.data.labels = dataset.labels;
+                chart.data.datasets[0].label = dataset.label;
+                chart.data.datasets[0].data = dataset.data;
+                chart.data.datasets[0].borderColor = dataset.color;
+                chart.data.datasets[0].backgroundColor = dataset.bg;
+                chart.update();
+            });
+        });
+    });
+</script>
+{% endblock %}

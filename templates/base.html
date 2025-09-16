@@ -145,6 +145,9 @@
                                 <li><a href="{% url 'profile' %}" class="dropdown-item">My Profile</a></li>
                                 <li><a href="{% url 'profile' %}?slide=history" class="dropdown-item">My Order History</a></li>
                                 <li><a href="{% url 'profile' %}?slide=wishlist" class="dropdown-item">My Wishlist</a></li>
+                                {% if user.is_staff %}
+                                    <li><a href="{% url 'sales_dashboard' %}" class="dropdown-item">Admin Dashboard</a></li>
+                                {% endif %}
                                 <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
                             {% else %}
                                 <li><a href="{% url 'account_signup' %}" class="dropdown-item">Create an account</a></li>
