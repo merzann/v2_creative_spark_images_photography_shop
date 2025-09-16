@@ -40,7 +40,7 @@
                                     <!-- Profile Picture -->
                                     <div class="profile-picture-container mb-4">
                                         {% if user.userprofile.profile_picture %}
-                                            <img src="{{ user.userprofile.profile_picture.url }}" class="profile-picture" alt="Profile Picture">
+                                            <img src="{{ user.userprofile.profile_picture.url }}" class="profile-picture" alt="Profile Picture" loading="lazy">
                                         {% else %}
                                             <img src="{% static 'user_profiles/images/image_placeholder.jpg' %}" class="profile-picture" alt="No image selected">
                                         {% endif %}
@@ -130,7 +130,10 @@
                                     </div>
 
                                     <div class="text-center mt-4">
-                                        <button type="button" class="btn btn-link profile-delete-link" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                        <button type="button"
+                                            class="btn btn-link profile-delete-link"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteAccountModal">
                                             Delete my account
                                         </button>
                                     </div>
@@ -159,7 +162,7 @@
                                             <div class="row align-items-center py-3 border-bottom gx-3">
                                                 <!-- Image -->
                                                 <div class="col-12 col-md-2 text-center mb-3 mb-md-0">
-                                                    <img src="{{ product.image_preview.url }}" class="img-fluid rounded" alt="{{ product.title }}">
+                                                    <img src="{{ product.image_preview.url }}" class="img-fluid rounded" alt="{{ product.title }}" loading="lazy">
                                                 </div>
                                                 <!-- Description -->
                                                 <div class="col-12 col-md-10 text-center text-md-start">
@@ -195,7 +198,8 @@
                                         <img src="{{ item.product.image_preview.url }}" 
                                             alt="Preview of {{ item.product.title }}" 
                                             class="img-fluid rounded me-3" 
-                                            style="width: 60px; height: auto;">
+                                            style="width: 60px; height: auto;"
+                                            loading="lazy">
                                     <div>
                                         <h5 class="mb-1">{{ item.product.title }}</h5>
                                         <p class="small text-muted">Added {{ item.added_at|date:"d M Y" }}</p>
@@ -241,6 +245,48 @@
         </div>
     </div>
 
-    <!-- Modals omitted for brevity (they remain unchanged) -->
+    <!-- Modals for account deletion -->
+
+    <!-- Initial Modal -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><strong>Request for Account Deletion</strong></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your account? This cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Yes, continue</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Modal to reconfirm deletion request -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><strong>I am sad to see you go 🙍🏻‍♀️</strong></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="deleteAccountForm" method="POST" action="{% url 'request_account_deletion' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                <p>Please let us know why you delete your account so we can improve our services.(optional):</p>
+                <textarea name="message" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="finalDeleteBtn" class="btn btn-danger">Send deletion request</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}

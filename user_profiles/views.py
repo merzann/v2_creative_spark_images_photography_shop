@@ -124,7 +124,7 @@ def request_account_deletion(request):
                 subject="Account Deletion Request",
                 message=email_body,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.DEFAULT_FROM_EMAIL],
+                recipient_list=[settings.ACCOUNT_DELETION_EMAIL],
             )
 
             messages.success(

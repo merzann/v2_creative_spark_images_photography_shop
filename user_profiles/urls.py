@@ -16,7 +16,10 @@ urlpatterns = [
         lambda request: profile(request),
         name="wishlist",
     ),
-    path('delete-request/', request_account_deletion, name='delete_request'),
+    path(
+        "request-account-deletion/",
+        request_account_deletion,
+        name="request_account_deletion"),
     path(
         "wishlist/add/<int:product_id>/",
         views.add_to_wishlist,
