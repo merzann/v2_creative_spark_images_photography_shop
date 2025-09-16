@@ -1745,6 +1745,35 @@ Below is an overview of what admins can manage, grouped by Django app:
 ---
 ---
 
+### Sales Dashboard
+
+The Dashboard provides staff members with a comprehensive overview of store performance.  
+It is an **admin-only view** (restricted with `@staff_member_required`) that aggregates sales data into clear KPIs and interactive charts.
+
+#### Key Features
+  - KPIs at a glance:
+    - Total Sales (number of completed orders).
+    - Total Revenue (sum of all order totals).
+    - Top Product (the most frequently ordered product).
+
+  - Sales Trends Visualization:
+    - **Daily Trends**: Shows short-term fluctuations and recent activity.
+    - **Monthly Trends**: Highlights medium-term growth and seasonal patterns.
+    - **Yearly Trends**: Provides a high-level overview of long-term performance.
+
+  - Interactive Chart Toggle:
+    - A single Chart.js graph updates dynamically when switching between *Daily*, *Monthly*, and *Yearly* views.
+    - Users can analyze trends without reloading or switching pages.
+
+  Technical Notes
+  - Built with Django and Chart.js.
+  - Sales data is aggregated via `TruncDate`, `TruncMonth`, and `TruncYear` annotations on the `OrderModel`.
+  - Context data is serialized as JSON (`labels` + `data`) and injected into the template for Chart.js rendering.
+  - Integrated into the `shop` app under the `/shop/dashboard/` route.
+
+---
+---
+
 ### 404 Page
 
 The project includes two custom 404 pages:
@@ -2328,6 +2357,22 @@ Correct section is shown based on choice                                | Pass  
 | TC026        | AboutUs WYSIWYG editing                   | Edit About Us section                                                             | Summernote editor loads                                                | Rich text editing functional                                         | Pass      |                                                              |
 | TC027        | Navigation between admin sections         | Use left sidebar or breadcrumbs                                                   | Navigation updates main content pane                                   | Seamless navigation                                                  | Pass      |                                                              |
 | TC028        | Form field validation in admin            | Submit form with required fields empty                                            | Form shows inline errors                                                | Proper error messages shown                                          | Pass      | Django admin default behavior                                 |
+
+---
+
+### Dashboard Test Matrix
+
+| Test Case ID | Description                          | Steps to Reproduce                                                              | Expected Result                                                                 | Actual Result                                                                  | Pass/Fail | Notes                                                  |
+|--------------|--------------------------------------|----------------------------------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|-----------|--------------------------------------------------------|
+| TC041        | Dashboard Access (Staff Only)        | Log in as a staff user and navigate to `/shop/dashboard/`                        | Dashboard loads successfully with sales KPIs and charts                         | Dashboard loads correctly with metrics and empty charts (if no data available)   | Pass      | Staff-only view works with `@staff_member_required`   |
+| TC042        | Dashboard Access (Non-Staff)         | Log in as a normal user and try to open `/shop/dashboard/`                       | Access denied, redirected to login or error page                                | Redirected to login page with proper message                                    | Pass      | Access control enforced                              |
+| TC043        | KPI Totals Display                   | Place orders and check dashboard                                                 | Total Sales, Total Revenue, and Top Product display correct values              | KPIs update correctly with orders                                               | Pass      | Values aggregate using ORM `Sum` and `Count`         |
+| TC044        | Daily Sales Trends                   | Place multiple orders across different days, view dashboard                      | Daily sales chart shows separate bars/points for each day                       | Daily chart updates as expected                                                 | Pass      | Uses `TruncDate` aggregation                         |
+| TC045        | Monthly Sales Trends                 | Place orders in different months, view dashboard                                 | Monthly sales chart groups totals per month                                     | Monthly chart groups correctly                                                  | Pass      | Uses `TruncMonth` aggregation                        |
+| TC046        | Yearly Sales Trends                  | Place orders in different years, view dashboard                                  | Yearly sales chart groups totals per year                                       | Yearly chart groups correctly                                                   | Pass      | Uses `TruncYear` aggregation                         |
+| TC047        | Toggle Between Views (Daily/Monthly/Yearly) | Use dropdown toggle to switch between datasets                                   | Chart updates instantly when switching views                                    | Toggle switches chart data correctly                                            | Pass      | Implemented in JavaScript toggle logic               |
+| TC048        | Empty Dataset Handling               | Open dashboard when no orders exist                                              | KPIs show 0, charts remain empty without error                                  | Works as expected — no crashes                                                  | Pass      | Gracefully handles empty data                        |
+
 
 ---
 

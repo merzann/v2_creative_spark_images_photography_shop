@@ -4,233 +4,1036 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-
 
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/ireland-through-the-seasons-annual-image-calendar/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/signup/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/bag/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/under-construction/?lang=en</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/?lang=en</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/under-construction/?lang=de</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/under-construction/?lang=fr</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/under-construction/?lang=es</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/policy/privacy/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/policy/cookies/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/products/licenses/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/policy/terms/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/contact/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/timeless-elegance-castles-manors/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/whispers-of-water/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/a-floral-wonderland/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/he-curious-case-of-faces-in-the-sky-a-cloud-myster/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/chasing-the-irish-sunset/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/wind-waves-collection/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/ireland-in-black-white/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/iconic-destinations-in-every-frame/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/gallery/irelands-coastal-beauty/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/20/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/21/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/password/reset/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/8/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/28/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
-  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/3/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/37/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/45/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/36/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/41/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/54/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/56/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/60/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/61/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/62/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/63/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/65/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/8/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/2/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/3/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/1/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
-  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/4/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/80/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
-  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/6/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/87/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
-  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/5/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/88/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/89/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/7/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/5/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/6/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/4/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/50/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/52/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/51/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/10/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/33/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/40/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/59/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/66/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/67/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/68/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/69/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/70/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/71/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/16/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/35/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/30/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/23/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/72/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/74/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/73/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/76/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/77/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/78/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/75/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/24/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/29/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/32/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/39/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/55/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/91/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/9/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
-  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/18/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/27/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
-  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/14/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/25/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/26/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/38/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/82/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/83/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/84/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/86/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/90/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/85/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/13/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/12/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/11/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/12/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/14/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/18/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/17/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/31/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/47/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/34/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/48/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/49/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/57/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/64/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/79/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/81/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/19/</loc>
-  <lastmod>2025-06-08T06:38:50+00:00</lastmod>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
   <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/22/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/42/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/44/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/46/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/43/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/53/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/shop/58/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/20/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/21/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/28/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/37/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/45/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/36/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/41/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/54/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/56/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/60/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/61/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/62/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/63/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/65/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/8/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/2/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/3/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/1/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/80/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/87/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/88/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/89/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/7/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/5/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/6/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/4/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/50/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/52/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/51/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/10/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/33/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/40/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/59/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/66/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/67/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/68/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/69/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/70/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/71/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/16/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/35/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/30/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/23/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/72/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/74/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/73/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/76/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/77/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/78/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/75/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/24/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/29/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/32/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/39/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/55/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/91/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/9/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/27/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/25/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/26/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/38/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/82/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/83/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/84/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/86/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/90/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/85/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/13/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/11/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/12/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/14/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/18/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/17/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/31/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/47/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/34/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/48/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/49/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/57/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/64/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/79/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/81/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/19/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/22/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/42/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/44/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/46/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/43/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/53/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://creative-spark-images-shop-6e4790dd908e.herokuapp.com/accounts/login/?next=/profile/wishlist/add/58/</loc>
+  <lastmod>2025-09-16T20:02:24+00:00</lastmod>
+  <priority>0.41</priority>
 </url>
 
 
