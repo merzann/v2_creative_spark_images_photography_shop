@@ -91,45 +91,52 @@ def profile(request):
 @login_required
 def request_account_deletion(request):
     """
-    Handle a user-submitted request to delete their account.
+    Delete the authenticated user's account.
 
-    A POST request triggers an email to the site administrator containing
-    the user's information and their optional message.
-
-    **Context:**
-    - This view does not render a template. It redirects to the "profile"
-      page after handling the request.
-
-    **Behavior:**
-    - On success, a success message is shown and the user is redirected.
-    - On non-POST requests, the view immediately redirects.
-
-    **Email Content:**
-    - Username and email of the requesting user.
-    - Optional message provided in the request.
+    Removes the :model:`auth.User` and related
+    :model:`user_profiles.UserProfile` instances.
 
     **Redirects:**
-    - :redirect:`profile`
+    :redirect:`home`
     """
     if request.method == "POST":
         try:
             message = request.POST.get("message", "No message provided.")
             user = request.user
-            email_body = (
+
+            # --- Email to Admin ---
+            admin_body = (
                 f"User {user.username} ({user.email}) has requested "
                 f"account deletion.\n\nMessage:\n{message}"
             )
 
             send_mail(
                 subject="Account Deletion Request",
-                message=email_body,
+                message=admin_body,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[settings.ACCOUNT_DELETION_EMAIL],
             )
 
+            # --- Confirmation Email to User ---
+            user_body = (
+                f"Hello {user.first_name or user.username},\n\n"
+                "We’ve received your request to delete your account. "
+                "Our team will process this request within 48 hours. "
+                "If this was not you, please contact us immediately.\n\n"
+                "Thank you,\nThe Creative Spark Images Team"
+            )
+
+            send_mail(
+                subject="We’ve received your account deletion request",
+                message=user_body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+            )
+
             messages.success(
                 request,
-                "Your request has been submitted successfully."
+                "Your request has been submitted successfully. "
+                "You’ll also receive a confirmation email shortly."
             )
         except Exception as e:
             messages.error(

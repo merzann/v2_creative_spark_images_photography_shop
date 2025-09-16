@@ -1135,7 +1135,7 @@ The form uses placeholder text, Bootstrap styling, and server-side form validati
 
 ### Account Deletion Request Flow
 
-A two-step modal confirmation allows users to request account deletion while optionally submitting feedback. This is handled securely via POST requests.
+A two-step modal confirmation allows users to request account deletion while optionally submitting feedback. This is handled securely via POST requests. In additioin to the success message the user receives and automated email confirming the request has been rceived and will be processed within 48 hours.
 
 ### Order History Integration
 
@@ -2172,6 +2172,26 @@ Correct section is shown based on choice                                | Pass  
 
 ---
 
+### Wishlist  
+
+| Test Case ID | Description                                      | Steps to Reproduce                                                                 | Expected Result                                                                 | Actual Result                                                                 | Pass/Fail | Notes                                                                 |
+|--------------|--------------------------------------------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|--------------------------------------------------------------------------------|-----------|----------------------------------------------------------------------|
+| TC001        | Access wishlist from profile dropdown            | Log in → click user icon in navbar → select “Wishlist”                             | Profile carousel opens on “Wishlist” card                                       | Carousel opens and loads wishlist tab                                          | Pass      | Integrated into profile dropdown & carousel                          |
+| TC002        | Wishlist empty state                             | Access wishlist with no saved products                                             | Message “Your wishlist is empty.” is shown                                      | Message is displayed correctly                                                 | Pass      | Clear empty state feedback                                           |
+| TC003        | Wishlist populated with products                 | Add product via “Add to Wishlist” button on product detail page                     | Product shows in wishlist card with thumbnail, title, date added                | Card layout renders with product info                                          | Pass      | Uses product.image_preview and added_at fields                      |
+| TC004        | Add product to wishlist from shopping bag        | In bag view → click “♡ Add to Wishlist”                                            | Product is added to wishlist and confirmation message displayed                | Works as expected                                                              | Pass      | Prevents duplicates with feedback                                    |
+| TC005        | Product thumbnail loads correctly                | View wishlist with saved products                                                  | Thumbnail image visible with alt text describing product                        | Images render with `alt="Preview of {{ item.product.title }}"`                 | Pass      | Lazy loading improves performance                                   |
+| TC006        | View product details from wishlist               | Click **View** button on wishlist item                                             | Redirects to product detail page of selected product                            | Navigates to `product_detail` view                                             | Pass      | `aria-label` used for accessibility                                 |
+| TC007        | Remove product from wishlist                     | Click **Remove** button on wishlist item                                           | Item removed from wishlist and confirmation message displayed                   | Product disappears from list                                                   | Pass      | Correct feedback via Django messages                                |
+| TC008        | Move product from wishlist to cart               | Click **Move to Cart** on wishlist item                                            | Item removed from wishlist, added to bag (session-based cart)                   | Item shows in bag, disappears from wishlist                                    | Pass      | Confirms success with user message                                  |
+| TC009        | Prevent duplicate additions                      | Add same product twice via product detail page                                     | Second attempt prevented; inline info message displayed                         | Message: “Product is already in your wishlist.”                               | Pass      | Duplicate defense implemented                                       |
+| TC010        | Responsive layout                                | Resize viewport across mobile/tablet/desktop                                       | Cards and buttons stack appropriately on smaller screens                        | Buttons stack vertically on mobile, align horizontally on desktop              | Pass      | Bootstrap grid + utility classes ensure responsiveness              |
+| TC011        | Accessibility of wishlist buttons                | Navigate using keyboard and screen reader                                          | Buttons focusable with keyboard; labels announced by screen reader              | `aria-label`s applied to View, Remove, Move to Cart buttons                    | Pass      | Meets WCAG guidelines                                                |
+| TC012        | Wishlist persistence across sessions             | Log out and back in → navigate to wishlist                                         | Wishlist items still stored and displayed                                       | Items persist, tied to user in database                                       | Pass      | Unlike bag, wishlist is DB-based not session-based                  |
+
+
+---
+
 ### Newsletter Page & Modal
 
 | Test Case ID | Description                        | Steps to Reproduce                                              | Expected Result                                                | Actual Result                                                | Pass/Fail | Notes                                               |
@@ -2536,6 +2556,7 @@ warning caused by the use of arrow functions only avaialbale in ES6
 | Jumping back to Checkout Summary | Users had no way to jump back directly to the order summary step from intermediate steps, forcing them to restart the checkout flow. | Introduced a `?step=summary` query parameter and updated `checkout_script.js` to detect it, allowing the summary template to be loaded immediately without restarting the checkout flow. |
 | Missing Live Validation on Profile Step | The checkout profile form lacked real-time validation, allowing users to progress with incomplete or invalid fields. This was highlighted as a weakness during assessment. | Implemented **live validation** for `first_name`, `last_name`, and `email` fields in `checkout_script.js`. Fields are validated on input and blur events, disabling the "Continue" button until all fields are valid. |
 | Checkout success redirect not working for new users | The `{CHECKOUT_SESSION_ID}` placeholder in the success URL was being escaped by `build_absolute_uri()` into `%7B...%7D`, preventing Stripe from replacing it with the actual session ID. This caused `checkout_success` to fail for non-admin users. | Build the success URL with `reverse("checkout_success")` and append the raw query string: `...?session_id={CHECKOUT_SESSION_ID}` so Stripe receives the correct placeholder and substitutes it properly. |
+| Account deletion request not working | Initially, the “Delete my account” link did not trigger any action. After fixing the connectioin between modals and Javascript, the process stalled after the first step and no confirmation email was sent. The backend only notified the admin, leaving the user without feedback. | Fixed by wiring up the button to the modal flow, implementing a two-step confirmation process, and updating the `request_account_deletion` view to send **two emails**: one to the site admin with the user’s request, and one to the user confirming receipt of the request. |
 
 ---
 ---
