@@ -67,6 +67,21 @@
     border-top: 1px solid #aaa;
 }
 
+.wishlist-btn {
+    background-color: #fff;
+    padding: 6px 12px;
+    border-color: rgb(45, 45, 236);
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.wishlist-btn a {
+    text-decoration: none;
+    color:rgb(45, 45, 236);
+}
+
 /* Media Queries */
 @media (max-width: 767.98px) {
   .product-page-config-card .btn-custom,

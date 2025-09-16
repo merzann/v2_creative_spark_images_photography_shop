@@ -145,58 +145,77 @@
   margin-bottom: 0.5rem;
 }
 
-.wishlist-item .btn {
-  font-size: 0.85rem;
-  text-align: center;
-}
-
-@media (max-width: 768px) {
+/* Media Queries */
+@media (max-width: 400px) {
   .wishlist-item .btn {
-    flex: 1;
+    font-size: 14px;
+    width: 7rem;
+    padding: 0 !important;
+  }
+}
+@media (max-width: 767.98px) {
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .carousel-control-prev {
+    left: 0.5rem;
+    right: auto;
+  }
+
+  .carousel-control-next {
+    right: 0.5rem;
+    left: auto;
+  }
+
+  .wishlist-item {
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  }
+
+  .wishlist-item > div {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .wishlist-item img {
+    margin-bottom: 1rem;
+  }
+
+  .wishlist-item .d-flex.align-items-center {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .wishlist-item .btn {
     font-size: 0.8rem;
     padding: 0.4rem 0.6rem;
-  }
-}
-
-/* Media Queries */
-@media (max-width: 767.98px) {
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
-
-    .carousel-control-prev {
-        left: 0.5rem;
-        right: auto;
-    }
-
-    .carousel-control-next {
-        right: 0.5rem;
-        left: auto;
-    }
-
-    .wishlist-item .col-12.col-md-3 {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
-  .wishlist-item .btn {
-    max-width: 60%;
-    
-  }
-
-  .wishlist-item .col-md-3 {
-    justify-content: center;
+  .wishlist-item .btn:last-child {
+    margin-bottom: 0;
   }
 }
 
 @media (min-width: 768px) {
+  .wishlist-item {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .wishlist-item .d-flex.align-items-center {
+    flex: 1;
+    text-align: left;
+  }
+
   .wishlist-item .btn {
     display: block;
-    width: 100%;
+    width: 8rem;
     margin-bottom: 0.5rem;
   }
 
@@ -204,7 +223,7 @@
     margin-bottom: 0;
   }
 
-  .wishlist-item .col-md-3 {
+  .wishlist-item > div:last-child {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -212,13 +231,13 @@
 }
 
 @media (min-width: 992px) {
-    .profile-card {
-        width: 100%;
-    }
+  .profile-card {
+      width: 100%;
+  }
 }
 
 @media (min-width: 1024px) {
-    .profile-card {
-        margin: 0;
-    }
+  .profile-card {
+      margin: 0;
+  }
 }

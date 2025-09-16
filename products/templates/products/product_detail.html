@@ -98,12 +98,9 @@
                                 </div>
 
                                 <!-- Second row: Wishlist button -->
-                                <form method="POST" action="{% url 'add_to_wishlist' product.id %}" class="w-100">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-primary mt-3 w-25">
-                                        ♡ Add to Wishlist
-                                    </button>
-                                </form>
+                                <button class="wishlist-btn w-100 fs-6">
+                                    <a href="{% url 'add_to_wishlist' product.id %}">♡ Add to Wishlist</a>
+                                </button>
                             </div>
                        </form>
                     </div>

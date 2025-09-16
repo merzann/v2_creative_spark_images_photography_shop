@@ -158,34 +158,24 @@
                             <div class="wishlist-content mt-3">
                             {% if user.wishlist.all %}
                                 {% for item in user.wishlist.all %}
-                                <div class="wishlist-item mb-4 p-3 border rounded">
-                                    <div class="row align-items-center gx-3">
-                                    
-                                    <!-- Image -->
-                                    <div class="col-12 col-md-2 text-center mb-3 mb-md-0">
+                                <div class="wishlist-item mb-4 p-3 border rounded d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
                                         <img src="{{ item.product.image_preview.url }}" 
                                             alt="{{ item.product.title }}" 
-                                            class="img-fluid rounded"
-                                            style="max-height: 100px; width: auto;">
-                                    </div>
-
-                                    <!-- Details -->
-                                    <div class="col-12 col-md-7 text-center text-md-start">
+                                            class="img-fluid rounded me-3" 
+                                            style="width: 60px; height: auto;">
+                                    <div>
                                         <h5 class="mb-1">{{ item.product.title }}</h5>
                                         <p class="small text-muted">Added {{ item.added_at|date:"d M Y" }}</p>
                                     </div>
-
-                                    <!-- Buttons -->
-                                    <div class="col-12 col-md-3 d-flex justify-content-md-end gap-2 mt-2 mt-md-0">
-                                        <a href="{% url 'product_detail' item.product.id %}" 
-                                        class="btn btn-outline-primary btn-sm">
-                                        View
-                                        </a>
-                                        <a href="{% url 'remove_from_wishlist' item.product.id %}" 
-                                        class="btn btn-outline-danger btn-sm">
-                                        Remove
-                                        </a>
                                     </div>
+                                    <div>
+                                    <a href="{% url 'product_detail' item.product.id %}" 
+                                        class="btn btn-sm btn-outline-primary me-2 mb-2">View</a>
+                                    <a href="{% url 'remove_from_wishlist' item.product.id %}" 
+                                        class="btn btn-sm btn-outline-danger me-2 mb-2">Remove</a>
+                                    <a href="{% url 'move_to_cart' item.product.id %}" 
+                                    class="btn btn-sm btn-outline-secondary me-2 mb-2">Move to Cart</a>
                                     </div>
                                 </div>
                                 {% endfor %}

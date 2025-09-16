@@ -161,8 +161,15 @@ def add_to_wishlist(request, product_id):
     - Redirects back to the user's profile page.
     """
     product = get_object_or_404(Product, id=product_id)
-    Wishlist.objects.get_or_create(user=request.user, product=product)
-    messages.success(request, f"{product.title} added to your wishlist.")
+    wishlist_item, created = Wishlist.objects.get_or_create(
+        user=request.user, product=product
+    )
+
+    if created:
+        messages.success(request, f"{product.title} added to your wishlist.")
+    else:
+        messages.info(request, f"{product.title} is already in your wishlist.")
+
     return redirect("view_bag")
 
 
@@ -218,3 +225,44 @@ def wishlist_view(request):
         "user_profiles/includes/wishlist_card.html",
         {"wishlist_items": wishlist_items},
     )
+
+
+@login_required
+def move_to_cart(request, product_id):
+    """
+    Move a product from the user's wishlist into the shopping cart.
+
+    Adds the product to the session-based shopping bag and removes
+    it from the wishlist to prevent duplication.
+
+    **Args:**
+    ``product_id``
+        Primary key of the :model:`products.Product` to move.
+
+    **Effects:**
+    - Adds the product to the user's shopping bag (stored in session).
+    - Deletes the corresponding :model:`user_profiles.Wishlist` entry.
+    - Displays a success message on completion.
+
+    **Redirects:**
+    - Redirects back to :view:`bag:view_bag`, keeping the user on
+      the shopping bag page.
+    """
+    product = get_object_or_404(Product, id=product_id)
+
+    bag = request.session.get("bag", {})
+
+    if str(product_id) in bag:
+        bag[str(product_id)]["quantity"] += 1
+    else:
+        bag[str(product_id)] = {"product_id": product_id, "quantity": 1}
+
+    request.session["bag"] = bag
+
+    Wishlist.objects.filter(user=request.user, product=product).delete()
+
+    messages.success(
+        request,
+        f"{product.title} moved to your shopping bag."
+    )
+    return redirect("view_bag")

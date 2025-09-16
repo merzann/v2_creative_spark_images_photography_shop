@@ -27,4 +27,10 @@ urlpatterns = [
         views.remove_from_wishlist,
         name="remove_from_wishlist"
     ),
+    path(
+        "move-to-cart/<int:product_id>/",
+        views.move_to_cart,
+        name="move_to_cart"
+    ),
+
 ]
