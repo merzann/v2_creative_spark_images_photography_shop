@@ -47,9 +47,15 @@ def profile(request):
 
         if form.is_valid():
             try:
-                form.save()
+                profile = form.save(commit=False)
 
-                # Also update first_name and last_name from POST data
+                # Ensure postal code is always uppercase before saving
+                if profile.default_postcode:
+                    profile.default_postcode = profile.default_postcode.upper()
+
+                profile.save()
+
+                # Update first_name and last_name from POST data
                 user.first_name = request.POST.get("first_name", "").strip()
                 user.last_name = request.POST.get("last_name", "").strip()
                 user.save()
@@ -67,11 +73,13 @@ def profile(request):
     else:
         form = UserProfileForm(instance=user_profile)
 
-    orders = OrderModel.objects.filter(user=request.user) \
+    orders = (
+        OrderModel.objects.filter(user=request.user)
         .prefetch_related(
             Prefetch('products', queryset=Product.objects.all())
-        ) \
+        )
         .order_by('-created_at')
+    )
 
     active_slide = request.GET.get("slide", "profile")
 

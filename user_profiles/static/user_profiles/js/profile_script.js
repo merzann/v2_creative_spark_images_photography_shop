@@ -1,7 +1,6 @@
 // Prevent auto sliding
 // Allows continuous looping when clicking next/prev
 document.addEventListener("DOMContentLoaded", function () {
-
     // controls profile card carousel behaviour
     var profileCarousel = document.getElementById("profileCarousel");
     var carouselInstance = new bootstrap.Carousel(profileCarousel, {
@@ -9,27 +8,30 @@ document.addEventListener("DOMContentLoaded", function () {
         wrap: true
     });
 
-    // --- Profile Picture Preview ---
+    // Handles preview display for profile picture 
     const fileInput = document.getElementById("id_profile_picture");
     const previewImg = document.querySelector(".profile-picture");
 
-    // run preview logic if both elements exist
     if (fileInput && previewImg) {
-        // Listen for file selection changes
         fileInput.addEventListener("change", function () {
             const file = fileInput.files[0];
             if (file) {
                 const reader = new FileReader();
-
                 reader.onload = function (e) {
                     previewImg.src = e.target.result;
                 };
-
                 reader.readAsDataURL(file);
             }
         });
     }
 
+    // Auto uppercase in postal code
+    const postcodeInput = document.getElementById("id_default_postcode");
+    if (postcodeInput) {
+        postcodeInput.addEventListener("input", function () {
+            this.value = this.value.toUpperCase();
+        });
+    }
 
     /** 
      * Triggers second modal during process for account deletion request
@@ -50,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Handler for My-Order_history navbar dropdown
+    // Handler for Order History and Wishlist entry in navbar profile dropdown
     const carouselEl = document.querySelector("#profileCarousel");
     const urlSlide = new URLSearchParams(window.location.search).get("slide");
 

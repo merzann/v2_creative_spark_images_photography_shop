@@ -388,9 +388,10 @@ def save_billing_from_checkout(request):
         profile.default_county = request.POST.get(
             'billing_county', ''
         ).strip()
-        profile.default_postcode = request.POST.get(
-            'billing_postcode', ''
-        ).strip()
+
+        raw_postcode = request.POST.get('billing_postcode', '').strip()
+        profile.default_postcode = raw_postcode.upper()
+
         profile.default_country = request.POST.get(
             'billing_country', ''
         ).strip()

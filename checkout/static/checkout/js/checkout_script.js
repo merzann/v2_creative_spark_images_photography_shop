@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return firstValid && lastValid && emailValid;
   }
 
-  // --- Live Validation for Checkout-Profile ---
+  // Live Validation for Checkout-Profile
   function attachProfileValidationHandlers() {
     const form = document.getElementById('checkout-profile-form');
     if (!form) return;
@@ -117,6 +117,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Validates postcode by country format rules
+  /** 
+     * Validates postcode by country format rules
+     * Auto uppercase in postal code
+    */
   function validatePostalCode(postcode, country) {
     const rules = {
       IE: /^[A-Z]{1}[0-9]{2}\s?[A-Z0-9]{4}$/i,
@@ -127,6 +131,13 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     const regex = rules[country] || /^[A-Z0-9\s\-]{3,10}$/;
     return regex.test(postcode);
+  }
+
+  const postcodeInput = document.getElementById("billing_postcode");
+  if (postcodeInput) {
+    postcodeInput.addEventListener("input", function () {
+      this.value = this.value.toUpperCase();
+    });
   }
 
   // Stores form data to compare later for unsaved changes
