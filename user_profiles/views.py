@@ -262,10 +262,21 @@ def move_to_cart(request, product_id):
     if str(product_id) in bag:
         bag[str(product_id)]["quantity"] += 1
     else:
-        bag[str(product_id)] = {"product_id": product_id, "quantity": 1}
+        # Default entry
+        bag[str(product_id)] = {
+            "product_id": product_id,
+            "quantity": 1,
+        }
+
+        # Ensure digital products are tagged properly
+        if hasattr(product, "file") and product.file:
+            bag[str(product_id)]["format"] = "digital"
+        else:
+            bag[str(product_id)]["format"] = "printed"
 
     request.session["bag"] = bag
 
+    # Remove from wishlist
     Wishlist.objects.filter(user=request.user, product=product).delete()
 
     messages.success(

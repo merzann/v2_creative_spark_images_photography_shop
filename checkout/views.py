@@ -686,7 +686,6 @@ def checkout_success(request):
         return HttpResponse("Missing session ID", status=400)
 
     try:
-        # Retrieve Stripe session
         session = stripe.checkout.Session.retrieve(
             session_id,
             expand=["line_items"]
@@ -699,7 +698,6 @@ def checkout_success(request):
             status=500
         )
 
-    # --- Resolve user ---
     customer_email = session.get("customer_email")
     user = None
     if customer_email:
@@ -709,7 +707,6 @@ def checkout_success(request):
     if not user:
         return HttpResponse("User not found", status=404)
 
-    # --- Guarantee Order exists (NEW LOGIC) ---
     order_total = Decimal(session.get("amount_total", 0)) / 100
     order, created = OrderModel.objects.get_or_create(
         stripe_session_id=session.id,
