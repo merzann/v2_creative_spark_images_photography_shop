@@ -1,7 +1,7 @@
 from django.urls import path
 from products.views import image_licenses, product_detail
 from .views import ContactPage, gallery_page, images_by_theme, PolicyPageView
-from .dashboard import sales_dashboard
+from .dashboard import sales_dashboard, staff_dashboard
 
 urlpatterns = [
     path('contact/', ContactPage.as_view(), name='contact_page'),
@@ -15,4 +15,6 @@ urlpatterns = [
     path("<int:product_id>/", product_detail, name="product_detail"),
     path('licenses/', image_licenses, name='license_info'),
     path("dashboard/", sales_dashboard, name="sales_dashboard"),
+    path("staff/", staff_dashboard, name="staff_dashboard"),
+    path("staff/sales/", sales_dashboard, name="sales_dashboard"),
 ]

@@ -116,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return allValid;
   }
 
-  // Validates postcode by country format rules
   /** 
      * Validates postcode by country format rules
      * Auto uppercase in postal code

@@ -1,10 +1,14 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
-from .models import OrderModel, Product
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from django.db.models import Sum, Count
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 
+from .models import OrderModel, Product
+
+
 import json
+from shop.forms import ProductForm
 
 
 @staff_member_required
@@ -72,4 +76,22 @@ def sales_dashboard(request):
         # Yearly
         "labels_yearly": json.dumps(labels_year),
         "data_yearly": json.dumps(data_year),
+    })
+
+
+def staff_dashboard(request):
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "New product added successfully.")
+            return redirect("staff_dashboard")
+    else:
+        form = ProductForm()
+
+    orders = OrderModel.objects.all().order_by("-created_at")
+
+    return render(request, "shop/staff_dashboard.html", {
+        "form": form,
+        "orders": orders,
     })

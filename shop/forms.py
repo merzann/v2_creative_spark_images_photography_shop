@@ -1,4 +1,5 @@
 from django import forms
+from products.models import Product
 
 
 class ContactForm(forms.Form):
@@ -34,3 +35,25 @@ class ContactForm(forms.Form):
         }),
         help_text="Max 1000 characters.",
     )
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            "title",
+            "description",
+            "theme",
+            "tags",
+            "product_types",
+            "price",
+            "license_types",
+            "print_types",
+            "size",
+            "stock",
+            "image_preview",
+            "image_framed",
+            "image_canvas",
+            "image_room_mockup",
+            "file",
+        ]
