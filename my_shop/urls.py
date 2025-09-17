@@ -1,21 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.sitemaps.views import sitemap
-from my_shop.sitemaps import (
-    StaticViewSitemap,
-    ProductSitemap,
-    ThemeSitemap,
-    AboutUsSitemap
-)
 from .views import page_under_construction
-
-# Define sitemap dictionary
-sitemaps = {
-    "static": StaticViewSitemap,
-    "products": ProductSitemap,
-    "themes": ThemeSitemap,
-    "about": AboutUsSitemap,
-}
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
@@ -33,9 +18,6 @@ urlpatterns = [
         name='page_under_construction',
     ),
     path('', include('home.urls'), name='home-urls'),
-
-    # 📌 Sitemap endpoint
-    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
 ]
 
 # Custom 404 handler
