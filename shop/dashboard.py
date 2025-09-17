@@ -1,14 +1,14 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Sum, Count
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
+from django.urls import reverse
 
 from .models import OrderModel, Product
-
+from shop.forms import ProductForm
 
 import json
-from shop.forms import ProductForm
 
 
 @staff_member_required
@@ -80,18 +80,51 @@ def sales_dashboard(request):
 
 
 def staff_dashboard(request):
+    form = ProductForm()
+
     if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "New product added successfully.")
-            return redirect("staff_dashboard")
-    else:
-        form = ProductForm()
+        action = request.POST.get("action", "").strip()
+
+        # --- Add Product ---
+        if action == "add_product":
+            form = ProductForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "New product added successfully.")
+                return redirect(reverse("staff_dashboard") + "#add-product")
+
+        elif action == "edit_order":
+            order_id = request.POST.get("order_id")
+            new_status = request.POST.get("status", "").strip().lower()
+            allowed = {"pending", "processing", "completed", "cancelled"}
+            order = get_object_or_404(OrderModel, pk=order_id)
+
+            if new_status in allowed:
+                order.status = new_status
+                order.save()
+                messages.success(
+                    request, f"Order #{order.id} updated to '{new_status}'."
+                )
+            else:
+                messages.error(request, "Invalid status value.")
+
+            return redirect(reverse("staff_dashboard") + "#manage-orders")
+
+        elif action == "delete_order":
+            order_id = request.POST.get("order_id")
+            order = get_object_or_404(OrderModel, pk=order_id)
+            order.delete()
+            messages.success(request, f"Order #{order_id} deleted.")
+
+            return redirect(reverse("staff_dashboard") + "#manage-orders")
+
+        else:
+            messages.error(request, "Unknown action.")
 
     orders = OrderModel.objects.all().order_by("-created_at")
 
-    return render(request, "shop/staff_dashboard.html", {
-        "form": form,
-        "orders": orders,
-    })
+    return render(
+        request,
+        "shop/staff_dashboard.html",
+        {"form": form, "orders": orders},
+    )
