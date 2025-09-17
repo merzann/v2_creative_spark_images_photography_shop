@@ -1750,6 +1750,45 @@ Below is an overview of what admins can manage, grouped by Django app:
 ---
 ---
 
+### Staff Dashboard
+
+The Staff Dashboard provides store administrators with tools to **manage products and orders** directly from a central interface.  
+It is an **admin-only view** that combines product creation with order monitoring and management.
+
+#### Key Features
+- **Add Product**
+  - Staff can upload new products via a simple form (`ProductForm`).
+  - Supports file uploads (e.g., product images).
+  - Success and error messages provide clear feedback.
+  - Redirects to the *Add Product* tab after submission.
+
+- **Manage Orders**
+  - Displays all orders in a sortable table with key details:
+    - Order Number
+    - Customer Name
+    - Total Price
+    - Current Status
+    - Date Created
+  - **Update Order Status**
+    - Staff can update an order’s status (Pending, Processing, Completed, Cancelled) directly via dropdown.
+    - Each update is validated against allowed values before saving.
+  - **Delete Order**
+    - Orders can be deleted through a confirmation modal.
+    - The modal ensures order IDs are securely passed via hidden fields before deletion.
+    - Success messages confirm deletion and redirect to the *Manage Orders* tab.
+
+#### Technical Notes
+  - Built with Django’s form and messaging system.
+  - Actions are handled via `POST` requests using a hidden `action` field (`add_product`, `edit_order`, `delete_order`).
+  - Uses Bootstrap 5 for tabs, forms, and modal components.
+  - JavaScript (`shop_script.js`) dynamically injects the selected order ID into the delete modal.
+  - Orders are queried from the `OrderModel` and sorted by creation date.
+  - Integrated into the `shop` app under the `/shop/staff/` route.
+
+
+---
+---
+
 ### Sales Dashboard
 
 The Dashboard provides staff members with a comprehensive overview of store performance.  
@@ -2365,19 +2404,35 @@ Correct section is shown based on choice                                | Pass  
 
 ---
 
-### Dashboard Test Matrix
+### Staff Dashboard Test Matrix
 
-| Test Case ID | Description                          | Steps to Reproduce                                                              | Expected Result                                                                 | Actual Result                                                                  | Pass/Fail | Notes                                                  |
-|--------------|--------------------------------------|----------------------------------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|-----------|--------------------------------------------------------|
-| TC041        | Dashboard Access (Staff Only)        | Log in as a staff user and navigate to `/shop/dashboard/`                        | Dashboard loads successfully with sales KPIs and charts                         | Dashboard loads correctly with metrics and empty charts (if no data available)   | Pass      | Staff-only view works with `@staff_member_required`   |
-| TC042        | Dashboard Access (Non-Staff)         | Log in as a normal user and try to open `/shop/dashboard/`                       | Access denied, redirected to login or error page                                | Redirected to login page with proper message                                    | Pass      | Access control enforced                              |
-| TC043        | KPI Totals Display                   | Place orders and check dashboard                                                 | Total Sales, Total Revenue, and Top Product display correct values              | KPIs update correctly with orders                                               | Pass      | Values aggregate using ORM `Sum` and `Count`         |
-| TC044        | Daily Sales Trends                   | Place multiple orders across different days, view dashboard                      | Daily sales chart shows separate bars/points for each day                       | Daily chart updates as expected                                                 | Pass      | Uses `TruncDate` aggregation                         |
-| TC045        | Monthly Sales Trends                 | Place orders in different months, view dashboard                                 | Monthly sales chart groups totals per month                                     | Monthly chart groups correctly                                                  | Pass      | Uses `TruncMonth` aggregation                        |
-| TC046        | Yearly Sales Trends                  | Place orders in different years, view dashboard                                  | Yearly sales chart groups totals per year                                       | Yearly chart groups correctly                                                   | Pass      | Uses `TruncYear` aggregation                         |
-| TC047        | Toggle Between Views (Daily/Monthly/Yearly) | Use dropdown toggle to switch between datasets                                   | Chart updates instantly when switching views                                    | Toggle switches chart data correctly                                            | Pass      | Implemented in JavaScript toggle logic               |
-| TC048        | Empty Dataset Handling               | Open dashboard when no orders exist                                              | KPIs show 0, charts remain empty without error                                  | Works as expected — no crashes                                                  | Pass      | Gracefully handles empty data                        |
+  | Test Case ID | Description                   | Steps to Reproduce                                                                 | Expected Result                                                                 | Actual Result                                                                  | Pass/Fail | Notes                                                                 |
+  |--------------|-------------------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|-----------|----------------------------------------------------------------------|
+  | TC051        | Dashboard Access (Staff Only) | Log in as a staff user and navigate to `/shop/staff/`                               | Staff Dashboard loads with Add Product tab and Manage Orders tab                | Dashboard loads with form and order table                                      | Pass      | Staff-only access via Django routing or template restriction         |
+  | TC052        | Add Product (Valid Data)      | Submit product form with valid name, price, and image                               | Product saved to database, success message displayed, redirected to Add Product | Product added successfully, feedback message shown                             | Pass      | Uses `ProductForm` with validation                                   |
+  | TC053        | Add Product (Invalid Data)    | Submit product form with missing required fields                                    | Form reloads with validation errors displayed                                   | Validation messages shown, no product saved                                    | Pass      | Django form handles errors correctly                                |
+  | TC054        | Display Orders Table          | Place multiple orders, then load Staff Dashboard                                   | Orders display in table with order number, customer, total, status, date        | Orders render correctly with details                                           | Pass      | Orders fetched via `OrderModel.objects.all().order_by("-created_at")` |
+  | TC055        | Update Order Status (Valid)   | Change status via dropdown to Pending/Processing/Completed/Cancelled, click Update | Order status updates in database, success message displayed                     | Status updates correctly, confirmation shown                                   | Pass      | Only allowed statuses are accepted                                  |
+  | TC056        | Update Order Status (Invalid) | Manually alter request to include invalid status (e.g., "shipped")                  | Status not updated, error message displayed                                     | Error shown, order unchanged                                                   | Pass      | Backend validation prevents invalid values                          |
+  | TC057        | Delete Order (Modal Confirm)  | Click Delete button, confirm in modal                                               | Order removed from database, success message displayed                          | Order deleted successfully, redirected to Manage Orders tab                    | Pass      | Modal injects correct order ID into form                            |
+  | TC058        | Delete Order (Cancel Modal)   | Click Delete button, cancel in modal                                                | Modal closes, order remains intact                                              | Works as expected                                                              | Pass      | Ensures accidental deletions are avoided                            |
+  | TC059        | Delete Order (Invalid ID)     | Manipulate hidden `order_id` to invalid value                                       | Error/404 displayed, order not deleted                                          | `get_object_or_404` blocks invalid deletions                                   | Pass      | Safe from tampering                                                 |
+  | TC060        | Empty Orders Handling         | Open Manage Orders tab with no orders in database                                   | Table displays “No orders found.” message                                       | Empty state message displays                                                   | Pass      | Gracefully handles no data                                          |
 
+  ---
+
+  ### Sales Dashboard Test Matrix
+
+  | Test Case ID | Description                          | Steps to Reproduce                                                              | Expected Result                                                                 | Actual Result                                                                  | Pass/Fail | Notes                                                  |
+  |--------------|--------------------------------------|----------------------------------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|-----------|--------------------------------------------------------|
+  | TC041        | Dashboard Access (Staff Only)        | Log in as a staff user and navigate to `/shop/dashboard/`                        | Dashboard loads successfully with sales KPIs and charts                         | Dashboard loads correctly with metrics and empty charts (if no data available)   | Pass      | Staff-only view works with `@staff_member_required`   |
+  | TC042        | Dashboard Access (Non-Staff)         | Log in as a normal user and try to open `/shop/dashboard/`                       | Access denied, redirected to login or error page                                | Redirected to login page with proper message                                    | Pass      | Access control enforced                              |
+  | TC043        | KPI Totals Display                   | Place orders and check dashboard                                                 | Total Sales, Total Revenue, and Top Product display correct values              | KPIs update correctly with orders                                               | Pass      | Values aggregate using ORM `Sum` and `Count`         |
+  | TC044        | Daily Sales Trends                   | Place multiple orders across different days, view dashboard                      | Daily sales chart shows separate bars/points for each day                       | Daily chart updates as expected                                                 | Pass      | Uses `TruncDate` aggregation                         |
+  | TC045        | Monthly Sales Trends                 | Place orders in different months, view dashboard                                 | Monthly sales chart groups totals per month                                     | Monthly chart groups correctly                                                  | Pass      | Uses `TruncMonth` aggregation                        |
+  | TC046        | Yearly Sales Trends                  | Place orders in different years, view dashboard                                  | Yearly sales chart groups totals per year                                       | Yearly chart groups correctly                                                   | Pass      | Uses `TruncYear` aggregation                         |
+  | TC047        | Toggle Between Views (Daily/Monthly/Yearly) | Use dropdown toggle to switch between datasets                                   | Chart updates instantly when switching views                                    | Toggle switches chart data correctly                                            | Pass      | Implemented in JavaScript toggle logic               |
+  | TC048        | Empty Dataset Handling               | Open dashboard when no orders exist                                              | KPIs show 0, charts remain empty without error                                  | Works as expected — no crashes                                                  | Pass      | Gracefully handles empty data                        |
 
 ---
 
