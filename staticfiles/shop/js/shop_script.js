@@ -44,4 +44,15 @@ document.addEventListener("DOMContentLoaded", function () {
             window.scrollTo({ top: 0, behavior: "smooth" });
         });
     }
+
+    // DELETE ORDER MODAL HANDLER
+        const deleteOrderModal = document.getElementById("deleteOrderModal");
+    if (deleteOrderModal) {
+        deleteOrderModal.addEventListener("show.bs.modal", function (event) {
+            const button = event.relatedTarget;
+            const orderId = button.getAttribute("data-order-id");
+            const hiddenInput = deleteOrderModal.querySelector("#deleteOrderId");
+            hiddenInput.value = orderId;
+        });
+    }
 });
