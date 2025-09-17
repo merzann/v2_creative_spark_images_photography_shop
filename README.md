@@ -181,7 +181,7 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
 
 ### Cost Structure
 - Hosting & domain
-- Transaction fees (Stripe, Zapier)
+- Transaction fees (Stripe)
 - Printing & shipping
 - Visual asset creation
 - Marketing (ads, tools, partnerships)
@@ -194,7 +194,7 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
 - **Frontend:** HTML5, CSS3, Bootstrap, JavaScript
 - **eCommerce:** Stripe Integration
 - **Admin Tools:** Django Admin, Crispy Forms
-- **Email Automation:** Zapier
+- **Email Automation:** Django messages
 - **Media Storage:** Cloudinary
 - **Testing/CI:** Automated test scripts, user flow testing
 - **Security:** CSRF, session handling, validation
@@ -313,7 +313,7 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
 - Stripe keys stored securely
 - CSRF, input, and session protection
 - GDPR-compliant user deletion
-- Email send error catching via Zapier and Django messages
+- Email send error catching via Django messages
 
 ---
 
@@ -328,6 +328,7 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
 ## Appendices
 
 - Live Site: [https://creative-spark-images-shop-6e4790dd908e.herokuapp.com](https://creative-spark-images-shop-6e4790dd908e.herokuapp.com)
+
 - Instagram: [https://www.instagram.com/irelandinsunset/](https://www.instagram.com/irelandinsunset/)
 
 ![Instagram](README_Media/instagram.png)
@@ -335,6 +336,10 @@ The long-term strategy includes developing a **B2B offering in parallel**, witho
 - Facebook: [https://www.facebook.com/profile.php?id=61574557148446](https://www.facebook.com/profile.php?id=61574557148446)
 
 ![Facebook](README_Media/fb_business_page.png)
+
+- YouTube: [https://www.youtube.com/@creative-spark-images](https://www.youtube.com/@creative-spark-images)
+
+![Instagram](README_Media/you_tube_channel.png)
 
 - Tech Stack Summary
 - Licensing Examples
@@ -500,7 +505,7 @@ The Kanban Board
   - Choose between **digital formats with licenses** or **printed formats** like canvas, poster, or framed print
   - Add products to a dynamic **shopping cart** with instant summary updates
   - Checkout securely via **Stripe**, with **automated order processing**
-  - Receive confirmation emails via **Zapier** integration
+  - Receive confirmation emails via **Django messages** integration
 
   Admin users can:
   - Manage products, print types, and license types
@@ -517,7 +522,7 @@ The Kanban Board
 - Session-based shopping cart
 - AJAX-based cart updates and feedback
 - Stripe integration for payments
-- Zapier email notifications on purchase
+- Django messages email notifications on purchase
 - Order management with unique `order_number`
 - Extendable language selection menu (currently implemented: EN/planned: DE,ES,FR)
 - Admin control via Django backend
@@ -536,7 +541,7 @@ The color palette reflects the deep connection to nature:
 Balanced by off-white tones to make every page easy on the eyes and accessible across devices
 These nature-inspired hues create a grounded, peaceful atmosphere — mirroring the very environments these images come from. The goal? To invite people in, let them slow down, and experience photography the way it was meant to be felt: personally.
 
-Behind the scenes, the project is backed by a robust Django framework — dynamic shopping bag functionality, Stripe integration, Zapier automation for email confirmations, and a thoughtfully designed order system with metadata-rich order tracking. For photographers and creators like me, the Django Admin panel is a dream to work with — intuitive, powerful, and secure.
+Behind the scenes, the project is backed by a robust Django framework — dynamic shopping bag functionality, Stripe integration, Django messages for email confirmations, and a thoughtfully designed order system with metadata-rich order tracking. For photographers and creators like me, the Django Admin panel is a dream to work with — intuitive, powerful, and secure.
 
 ---
 ---
@@ -2672,30 +2677,6 @@ warning caused by the use of arrow functions only avaialbale in ES6
 - Comments: Functions and classes include docstrings to describe their purpose, inputs, and outputs.
 
 - Version control is managed using Git and GitHub, with a focus on maintaining a clean and organized history. Regular commits follow a consistent format and describe the features implemented and/or reasons for changes made to existing features.
-
----
----
-
-## Sitemap
-
-Creative Spark Images uses a dynamically generated `sitemap.xml` to improve SEO and help search engines crawl the most relevant content.
-
-### Features
-
-- Auto-generated sitemap via Django’s `django.contrib.sitemaps` framework.
-- Accessible at [`/sitemap.xml`](https://creativesparkimages.com/sitemap.xml).
-- Covers all key public-facing routes:
-  - Homepage and static pages (via `StaticViewSitemap`)
-  - Individual product detail pages (via `ProductSitemap`)
-  - Theme-specific gallery views (via `ThemeSitemap`)
-  - About Us content (via `AboutUsSitemap`)
-- Custom priorities and change frequencies defined for each section.
-
-### Setup Highlights
-
-- A single `sitemaps.py` file is located at project level (`my_shop/sitemaps.py`).
-- Registered in `urls.py` using Django’s built-in `sitemap` view.
-- Automatically updated as products or themes are added via the admin panel.
 
 ---
 ---
