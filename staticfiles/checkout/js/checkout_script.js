@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const modalAlert = document.getElementById('modal-alert');
   const saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
   const loginBtn = document.getElementById('btn-login');
-  const guestBtn = document.getElementById('btn-guest');
 
   let formInitialData = {};
   let skipProfileSave = false;
@@ -68,6 +67,26 @@ document.addEventListener('DOMContentLoaded', function () {
     return firstValid && lastValid && emailValid;
   }
 
+  // --- Live Validation for Checkout-Profile ---
+  function attachProfileValidationHandlers() {
+    const form = document.getElementById('checkout-profile-form');
+    if (!form) return;
+
+    const inputs = ['first_name', 'last_name', 'email'];
+    inputs.forEach(id => {
+      const input = form.querySelector(`#${id}`);
+      if (input) {
+        input.addEventListener('input', () => {
+          const valid = validateProfileFormFields();
+          continueBtn.disabled = !valid;
+          continueBtn.dataset.allowRedirect = "false";
+          skipProfileSave = false;
+        });
+        input.addEventListener('blur', validateProfileFormFields);
+      }
+    });
+  }
+
   // Validates billing form input fields
   function validateBillingFormFields() {
     const form = document.getElementById('billing-form');
@@ -108,11 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     const regex = rules[country] || /^[A-Z0-9\s\-]{3,10}$/;
     return regex.test(postcode);
-  }
-
-  // Alias for validating profile during guest checkout
-  function validateGuestFormFields() {
-    return validateProfileFormFields();
   }
 
   // Stores form data to compare later for unsaved changes
@@ -347,55 +361,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Guest checkout button logic
-  if (guestBtn) {
-    guestBtn.addEventListener('click', function () {
-      const choiceWrapper = document.getElementById('checkout-choice-wrapper');
-      const formWrapper = document.getElementById('checkout-form-wrapper');
-
-      choiceWrapper?.classList.add('d-none');
-
-      formWrapper.innerHTML = `
-        <div class="text-center my-5">
-          <div class="spinner-border text-secondary" role="status" aria-label="Redirecting..."></div>
-          <p class="mt-3">Redirecting to guest checkout...</p>
-        </div>
-      `;
-      formWrapper.style.display = 'block';
-
-      fetch('/checkout/load-guest-form/')
-        .then(res => res.text())
-        .then(html => {
-          formWrapper.innerHTML = html;
-          setActiveProgressStep(1);
-          captureInitialFormValues();
-          continueBtn.disabled = !validateGuestFormFields();
-
-          ['first_name', 'last_name', 'email'].forEach(id => {
-            const input = document.getElementById(id);
-            if (input) {
-              input.addEventListener('input', () => {
-                validateGuestFormFields();
-                continueBtn.disabled = !validateGuestFormFields();
-                continueBtn.dataset.allowRedirect = "false";
-                skipProfileSave = false;
-              });
-              input.addEventListener('blur', validateGuestFormFields);
-            }
-          });
-        })
-        .catch(err => {
-          console.error("Failed to load guest form", err);
-          formWrapper.innerHTML = '<p class="text-danger">Failed to load the form. Please try again.</p>';
-          choiceWrapper?.classList.remove('d-none');
-        });
-    });
-  }
-
   // Initialize step and validation for authenticated users
   if (isAuthenticated) {
     continueBtn.disabled = !validateProfileFormFields();
     captureInitialFormValues();
     setActiveProgressStep(1);
+    attachProfileValidationHandlers();
+  }
+
+  // Handles image download for download button on checkout success page
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".download-link").forEach(btn => {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        const url = this.getAttribute("data-url");
+        window.open(url, '_blank');
+      });
+    });
+  });
+
+    // --- Handle query string steps (e.g. ?step=billing) ---
+  const params = new URLSearchParams(window.location.search);
+  const step = params.get("step");
+
+  if (step === "billing") {
+    // Jump directly to step 2
+    setActiveProgressStep(2);
+    loadBillingForm();
+  } else if (step === "summary") {
+    // Optional: allow linking directly to summary
+    setActiveProgressStep(3);
+    loadCheckoutSummary();
   }
 });

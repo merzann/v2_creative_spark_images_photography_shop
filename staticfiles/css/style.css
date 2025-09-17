@@ -277,6 +277,40 @@ a.dropdown-item {
     font-size: 0.9rem;
 }
 
+/* Newsletter Page */
+.newsletter-link-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.newsletter-link-wrapper a {
+    text-decoration: none;
+    color: #555;
+}
+
+.newsletter-link-wrapper a:hover {
+    text-decoration: underline;
+}
+
+/* Newsletter Modal */
+#newsletter-modal .modal-content {
+    font-family: 'Poiret One', cursive;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    border: 5px solid #333;
+}
+
+#newsletter-modal h5 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#newsletter-modal p {
+    font-size: 1.1rem;
+    color: #444;
+}
+
 
 /* 404 page-under-construction styles */ 
 .page-under-construction {
@@ -378,7 +412,7 @@ footer a i {
     }
 
     nav.navbar {
-        padding: 8 16 8 16px;
+        padding: 8px 16px 8px 16px;
     }
 
     .navbar .nav-link {

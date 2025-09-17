@@ -9,6 +9,28 @@ document.addEventListener("DOMContentLoaded", function () {
         wrap: true
     });
 
+    // --- Profile Picture Preview ---
+    const fileInput = document.getElementById("id_profile_picture");
+    const previewImg = document.querySelector(".profile-picture");
+
+    // run preview logic if both elements exist
+    if (fileInput && previewImg) {
+        // Listen for file selection changes
+        fileInput.addEventListener("change", function () {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+
     /** 
      * Triggers second modal during process for account deletion request
      * Request second confirmation from user
@@ -32,9 +54,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const carouselEl = document.querySelector("#profileCarousel");
     const urlSlide = new URLSearchParams(window.location.search).get("slide");
 
-    if (urlSlide === "history" && carouselEl) {
-    
-    const carousel = $(carouselEl).carousel();
-    $(carouselEl).carousel(1);  
+    if (carouselEl && urlSlide) {
+        const carousel = $(carouselEl).carousel();
+
+        if (urlSlide === "history") {
+            $(carouselEl).carousel(1);
+        } else if (urlSlide === "wishlist") {
+            $(carouselEl).carousel(2);
+        }
     }
 });

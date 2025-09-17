@@ -83,6 +83,10 @@
   .shopping-bag-section .btn-outline-danger {
     max-width: 6rem;
   }
+
+  .btn-outline-secondary {
+    width: 12.5rem;
+  }
   
   /* Alerts */
   .shopping-bag-section .alert {
@@ -93,6 +97,12 @@
   }
 
 /* Media Queries */
+@media (min-width: 576px) {
+  .btn-outline-secondary {
+    width: 6rem;
+  }
+}
+
 @media (max-width: 767.98px) {
   .shopping-bag-section .btn-custom,
   .shopping-bag-section .btn-secondary {
@@ -126,6 +136,10 @@
   }
 
   .shopping-bag-section .btn-outline-danger {
+    width: 6rem;
+  }
+
+  .btn-outline-secondary {
     width: 6rem;
   }
 }
