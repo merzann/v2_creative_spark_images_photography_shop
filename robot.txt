@@ -1,28 +1,30 @@
-# robots.txt for Creative Spark Images Photography Shop
-
 User-agent: *
 
-# ❌ Block admin, user-specific, and server-side areas
+# lock sensitive and irrelevant areas
 Disallow: /admin/
 Disallow: /checkout/
 Disallow: /bag/
 Disallow: /accounts/
 Disallow: /static/
 Disallow: /media/
-Disallow: /404/
-Disallow: /404_page_under_construction/
-Disallow: /newsletter/newsletter-signup/
+Disallow: /under-construction/
+Disallow: /profile/wishlist/
+Disallow: /accounts/login/?next=*
 
-# ✅ Allow key product-facing pages
+# Allow key product-facing and informational pages
+Allow: /
 Allow: /shop/
 Allow: /shop/gallery/
 Allow: /shop/products/
+Allow: /shop/gallery/
+Allow: /shop/contact/
+Allow: /shop/policy/
 Allow: /newsletter/
 Allow: /about/
 
-# Optional: allow individual product and theme-based URLs if structure supports it
+# Optional: allow individual product/theme URLs
 Allow: /shop/theme/
 Allow: /shop/product/
 
-# Sitemap (update this with your real domain)
+# Sitemap (update domain when live)
 Sitemap: https://creativesparkimages.com/sitemap.xml
